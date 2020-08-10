@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/font/font.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  </head>
+  <body class="bkgd-no">
+    <div class="title-block">
+      <h3 id="title-prefix">IS THE</h3>
+      <h2 id="title-main">NEW RIVER</h2>
+      <h3 id="title-sufix">SAFE FOR ME TODAY?</h3>
+    </div>
+    <div class="answer-block">
+      <div id="answer-answer">
+        <h1>NO</h1>
+      </div>
+      <div id="answer-flow">
+        <h4>CURRENT FLOW: 1538 FT<sup>3</sup>/S</h4>
+      </div>
+    </div>
+    <div class="range-block">
+      <div id="range-label">
+        <h5>SAFE RANGE</h5>
+      </div>
+      <div class="range-rule">
+        <div class="range-rule-line"></div>
+        <div class="range-rule-measurement range-low">
+          <h5>400</h5>
+        </div>
+        <div class="range-rule-measurement range-high">
+          <h5>1000</h5>
+        </div>
+        <div class="range-rule-indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><path class="range-rule-indicator-path" d="M7.5 1L0 14h15z"/></svg>
+        </div>
+      </div>
+      <div id="range-unit">
+        <h5>FT<sup>3</sup>/S</h5>
+      </div>
+    </div>
+    <div class="graph-block" id="graph">
+      <canvas id="flowChart"></canvas>
+    </div>
+    <div class="contact-block">
+      <div id="contact-message">
+        <h5>Doesn’t Look Like Today’s The Day! Conact the Park for more info.</h5>
+      </div>
+      <div id="contact-information">
+        <h4>336-982-2587</h4>
+      </div>
+    </div>
+    <input type="file" id="input">
+    <input type="button" onClick="readData()" value="Click Me!">
+  </body>
+  <script type="text/javascript">
+  // 7 Day Period for New River
+  var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P7D&parameterCd=00060,00065&siteStatus=all";
+
+function readData() {
+  var selectedFile = document.getElementById('input').files[0];
+
+  if (selectedFile) {
+        // create reader
+        var reader = new FileReader();
+        reader.readAsText(selectedFile);
+        reader.onload = function(e) {
+            // browser completed reading file - display it
+            var data = e.target.result;
+            grabValues(data);
+        }
+    }
+}
+
+function grabValues(data) {
+  var flow = [];
+  var flowData = [];
+
+  data = JSON.parse(data);
+
+  // Iterate over the returned flow values and push them into a flow array
+  for(var i=0; i < data.value.timeSeries[0].values[0].value.length; i++) {
+    flow.push(data.value.timeSeries[0].values[0].value[i].value);
+
+    var dateTime = data.value.timeSeries[0].values[0].value[i].dateTime;
+    dateTime = dateTime.substr(0, dateTime.length-10);
+
+    // Parse Date
+    var parser = d3.timeParse("%Y-%m-%dT%H:%M:%S");
+    dateTime = parser(dateTime);
+
+    var currentObjData = {
+      "x": dateTime,
+      "y": parseFloat(data.value.timeSeries[0].values[0].value[i].value)
+    };
+
+    flowData.push(currentObjData);
+  }
+
+  // Split the flow array into chunks of 96 (there are 96 15 minute segments in a day)
+  var flowDays = [];
+
+  while (flow.length > 0) {
+    flowDays.push(flow.splice(0, 96));
+  }
+
+  // Iterate over the flow days and find an average for each day
+  var flowDaysAvg = [];
+  for(var i=0; i < flowDays.length; i++) {
+    var total = 0;
+    for(var j=0; j < flowDays[i].length; j++) {
+      total = total + parseFloat(flowDays[i][j]);
+    }
+    var avg = total / flowDays[i].length;
+    flowDaysAvg.push(Math.round(avg));
+  }
+
+  // For now this just shows an example range
+  var safeRange = {
+    "min": 400,
+    "max": 1000
+  };
+
+  // Test if today's average value is within the safe range
+  if(flowDaysAvg[flowDaysAvg.length-1] > (safeRange.min - 1) && flowDaysAvg[flowDaysAvg.length-1] < (safeRange.max + 1)) {
+    // Test if the average value is within a percentage of the safe range
+    var rangeVariance = .25;
+    var rangeSize = safeRange.max - safeRange.min;
+    var superSafeRange = {
+      "min": safeRange.min + (rangeSize*rangeVariance),
+      "max": safeRange.max - (rangeSize*rangeVariance)
+    };
+    if(flowDaysAvg[flowDaysAvg.length-1] > (superSafeRange.min - 1) && flowDaysAvg[flowDaysAvg.length-1] < (superSafeRange.max + 1)) {
+      // Today is safe
+      console.log("Today is safe!");
+    } else {
+      // Today is maybe safe
+      console.log("Today is maybe safe?");
+    }
+  } else {
+    // Today is not safe
+    console.log("Today is not safe!");
+    createFlowGraph(flowData, "#EAC435");
+    formatPage("NO")
+  }
+}
+
+// This function formats the page styles to match the river state
+function formatPage(state) {
+  // Clear all formatting
+  $('body').removeClass("bkgd-no bkgd-maybe bkgd-yes");
+
+  // Test for state
+  if(state == "NO") {
+    // No State
+    $('body').addClass("bkgd-no");
+  }
+  if(state == "MAYBE") {
+    // Maybe State
+    $('body').addClass("bkgd-maybe");
+  }
+  if(state == "YES") {
+    // Yes State
+    $('body').addClass("bkgd-yes");
+  }
+}
+
+// This function creates the flow graph using D3
+function createFlowGraph(data, lineColor) {
+  var x = [];
+  var y = [];
+
+  var previousDate = data[0].x.toString().substr(4,6).toUpperCase();
+  for(var i=0; i < data.length; i++) {
+    if(i%12 == 0) {
+      var currentX = data[i].x;
+      x.push(currentX.toString().substr(4,6).toUpperCase());
+      y.push(data[i].y);
+    }
+  }
+
+  var ctx = document.getElementById('flowChart').getContext('2d');
+  Chart.defaults.global.defaultFontColor = lineColor;
+  var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: x,
+        datasets: [{
+            data: y,
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            borderColor: lineColor,
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+            pointBorderColor: 'rgba(0, 0, 0, 0)',
+            pointRadius: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false,
+                    min: 100,
+                    max: 3500,
+                    maxTicksLimit: 2,
+                    callback: function(value, index, values) {
+                        return value + "FT3/S";
+                    }
+                },
+                gridLines: {
+                  display: false
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                  maxTicksLimit: 7
+                },
+                gridLines: {
+                  display: false
+                }
+            }]
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false
+        }
+    }
+});
+}
+
+// This function writes a cookie ith a name, data, and a number of days before expiring
+function writeCookie(name, data, expire) {
+  var now = new Date();
+  now.setDate(now.getDate() + expire);
+  var exp = now;
+  document.cookie = name + "=" + data + ";" + "expires=" + exp.toUTCString() + ";";
+}
+
+// This function returns the data in a cookie of a specified name
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+// This function checks for a cookie to see if it is present
+function checkCookie(name) {
+  var cookieCheck = getCookie(name);
+  if (cookieCheck != "") {
+   return true;
+  } else {
+    if (cookieCheck !== "" && cookieCheck !== null) {
+      return false;
+    }
+  }
+}
+
+
+  </script>
+</html>

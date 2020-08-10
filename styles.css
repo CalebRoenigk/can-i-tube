@@ -1,0 +1,199 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* END RESET */
+
+html, body {
+	transition: .375s ease;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	padding: 50px;
+	box-sizing: border-box;
+	height: 100vh;
+}
+
+.bkgd-no {
+	background: #C41E3D;
+	color: #EAC435;
+}
+
+.bkgd-maybe {
+	background: #FF7F11;
+	color: #E4E6C3;
+}
+.bkgd-yes {
+	background: #2E933C;
+	color: #261C15;
+}
+
+h1 {
+	font-size: 128px;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: 2px;
+}
+
+h2 {
+	font-size: 48px;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: 1px;
+}
+
+h3 {
+	font-size: 21px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: .5px;
+}
+
+h4 {
+	font-size: 16px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+}
+
+h5 {
+	font-size: 12px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+}
+
+/* Title */
+.title-block h2 {
+	line-height: 58px;
+}
+
+.title-block h3 {
+	line-height: 24px;
+}
+
+/* Answer */
+#answer-flow {
+	margin-top: 10px;
+}
+
+/* Range */
+.range-block {
+	width: 30vw;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.range-rule {
+	position: relative;
+	width: 75%;
+	height: 100%;
+}
+
+.range-rule-line {
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	transform: translate(0%, -50%);
+	height: .5px;
+	width: 100%;
+	background: #EAC435;
+}
+
+.range-rule-measurement {
+	position: absolute;
+	top: 50%;
+	transform: translate(0%, -50%);
+}
+
+.range-rule-measurement h5 {
+	transform: translate(0%, 75%);
+}
+
+.range-rule .range-low {
+	left: 25%;
+}
+
+.range-rule .range-high {
+	left: 75%;
+}
+
+.range-rule-indicator {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	top: 55%;
+	right: 25px;
+	transform: translate(-50%, 0%);
+}
+
+.range-rule-indicator .range-rule-indicator-path {
+	fill: #EAC435;
+}
+
+/* Graph */
+.graph-block {
+	width: 40vw;
+	height: 15vh;
+}
+
+#flowChart {
+	width: 30vw;
+	height: 15vh;
+}
+
+/* Contact */
+.contact-block h4 {
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	line-height: 32px;
+}
