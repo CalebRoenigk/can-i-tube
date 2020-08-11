@@ -59,18 +59,18 @@
   </body>
   <script type="text/javascript">
   // 7 Day Period for New River
-  var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P7D&parameterCd=00060,00065&siteStatus=all";
+  var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P4D&parameterCd=00060&siteStatus=active";
 
   var jsonData = fetchData(03161000);
 
   // This function fetches the data using AJAX
   function fetchData(site) {
     $.ajax({
-		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P7D&parameterCd=00060,00065&siteStatus=all",
+		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P4D&parameterCd=00060&siteStatus=active",
 		  dataType: 'json',
 		  data: '',
 		  success: function(json){
-			   return json;
+			   return data;
 			 },
 		  error : function(XMLHttpRequest, textStatus, errorThrown) {
 			   console.log("Error: AJAX request failed...");
