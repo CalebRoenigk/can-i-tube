@@ -66,8 +66,19 @@
     return new Promise((resolve, reject) => {
       $.ajax({
         url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P4D&parameterCd=00060&siteStatus=active",
+        type: 'post',
         dataType: 'JSON',
         data: '',
+        xhr: function () {
+            var xhr = $.ajaxSettings.xhr();
+            xhr.onprogress = function e() {
+                // For downloads
+                if (e.lengthComputable) {
+                    console.log(e.loaded / e.total);
+                }
+            };
+            return xhr;
+        },
         success: function(json){
           console.log("Data Retreived!")
            resolve(json);
@@ -100,7 +111,7 @@ function grabValues(data) {
   var flow = [];
   var flowData = [];
 
-  data = JSON.parse(data);
+  //data = JSON.parse(data);
 
   // Iterate over the returned flow values and push them into a flow array
   for(var i=0; i < data.value.timeSeries[0].values[0].value.length; i++) {
