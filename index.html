@@ -61,16 +61,16 @@
   // 7 Day Period for New River
   var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P4D&parameterCd=00060&siteStatus=active";
 
-  var jsonData = fetchData(03161000);
+  var jsonData = fetchData();
 
   // This function fetches the data using AJAX
-  function fetchData(site) {
+  function fetchData() {
     $.ajax({
-		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=00060&siteStatus=active",
-		  dataType: 'json',
+		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&parameterCd=00060&siteStatus=active",
+		  dataType: 'JSON',
 		  data: '',
 		  success: function(json){
-			   return data;
+			   return json;
 			 },
 		  error : function(XMLHttpRequest, textStatus, errorThrown) {
 			   console.log("Error: AJAX request failed...");
