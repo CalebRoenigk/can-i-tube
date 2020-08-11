@@ -95,7 +95,7 @@
     var jsonData = await fetchData("03161000");
 
     // Store the data to the site data cookie, set the cookie to expire in 1 day
-    writeCookie(siteCookieName, json, 1);
+    writeCookie(siteCookieName, jsonData, 1);
 
     // Log the returned data to the console
     console.log(jsonData);
