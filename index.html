@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>title</title>
+    <title>Can I Tube?</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/font/font.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -60,6 +60,25 @@
   <script type="text/javascript">
   // 7 Day Period for New River
   var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P7D&parameterCd=00060,00065&siteStatus=all";
+
+  var jsonData = fetchData(03161000);
+
+  // This function fetches the data using AJAX
+  function fetchData(site) {
+    $.ajax({
+		  url: "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P7D&parameterCd=00060,00065&siteStatus=all",
+		  dataType: 'json',
+		  data: '',
+		  success: function(json){
+			   return json;
+			 },
+		  error : function(XMLHttpRequest, textStatus, errorThrown) {
+			   console.log("Error: AJAX reuqest failed...");
+         console.log(textStatus);
+         console.log(errorThrown);
+		  }
+		});
+  }
 
 function readData() {
   var selectedFile = document.getElementById('input').files[0];
