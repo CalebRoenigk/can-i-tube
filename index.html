@@ -56,16 +56,14 @@
     </div>
   </body>
   <script type="text/javascript">
-  // 7 Day Period for New River
-  var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P4D&parameterCd=00060&siteStatus=active";
   writeCookie("testCookie", [1,2,3,4,5], 1);
+  // For now this site name is just new river but will eventually be the name of any site selected by the user
+  var siteName = "newRiver";
+  var siteCookieName = siteName + "Data";
   populateData();
 
   // This function fetches the data using AJAX if the data has not already been stored in a cookie
   function fetchData(site) {
-    // For now this site name is just new river but will eventually be the name of any site selected by the user
-    var siteName = "newRiver";
-    var siteCookieName = siteName + "Data";
     var dataCookiePresent = checkCookie(siteCookieName)
 
     if(dataCookiePresent == false) {
