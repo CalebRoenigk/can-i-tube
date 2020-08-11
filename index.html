@@ -54,47 +54,45 @@
         <h4>336-982-2587</h4>
       </div>
     </div>
-    <input type="file" id="input">
-    <input type="button" onClick="readData()" value="Click Me!">
   </body>
   <script type="text/javascript">
   // 7 Day Period for New River
   var newRiverUSGSString = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03161000&period=P4D&parameterCd=00060&siteStatus=active";
 
-  var jsonData = fetchData("03161000");
+  populateData();
 
   // This function fetches the data using AJAX
   function fetchData(site) {
-    $.ajax({
-		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=00060&siteStatus=active",
-		  dataType: 'JSON',
-		  data: '',
-		  success: function(json){
-			   return json;
-			 },
-		  error : function(XMLHttpRequest, textStatus, errorThrown) {
-			   console.log("Error: AJAX request failed...");
-         console.log(textStatus);
-         console.log(errorThrown);
-		  }
-		});
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P4D&parameterCd=00060&siteStatus=active",
+        dataType: 'JSON',
+        data: '',
+        success: function(json){
+          console.log("Data Retreived!")
+           resolve(json);
+         },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+           console.log("Error: AJAX request failed...");
+           console.log(textStatus);
+           console.log(errorThrown);
+        }
+      });
+    })
+
   }
 
-function readData() {
-  var selectedFile = document.getElementById('input').files[0];
+  // This function populates the data to the site
+  async function populateData() {
+    // Fetch the data
+    var jsonData = await fetchData("03161000");
 
-  if (selectedFile) {
-        // create reader
-        var reader = new FileReader();
-        reader.readAsText(selectedFile);
-        reader.onload = function(e) {
-            // browser completed reading file - display it
-            var data = e.target.result;
-            grabValues(data);
-        }
-    }
-}
+    // Extract the values
+    grabValues(jsonData);
+  }
 
+// This function grabs the values and styles the page
+// BREAK THIS FUNCTION OUT INTO A FUNCTION THAT RETURNS THE DATA TO A MORE READABLE FORM AND THEN A SEPERATE FUNCTION THAT STYLES THE PAGE
 function grabValues(data) {
   var flow = [];
   var flowData = [];
@@ -164,7 +162,7 @@ function grabValues(data) {
     // Today is not safe
     console.log("Today is not safe!");
     createFlowGraph(flowData, "#EAC435");
-    formatPage("NO")
+    formatPage("NO");
   }
 }
 
