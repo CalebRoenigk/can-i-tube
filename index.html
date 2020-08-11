@@ -66,7 +66,6 @@
     return new Promise((resolve, reject) => {
       $.ajax({
         url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P4D&parameterCd=00060&siteStatus=active",
-        type: 'post',
         dataType: 'JSON',
         data: '',
         xhr: function () {
