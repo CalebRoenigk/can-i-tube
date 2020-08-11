@@ -66,14 +66,14 @@
   // This function fetches the data using AJAX
   function fetchData(site) {
     $.ajax({
-		  url: "http://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P7D&parameterCd=00060,00065&siteStatus=all",
+		  url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P7D&parameterCd=00060,00065&siteStatus=all",
 		  dataType: 'json',
 		  data: '',
 		  success: function(json){
 			   return json;
 			 },
 		  error : function(XMLHttpRequest, textStatus, errorThrown) {
-			   console.log("Error: AJAX reuqest failed...");
+			   console.log("Error: AJAX request failed...");
          console.log(textStatus);
          console.log(errorThrown);
 		  }
