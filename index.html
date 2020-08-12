@@ -17,10 +17,8 @@
     </div>
     <div class="answer-block">
       <div id="answer-answer">
-        <h1>NO</h1>
       </div>
       <div id="answer-flow">
-        <h4>CURRENT FLOW: 1538 FT<sup>3</sup>/S</h4>
       </div>
     </div>
     <div class="range-block">
@@ -30,17 +28,15 @@
       <div class="range-rule">
         <div class="range-rule-line"></div>
         <div class="range-rule-measurement range-low">
-          <h5>400</h5>
         </div>
         <div class="range-rule-measurement range-high">
-          <h5>1000</h5>
         </div>
         <div class="range-rule-indicator">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><path class="range-rule-indicator-path" d="M7.5 1L0 14h15z"/></svg>
         </div>
       </div>
       <div id="range-unit">
-        <h5>FT<sup>3</sup>/S</h5>
+        <h5>FT<span class="superscript">3</span>/S</h5>
       </div>
     </div>
     <div class="graph-block" id="graph">
@@ -48,15 +44,13 @@
     </div>
     <div class="contact-block">
       <div id="contact-message">
-        <h5>Doesn’t Look Like Today’s The Day! Conact the Park for more info.</h5>
       </div>
       <div id="contact-information">
-        <h4>336-982-2587</h4>
       </div>
     </div>
   </body>
   <script type="text/javascript">
-  console.log("Can I Tube: v0.9.0");
+  console.log("Can I Tube: v1.0.0");
   populateData("03161000");
 
   // This function fetches the data using AJAX if the data has not already been stored in a cookie
@@ -66,7 +60,7 @@
     if(dataCookiePresent == false) {
       return new Promise((resolve, reject) => {
         $.ajax({
-          url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P4D&parameterCd=00060&siteStatus=active",
+          url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&period=P3D&parameterCd=00060&siteStatus=active",
           dataType: 'JSON',
           data: '',
           success: function(json){
@@ -148,18 +142,18 @@
         // Today is safe
         console.log("Today is safe!");
         createFlowGraph(graphArray, "#261C15");
-        formatPage("YES");
+        formatPage("YES", currentFlow, safeRange);
       } else {
         // Today is maybe safe
         console.log("Today is maybe safe?");
         createFlowGraph(graphArray, "#E4E6C3");
-        formatPage("MAYBE");
+        formatPage("MAYBE", currentFlow, safeRange);
       }
     } else {
       // Today is not safe
       console.log("Today is not safe!");
       createFlowGraph(graphArray, "#EAC435");
-      formatPage("NO");
+      formatPage("NO", currentFlow, safeRange);
     }
   }
 
@@ -238,11 +232,54 @@
   }
 
 // This function formats the page styles to match the river state
-function formatPage(state) {
+function formatPage(state, currentFlowValue, safeRange) {
+  var contactStrings = {
+    "NO": "Doesn’t Look Like Today’s The Day! Conact the Park for more info.",
+    "MAYBE": "Looks a Little Close to Call. Check with The Park to Be Safe.",
+    "YES": "Looks Optimal, but just to be sure you should contact the park."
+  }
+
   // Clear all formatting
   $('body').removeClass("bkgd-no bkgd-maybe bkgd-yes");
   $('.range-rule-line').removeClass("no-state-fill maybe-state-fill yes-state-fill");
   $('.range-rule-indicator-path').removeClass("no-state-svg-fill maybe-state-svg-fill yes-state-svg-fill");
+
+  // Add the current flow text
+  var currentFlowText = '<h4>CURRENT FLOW: ' + currentFlowValue + ' FT<span class="superscript">3</span>/S</h4>';
+  $('#answer-flow').append(currentFlowText);
+
+  // Add the current state answer
+  var currentAnswerText = '<h1>' + state + '</h1>';
+  $('#answer-answer').append(currentAnswerText);
+
+  // Add the contact text
+  var contactText = '<h5>' + contactStrings[state] + '</h5>';
+  $('#contact-message').append(contactText);
+
+  // Add the contact info
+  var contactInfoText = '<h4>336-982-2587</h4>';
+  $('#contact-information').append(contactInfoText);
+
+  // Change the range rule text
+  var rangeLowText = '<h5>' + safeRange.min + '</h5>';
+  var rangeHighText = '<h5>' + safeRange.max + '</h5>';
+  $('.range-low').append(rangeLowText);
+  $('.range-high').append(rangeHighText);
+
+  // Set up the range ruler
+  if(safeRange.max > currentFlowValue) {
+    var maxFlow = safeRange.max*1.25;
+  } else {
+    var maxFlow = currentFlowValue*1.25;
+  }
+  var scaleSlope = (maxFlow - 0)/(100 - 0);
+  var indicatorPostion = parseInt(currentFlowValue)/scaleSlope;
+  var lowRangePosition = safeRange.min/scaleSlope;
+  var highRangePosition = safeRange.max/scaleSlope;
+
+  $('.range-rule-indicator').css("left", indicatorPostion + "%");
+  $('.range-low').css("left", lowRangePosition + "%");
+  $('.range-high').css("left", highRangePosition + "%");
 
   // Test for state
   if(state == "NO") {
@@ -303,7 +340,7 @@ function createFlowGraph(data, lineColor) {
                     max: 3500,
                     maxTicksLimit: 2,
                     callback: function(value, index, values) {
-                        return value + "FT3/S";
+                        return value + "FT³/S";
                     }
                 },
                 gridLines: {
