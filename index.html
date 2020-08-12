@@ -63,6 +63,12 @@
   var newRiverDataCookie = getCookie(siteCookieName);
   console.log("Cookie: " + newRiverDataCookie);
   console.log(newRiverDataCookie.split(";"));
+  var dataCookiePresent = checkCookie(siteCookieName);
+  if(dataCookiePresent == false) {
+    console.log("empty");
+  } else {
+    console.log("data");
+  }
   fetchData("03161000");
   //populateData();
 
