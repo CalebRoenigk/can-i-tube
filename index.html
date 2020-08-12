@@ -60,7 +60,9 @@
   // For now this site name is just new river but will eventually be the name of any site selected by the user
   var siteName = "newRiver";
   var siteCookieName = siteName + "Data";
-  console.log('Fetching Data!');
+  var newRiverDataCookie = getCookie(siteCookieName);
+  console.log("Cookie: " + newRiverDataCookie);
+  console.log(newRiverDataCookie.split(";"));
   fetchData("03161000");
   //populateData();
 
