@@ -147,6 +147,17 @@ h5 {
 	transform: translate(0%, -50%);
 	height: .5px;
 	width: 100%;
+}
+
+.yes-state-fill {
+	background: #261C15;
+}
+
+.maybe-state-fill {
+	background: #E4E6C3;
+}
+
+.no-state-fill {
 	background: #EAC435;
 }
 
@@ -178,6 +189,18 @@ h5 {
 }
 
 .range-rule-indicator .range-rule-indicator-path {
+	fill: #000000;
+}
+
+.yes-state-svg-fill {
+	fill: #261C15;
+}
+
+.maybe-state-svg-fill {
+	fill: #E4E6C3;
+}
+
+.no-state-svg-fill {
 	fill: #EAC435;
 }
 

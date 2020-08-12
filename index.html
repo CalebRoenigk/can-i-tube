@@ -221,7 +221,6 @@
 
       var dateTime = dateAry[i];
       dateTime = dateTime.split("GMT")[0].substr(0, dateTime.split("GMT")[0].length-1);
-      console.log(dateTime);
 
       // Parse Date
       var parser = d3.timeParse("%Y-%m-%dT%H:%M:%S");
@@ -242,19 +241,27 @@
 function formatPage(state) {
   // Clear all formatting
   $('body').removeClass("bkgd-no bkgd-maybe bkgd-yes");
+  $('.range-rule-line').removeClass("no-state-fill maybe-state-fill yes-state-fill");
+  $('.range-rule-indicator-path').removeClass("no-state-svg-fill maybe-state-svg-fill yes-state-svg-fill");
 
   // Test for state
   if(state == "NO") {
     // No State
     $('body').addClass("bkgd-no");
+    $('.range-rule-line').addClass("no-state-fill");
+    $('.range-rule-indicator-path').addClass("no-state-svg-fill");
   }
   if(state == "MAYBE") {
     // Maybe State
     $('body').addClass("bkgd-maybe");
+    $('.range-rule-line').addClass("maybe-state-fill");
+    $('.range-rule-indicator-path').addClass("maybe-state-svg-fill");
   }
   if(state == "YES") {
     // Yes State
     $('body').addClass("bkgd-yes");
+    $('.range-rule-line').addClass("yes-state-fill");
+    $('.range-rule-indicator-path').addClass("yes-state-svg-fill");
   }
 }
 
