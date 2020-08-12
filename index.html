@@ -82,7 +82,7 @@
       })
     } else {
       // Grab the non-expired data
-      return getCookie(cookieName);
+      return "Data Already Present!";
     }
   }
 
@@ -95,21 +95,82 @@
     // Fetch the data
     var jsonData = await fetchData(site, siteCookieName);
 
-    // Store the data to the site data cookie, set the cookie to expire in 1 day
-    //writeCookie(siteCookieName, json, 1);
+    // If the data is already stored as cookies, grab that data, else store that data to cookies
+    if(jsonData == "Data Already Present!") {
+      var flowArray = getCookie("newRiverFlow").split(",");
+      var dateSaved = getCookie(siteCookieName);
+    } else {
+      // Log the returned data to the console
+      console.log(jsonData);
 
-    // Log the returned data to the console
-    console.log(jsonData);
+      // Return data arrays for data population and cookie storage
+      var flowArray = createDataArray(jsonData, "value");
+
+      // Store the data to the site data cookies, set the cookies to expire in 1 day
+      var dateSaved = new Date();
+      dateSaved = dateSaved.getMonth() + "/" + dateSaved.getDay();
+      // siteNameData: The date that the cookie was created
+      writeCookie(siteCookieName, dateSaved, 1);
+      // siteNameFlow: The flow values retreived
+      writeCookie("newRiverFlow", flowArray, 1);
+    }
+
+    // Log the data
+    console.log(siteCookieName);
+    console.log(flowArray);
+
+    // Create the date array
+    var dateTimeArray = createDateTimeArray(flowArray, dateSaved);
+
+    console.log(dateTimeArray);
 
     // Extract the values
     //grabValues(jsonData);
+
+    // Store the data to the site data cookie, set the cookie to expire in 1 day
+    //writeCookie(siteCookieName, json, 1);
+  }
+
+  // This function creates the date time array based on the flow array length and cookie save date
+  function createDateTimeArray(ary, endDate) {
+    var returnArray =[];
+    var weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var year = new Date().getFullYear();
+    var timezone = "GMT-0400 (Eastern Daylight Time)";
+
+    var endDay = parseInt(endDate.split("/")[1]);
+    var currentMonth = monthNames[parseInt(endDate.split("/")[0])];
+    // Iterate for length of array
+    for(var i=ary.length-1; i > -1; i--) {
+      var currentDay = weekdayNames[endDay - Math.floor(i/96)];
+      var currentHour = Math.floor(((i%96)/96)*24);
+      var currentMin = (Math.floor(((i%96)/96)*24)%1)*60;
+      var currentValue = currentDay + " " + currentMonth + " " + (endDay - Math.floor(i/96)) + " " + year + " " + currentHour + ":" + currentMin + ":00 " + timezone;
+
+      returnArray.push(currentValue);
+    }
+
+    return returnArray;
+  }
+
+  // This function grabs data based on the passed key and data and returns it in an array
+  function createDataArray(data, key) {
+    var returnArray = [];
+    // Iterate over the data
+    for(var i=0; i < data.value.timeSeries[0].values[0].value.length; i++) {
+      var currentValue = data.value.timeSeries[0].values[0].value[i][key];
+
+      returnArray.push(currentValue);
+    }
+
+    // Return the data
+    return returnArray;
   }
 
 // This function grabs the values and styles the page
 // BREAK THIS FUNCTION OUT INTO A FUNCTION THAT RETURNS THE DATA TO A MORE READABLE FORM AND THEN A SEPERATE FUNCTION THAT STYLES THE PAGE
 function grabValues(data) {
-  var flow = [];
-  var flowData = [];
 
   //data = JSON.parse(data);
 
