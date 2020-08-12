@@ -57,25 +57,15 @@
   </body>
   <script type="text/javascript">
   writeCookie("testCookie", [1,2,3,4,5], 1);
-  // For now this site name is just new river but will eventually be the name of any site selected by the user
-  var siteName = "newRiver";
-  var siteCookieName = siteName + "Data";
-  var newRiverDataCookie = getCookie(siteCookieName);
-  console.log("Cookie: " + newRiverDataCookie);
-  console.log(newRiverDataCookie);
-  var dataCookie = getCookie(name);
-  if(dataCookie == "") {
-    console.log("empty");
-    console.log(checkCookie(siteCookieName));
-  } else {
-    console.log("data");
-  }
   fetchData("03161000");
   //populateData();
 
   // This function fetches the data using AJAX if the data has not already been stored in a cookie
   function fetchData(site) {
     var dataCookiePresent = checkCookie(siteCookieName);
+    // For now this site name is just new river but will eventually be the name of any site selected by the user
+    var siteName = "newRiver";
+    var siteCookieName = siteName + "Data";
 
     if(dataCookiePresent == false) {
       return new Promise((resolve, reject) => {
@@ -85,7 +75,8 @@
           data: '',
           success: function(json){
             console.log("Data Retreived!")
-            console.log(json);
+            // Store the data to the site data cookie, set the cookie to expire in 1 day
+            writeCookie(siteCookieName, json, 1);
             resolve(json);
            },
           error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -105,9 +96,6 @@
   async function populateData() {
     // Fetch the data
     var jsonData = await fetchData("03161000");
-
-    // Store the data to the site data cookie, set the cookie to expire in 1 day
-    writeCookie(siteCookieName, jsonData, 1);
 
     // Log the returned data to the console
     console.log(jsonData);
