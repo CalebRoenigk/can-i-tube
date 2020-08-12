@@ -66,6 +66,7 @@
   var dataCookie = getCookie(name);
   if(dataCookie == "") {
     console.log("empty");
+    console.log(checkCookie(siteCookieName));
   } else {
     console.log("data");
   }
@@ -305,7 +306,7 @@ function getCookie(cname) {
 // This function checks for a cookie to see if it is present
 function checkCookie(name) {
   var cookieCheck = getCookie(name);
-  if (cookieCheck != "") {
+  if (cookieCheck == "") {
    return false;
   } else {
     if (cookieCheck !== "" && cookieCheck !== null) {
