@@ -60,7 +60,8 @@
   // For now this site name is just new river but will eventually be the name of any site selected by the user
   var siteName = "newRiver";
   var siteCookieName = siteName + "Data";
-  populateData();
+  fetchData("03161000");
+  //populateData();
 
   // This function fetches the data using AJAX if the data has not already been stored in a cookie
   function fetchData(site) {
@@ -74,6 +75,7 @@
           data: '',
           success: function(json){
             console.log("Data Retreived!")
+            console.log(json);
             resolve(json);
            },
           error : function(XMLHttpRequest, textStatus, errorThrown) {
