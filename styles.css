@@ -339,7 +339,6 @@ div[data-state="null"] {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	box-sizing: border-box;
-	overflow: hidden;
 	z-index: 0;
 	transition: .375s cubic-bezier(.5,0,.25,1);
 }
@@ -360,6 +359,17 @@ div[data-state="null"] {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+.post-load-title::after {
+	color: #1D1D1D;
+	content: attr(data-text);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
 }
 
 /* Answer State Styles */
