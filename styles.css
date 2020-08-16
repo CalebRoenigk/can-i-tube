@@ -373,6 +373,18 @@ div[data-state="null"] {
 	user-select: none;
 }
 
-.load-bar-finish {
-	color: #1D1D1D;
+/* Answer State Styles */
+
+.bkgd-no {
+	background: #C41E3D;
+	color: #EAC435;
+}
+
+.bkgd-maybe {
+	background: #FF7F11;
+	color: #E4E6C3;
+}
+.bkgd-yes {
+	background: #2E933C;
+	color: #261C15;
 }
