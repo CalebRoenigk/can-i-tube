@@ -56,7 +56,7 @@
           <div class="container">
             <div class="title-block">
               <div class="container">
-                <div class="title title-stroke"></div>
+                <div class="title title-stroke text-stroke-neutral"></div>
               </div>
             </div>
           </div>
@@ -304,6 +304,9 @@
       // Set the border-line transformation
       $('#border-line').attr('style', 'width: 75vw; height: 75vh; transition-duration: .625s;');
 
+      // Add the River Title text to both title divs and turn their opacity to 0
+      $('.title').empty().text(selectionData.title).css('opacity', '0').css('transition', 'all 0s 0s linear');
+
       // Bring in the side content
       // Left
       // Populate with the current date
@@ -328,7 +331,7 @@
       $('.subtitle').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('font-size', '32px');
       // Top
       $('#subtitle-top').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('top', '28%');
-      // Top
+      // Bottom
       $('#subtitle-bottom').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('bottom', '20%');
 
       // Generate the loading styles
@@ -554,7 +557,7 @@
               writeCookie(cookieName, appReadyData, expDate);
 
               // Return the app-ready data
-              resolve(appReadyData);
+              resolve(parseInt(appReadyData));
              },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                console.log("Error: AJAX request failed...");
@@ -570,7 +573,7 @@
         var appReadyData = getCookie(cookieName);
 
         // Return the app-ready data
-        return appReadyData;
+        return parseInt(appReadyData);
       }
     }
 
@@ -620,13 +623,27 @@
 
     // This function formats the page based on the determined safety
     function formatPage(state, currentFlowValue, safeRange) {
-
       // Clear all formatting
       $('body').removeClass("bkgd-neutral bkgd-no bkgd-maybe bkgd-yes");
       $('#river-load-title').removeClass('load-bar-finish');
 
-      // Remove loading bar
+      // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
+
+      // Remove the loader title and replace it with the final title
+      // First store the styling of the loader title
+      var titleLetterSpacing = $('#river-load-title').css('letter-spacing');
+      var titleTransition = $('#river-load-title').css('transition');
+      var titleFontSize = $('#river-load-title').css('font-size');
+
+      // Style the new title
+      $('.title').css('opacity', '');
+      $('#river-loader-wrapper').remove();
+      $('.title').css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
+
+      // Begin the title transformation
+      $('.title-block').css('top', '0%');
+      $('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, -25%);');
 
       // Test for state
       if(state == "NO") {
@@ -635,6 +652,7 @@
         $('#river-load-title').css('color', '#EAC435');
         $('.content-neutral').addClass('content-no').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #EAC435');
+        $('.text-stroke-neutral').addClass('text-stroke-no').removeClass('text-stroke-neutral');
       }
       if(state == "MAYBE") {
         // Maybe State
@@ -642,6 +660,7 @@
         $('#river-load-title').css('color', '#E4E6C3');
         $('.content-neutral').addClass('content-maybe').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #E4E6C3');
+        $('.text-stroke-neutral').addClass('text-stroke-maybe').removeClass('text-stroke-neutral');
       }
       if(state == "YES") {
         // Yes State
@@ -649,6 +668,7 @@
         $('#river-load-title').css('color', '#261C15');
         $('.content-neutral').addClass('content-yes').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #261C15');
+        $('.text-stroke-neutral').addClass('text-stroke-yes').removeClass('text-stroke-neutral');
       }
     }
   </script>
