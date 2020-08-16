@@ -321,8 +321,7 @@
       var realTimeDataJSON = await fetchRealTimeData(siteCode, currentSiteCookieName);
 
       // Finish the loading bar
-      console.log("The returned data: " + realTimeDataJSON);
-      $('#river-load-title').removeClass('load-bar').addClass('load-bar-finished');
+      $('#river-load-title').removeClass('load-bar').addClass('load-bar-finish');
       $('#right-border-content > .container > .content-mask > .container').removeClass('text-load').addClass('text-load-finish');
 
     });
@@ -498,7 +497,6 @@
               var expDate = now.setTime(time);
               // Write the cookie with the app-ready data
               writeCookie(cookieName, appReadyData, expDate);
-              console.log(expDate);
 
               // Return the app-ready data
               resolve(appReadyData);
