@@ -342,6 +342,7 @@
       // Finish the loading bar
       $('#river-load-title').removeClass('load-bar').addClass('load-bar-finish');
       $('#right-border-content > .container > .content-mask > .container').removeClass('text-load').addClass('text-load-finish');
+      $('#fill-title-text').css('display', '');
 
       // Begin styling and transitioning the page
       var currentSafeRange = riverInfo[selectedRiver].safe_range;
@@ -615,7 +616,6 @@
       $('#river-load-title').removeClass('load-bar-finish');
       $('.border-content').css('transition', 'all .375s ease');
       $('.border-content > .container > .content-mask > .container').css('transition', 'all .375s ease');
-      $('#fill-title-text').css('display', '');
 
       // Begin the title transformation
       $('#river-loader-wrapper').css('top', '12.5vh');

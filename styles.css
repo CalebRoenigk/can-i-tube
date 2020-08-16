@@ -340,7 +340,7 @@ div[data-state="null"] {
 	transform: translate(-50%, -50%);
 	box-sizing: border-box;
 	z-index: 0;
-	transition: .375s cubic-bezier(.5,0,.25,1);
+	transition: .375s cubic-bezier(.625,0,.25,1);
 }
 
 #river-load-title {
