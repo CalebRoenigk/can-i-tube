@@ -86,7 +86,7 @@
   </body>
   <script type="text/javascript">
     // Log the current version
-    console.log('Can I Tube v1.7.1');
+    console.log('Can I Tube v1.7.2');
 
     // This object holds all the river info for each selectable river
     var riverInfo = {
@@ -357,16 +357,16 @@
         if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
           // Today is safe
           console.log("Today is safe!");
-          formatPage("YES", realTimeFlowValue, currentSafeRange);
+          setTimeout(formatPage("YES", realTimeFlowValue, currentSafeRange), 250);
         } else {
           // Today is maybe safe
           console.log("Today is maybe safe?");
-          formatPage("MAYBE", realTimeFlowValue, currentSafeRange);
+          setTimeout(formatPage("MAYBE", realTimeFlowValue, currentSafeRange), 250);
         }
       } else {
         // Today is not safe
         console.log("Today is not safe!");
-        formatPage("NO", realTimeFlowValue, currentSafeRange);
+        setTimeout(formatPage("NO", realTimeFlowValue, currentSafeRange), 250);
       }
     });
 
