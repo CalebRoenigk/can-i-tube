@@ -497,7 +497,7 @@
               time += 3600 * 1000;
               var expDate = now.setTime(time);
               // Write the cookie with the app-ready data
-              writeCookie(cookieName, appReadyData.join(","), expDate);
+              writeCookie(cookieName, appReadyData, expDate);
               console.log(expDate);
 
               // Return the app-ready data
@@ -514,7 +514,7 @@
         // Note the non-expired data
         console.log("Data Already Present!");
         // Here, convert the data to the app-ready format
-        var appReadyData = getCookie(cookieName).split(",");
+        var appReadyData = getCookie(cookieName);
 
         // Return the app-ready data
         return appReadyData;
@@ -524,8 +524,8 @@
     // This function parses the real-time data json and returns app-ready data
     function parseRealTimeJSON(data) {
       var dataFlow = data.value.timeSeries[0].values[0].value[0].value;
-      var dataDataTime = data.value.timeSeries[0].values[0].value[0].dateTime;
-      return [dataFlow, dataDataTime];
+      //var dataDataTime = data.value.timeSeries[0].values[0].value[0].dateTime;
+      return dataFlow;
     }
 
     // This function writes a cookie ith a name, data, and a number of days before expiring
