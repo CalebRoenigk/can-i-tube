@@ -86,7 +86,7 @@
   </body>
   <script type="text/javascript">
     // Log the current version
-    console.log('Can I Tube v1.7.2b');
+    console.log('Can I Tube v1.7.2c');
 
     // This object holds all the river info for each selectable river
     var riverInfo = {
@@ -626,6 +626,11 @@
       $('#river-loader-wrapper').css('top', '12.5vh');
       $('#river-load-title').css('transform', 'translate(0%, 25%)');
       $('#fill-title-text').css('top', '0').css('transform', 'translate(-50%, -25%)').css('transition', '.625s cubic-bezier(.625,0,.25,1)');
+      $('#subtitle-text-wrapper').css('height', '75vh').css('width', '75vw');
+
+      // Move the subtitles
+      $('#subtitle-top').css('top', '15%').css('left', '10vw');
+      $('#subtitle-bottom').css('top', '15%').css('right', '10vw');
 
       // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
