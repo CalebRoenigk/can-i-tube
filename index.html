@@ -623,19 +623,32 @@
 
       // Clear all formatting
       $('body').removeClass("bkgd-neutral bkgd-no bkgd-maybe bkgd-yes");
+      $('#river-load-title').removeClass('load-bar-finish');
+
+      // Remove loading bar
+      $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
 
       // Test for state
       if(state == "NO") {
         // No State
         $('body').addClass("bkgd-no");
+        $('#river-load-title').css('color', '#EAC435');
+        $('.content-neutral').addClass('content-no').removeClass('content-neutral');
+        $('#border-stroke').css('border', '1px solid #EAC435');
       }
       if(state == "MAYBE") {
         // Maybe State
         $('body').addClass("bkgd-maybe");
+        $('#river-load-title').css('color', '#E4E6C3');
+        $('.content-neutral').addClass('content-maybe').removeClass('content-neutral');
+        $('#border-stroke').css('border', '1px solid #E4E6C3');
       }
       if(state == "YES") {
         // Yes State
         $('body').addClass("bkgd-yes");
+        $('#river-load-title').css('color', '#261C15');
+        $('.content-neutral').addClass('content-yes').removeClass('content-neutral');
+        $('#border-stroke').css('border', '1px solid #261C15');
       }
     }
   </script>

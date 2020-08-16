@@ -149,10 +149,6 @@ h5 {
 	transition: .375s ease;
 }
 
-.content-neutral {
-	background-color: #E6E6E6;
-}
-
 #left-border-content {
 	top: 50%;
 	left: 0px;
@@ -376,7 +372,7 @@ div[data-state="null"] {
 /* Answer State Styles */
 
 .bkgd-no, .bkgd-maybe, .bkgd-yes {
-	transition: .375s ease;
+	transition: .25s ease;
 }
 
 .bkgd-no {
@@ -384,11 +380,28 @@ div[data-state="null"] {
 	color: #EAC435;
 }
 
+.content-no {
+	background-color: #C41E3D;
+}
+
 .bkgd-maybe {
 	background: #FF7F11;
 	color: #E4E6C3;
 }
+
+.content-maybe {
+	background-color: #FF7F11;
+}
+
 .bkgd-yes {
 	background: #2E933C;
 	color: #261C15;
+}
+
+.content-yes {
+	background-color: #2E933C;
+}
+
+.content-neutral {
+	background-color: #E6E6E6;
 }
