@@ -375,6 +375,10 @@ div[data-state="null"] {
 
 /* Answer State Styles */
 
+.bkgd-no, .bkgd-maybe, .bkgd-yes {
+	transition: .375s ease;
+}
+
 .bkgd-no {
 	background: #C41E3D;
 	color: #EAC435;
