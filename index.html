@@ -305,7 +305,7 @@
       $('#border-line').attr('style', 'width: 75vw; height: 75vh; transition-duration: .625s;');
 
       // Add the River Title text to both title divs and turn their opacity to 0
-      $('.title').empty().text(selectionData.title).css('opacity', '0').css('transition', 'all 0s 0s linear');
+      $('.title').empty().text(selectionData.title).css('display', 'none').css('transition', 'all 0s 0s linear');
 
       // Bring in the side content
       // Left
@@ -628,22 +628,12 @@
       $('.border-content').css('transition', 'all .375s ease');
       $('.border-content > .container > .content-mask > .container').css('transition', 'all .375s ease');
 
-      // Remove loading text
-      $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
-
-      // Remove the loader title and replace it with the final title
-      // First store the styling of the loader title
+      // Replicate the loader title
       var titleLetterSpacing = $('#river-load-title').css('letter-spacing');
       var titleTransition = $('#river-load-title').css('transition');
       var titleFontSize = $('#river-load-title').css('font-size');
 
-      // Style the new title
-      $('#river-loader-wrapper').remove();
-      $('.title').css('opacity', '').delay(1).css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
-
-      // Begin the title transformation
-      $('.title-block').css('top', '0%');
-      $('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, 25%);');
+      $('.title').css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
 
       // Test for state
       if(state == "NO") {
@@ -667,6 +657,19 @@
         $('#border-stroke').css('border', '1px solid #261C15');
         $('.text-stroke-neutral').addClass('text-stroke-yes').removeClass('text-stroke-neutral');
       }
+
+      // Style the new title
+      $('#river-loader-wrapper').remove();
+      $('.title').css('display', '');
+
+      // Begin the title transformation
+      $('.title-block').css('top', '0%');
+      $('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, 25%);');
+
+
+
+      // Remove loading text
+      $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
     }
   </script>
 </html>
