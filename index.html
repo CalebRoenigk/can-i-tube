@@ -91,31 +91,31 @@
     // This object holds all the river info for each selectable river
     var riverInfo = {
       "cape-fear-river": {
-        "siteID": 02108000,
+        "siteID": "02108000",
         "state": "NC"
       },
       "catawba-river": {
-        "siteID": 02145000,
+        "siteID": "02145000",
         "state": "NC"
       },
       "congaree-river": {
-        "siteID": 02169500,
+        "siteID": "02169500",
         "state": "SC"
       },
       "dan-river": {
-        "siteID": 02069000,
+        "siteID": "02069000",
         "state": "NC"
       },
       "french-broad": {
-        "siteID": 03451500,
+        "siteID": "03451500",
         "state": "NC"
       },
       "new-river": {
-        "siteID": 03161000,
+        "siteID": "03161000",
         "state": "NC"
       },
       "saluda-river": {
-        "siteID": 02167000,
+        "siteID": "02167000",
         "state": "SC"
       }
     }
@@ -305,7 +305,7 @@
       var currentSiteCookieName = "canitube_" + selectedRiver + "_currentData";
 
       // Fetch the current site real-time data
-      var realTimeDataJSON = await fetchRealTimeData(siteCode.toString(), currentSiteCookieName);
+      var realTimeDataJSON = await fetchRealTimeData(siteCode, currentSiteCookieName);
 
       // Finish the loading bar
       console.log("The returned data: " + realTimeDataJSON);
