@@ -372,3 +372,7 @@ div[data-state="null"] {
 	-ms-user-select: none;
 	user-select: none;
 }
+
+.load-bar-finish {
+	color: #1D1D1D;
+}
