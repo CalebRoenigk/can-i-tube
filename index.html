@@ -86,7 +86,7 @@
   </body>
   <script type="text/javascript">
     // Log the current version
-    console.log('Can I Tube v1.7.0');
+    console.log('Can I Tube v1.7.1');
 
     // This object holds all the river info for each selectable river
     var riverInfo = {
@@ -291,9 +291,6 @@
       // Set the border-line transformation
       $('#border-line').attr('style', 'width: 75vw; height: 75vh; transition-duration: .625s;');
 
-      // Add the River Title text to the fill mask title
-      $('#fill-title-text').empty().text(selectionData.title).css('display', 'none');
-
       // Bring in the side content
       // Left
       // Populate with the current date
@@ -311,7 +308,6 @@
 
       // Restyle the title content
       $('#river-load-title').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('letter-spacing', '16px').css('font-size', '96px');
-      $('#fill-title-text').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('letter-spacing', '16px').css('font-size', '96px');
 
       // Restyle the subtitle content
       $('#subtitle-text-wrapper').width('500px').height('350px').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)');
@@ -342,7 +338,9 @@
       // Finish the loading bar
       $('#river-load-title').removeClass('load-bar').addClass('load-bar-finish');
       $('#right-border-content > .container > .content-mask > .container').removeClass('text-load').addClass('text-load-finish');
-      $('#fill-title-text').css('display', '');
+      // Add the River Title text to the fill mask title
+      $('#fill-title-text').empty().text(selectionData.title);
+      $('#fill-title-text').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('letter-spacing', '16px').css('font-size', '96px');
 
       // Begin styling and transitioning the page
       var currentSafeRange = riverInfo[selectedRiver].safe_range;
