@@ -375,8 +375,10 @@ div[data-state="null"] {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
 	color: inherit;
 	white-space: nowrap;
+	-webkit-text-stroke-width: 1px;
 }
 
 /* Answer State Styles */
