@@ -623,7 +623,7 @@
     // This function formats the page based on the determined safety
     function formatPage(state, currentFlowValue, safeRange) {
       // Clear all formatting
-      $('body').removeClass("bkgd-neutral bkgd-no bkgd-maybe bkgd-yes");
+      $('body').removeClass("bkgd-neutral");
       $('#river-load-title').removeClass('load-bar-finish');
       $('.border-content').css('transition', 'all .375s ease');
       $('.border-content > .container > .content-mask > .container').css('transition', 'all .375s ease');
@@ -634,6 +634,8 @@
       var titleFontSize = $('#river-load-title').css('font-size');
 
       $('.title').css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
+      $('#river-loader-wrapper').remove();
+      $('.title').css('display', '');
 
       // Test for state
       if(state == "NO") {
@@ -658,12 +660,8 @@
         $('.text-stroke-neutral').addClass('text-stroke-yes').removeClass('text-stroke-neutral');
       }
 
-      // Style the new title
-      $('#river-loader-wrapper').remove();
-      $('.title').css('display', '');
-
       // Begin the title transformation
-      $('.title-block').css('top', '0%');
+      //$('.title-block').css('top', '0%');
       //$('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, 25%)');
 
 
