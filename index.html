@@ -99,7 +99,7 @@
   </body>
   <script type="text/javascript">
     // Log the current version
-    console.log('Can I Tube v1.3.1')
+    console.log('Can I Tube v1.6.0');
 
     // This object holds all the river info for each selectable river
     var riverInfo = {
@@ -356,7 +356,6 @@
       $('#right-border-content > .container > .content-mask > .container').removeClass('text-load').addClass('text-load-finish');
 
       // Begin styling and transitioning the page
-      console.log(typeof realTimeFlowValue);
       var currentSafeRange = riverInfo[selectedRiver].safe_range;
 
       // Test if the current flow value is within the safe range
