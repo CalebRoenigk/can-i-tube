@@ -637,13 +637,12 @@
       }
 
       // Begin the title transformation
-      //$('.title-block').css('top', '0%');
-      //$('.title').css('transform', 'translate(-50%, 25%)');
-
-
+      $('#river-loader-wrapper').css('top', '0%');
+      $('#river-load-title').css('transform', 'translate(0%, 25%)');
 
       // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
+      $('#right-border-content').css('width', '0px');
     }
   </script>
 </html>
