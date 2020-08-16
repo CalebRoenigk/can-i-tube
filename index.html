@@ -357,14 +357,12 @@
         if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
           // Today is safe
           console.log("Today is safe!");
-          console.log("Time Before: " + new Date());
           setTimeout(function() {
             formatPage("YES", realTimeFlowValue, currentSafeRange);
           }, 250);
         } else {
           // Today is maybe safe
           console.log("Today is maybe safe?");
-          console.log("Time Before: " + new Date());
           setTimeout(function() {
             formatPage("MAYBE", realTimeFlowValue, currentSafeRange);
           }, 250);
@@ -372,7 +370,6 @@
       } else {
         // Today is not safe
         console.log("Today is not safe!");
-        console.log("Time Before: " + new Date());
         setTimeout(function() {
           formatPage("NO", realTimeFlowValue, currentSafeRange);
         }, 250);
@@ -628,7 +625,7 @@
       // Begin the title transformation
       $('#river-loader-wrapper').css('top', '12.5vh');
       $('#river-load-title').css('transform', 'translate(0%, 25%)');
-      $('#fill-title-text').css('top', '0').css('transform', 'translate(-50%, -25%)');
+      $('#fill-title-text').css('top', '0').css('transform', 'translate(-50%, -25%)').css('transition', '.625s cubic-bezier(.625,0,.25,1)');
 
       // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
