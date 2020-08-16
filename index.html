@@ -498,6 +498,7 @@
               var expDate = now.setTime(time);
               // Write the cookie with the app-ready data
               writeCookie(cookieName, appReadyData.join(","), expDate);
+              console.log(expDate);
 
               // Return the app-ready data
               resolve(appReadyData);
