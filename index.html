@@ -613,24 +613,27 @@
       // Test for state
       if(state == "NO") {
         // No State
-        $('body').addClass("bkgd-no").css('transition-delay', '.125s');
-        $('.content-neutral').addClass('content-no').removeClass('content-neutral').css('transition-delay', '.125s');
+        $('body').addClass("bkgd-no");
+        $('.content-neutral').addClass('content-no').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #EAC435');
         $('.text-stroke-neutral').addClass('text-stroke-no').removeClass('text-stroke-neutral');
+        $('#river-load-title').css('color', '#EAC435');
       }
       if(state == "MAYBE") {
         // Maybe State
-        $('body').addClass("bkgd-maybe").css('transition-delay', '.125s');
-        $('.content-neutral').addClass('content-maybe').removeClass('content-neutral').css('transition-delay', '.125s');
+        $('body').addClass("bkgd-maybe");
+        $('.content-neutral').addClass('content-maybe').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #E4E6C3');
         $('.text-stroke-neutral').addClass('text-stroke-maybe').removeClass('text-stroke-neutral');
+        $('#river-load-title').css('color', '#E4E6C3');
       }
       if(state == "YES") {
         // Yes State
-        $('body').addClass("bkgd-yes").css('transition-delay', '.125s');
-        $('.content-neutral').addClass('content-yes').removeClass('content-neutral').css('transition-delay', '.125s');
+        $('body').addClass("bkgd-yes");
+        $('.content-neutral').addClass('content-yes').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #261C15');
         $('.text-stroke-neutral').addClass('text-stroke-yes').removeClass('text-stroke-neutral');
+        $('#river-load-title').css('color', '#261C15');
       }
 
       // Begin the title transformation
