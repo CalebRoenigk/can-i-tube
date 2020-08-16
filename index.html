@@ -626,6 +626,8 @@
       // Clear all formatting
       $('body').removeClass("bkgd-neutral bkgd-no bkgd-maybe bkgd-yes");
       $('#river-load-title').removeClass('load-bar-finish');
+      $('.border-content').css('transition', 'all .375s ease');
+      $('.border-content > .container > .content-mask > .container').css('transition', 'all .375s ease');
 
       // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
@@ -637,19 +639,17 @@
       var titleFontSize = $('#river-load-title').css('font-size');
 
       // Style the new title
-      $('.title').css('opacity', '');
       $('#river-loader-wrapper').remove();
-      $('.title').css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
+      $('.title').css('opacity', '').delay(1).css('letter-spacing', titleLetterSpacing).css('font-size', titleFontSize).css('transition', titleTransition);
 
       // Begin the title transformation
       $('.title-block').css('top', '0%');
-      $('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, -25%);');
+      $('.title').css('letter-spacing', '').css('font-size', '').css('transform', 'translate(-50%, 25%);');
 
       // Test for state
       if(state == "NO") {
         // No State
         $('body').addClass("bkgd-no");
-        $('#river-load-title').css('color', '#EAC435');
         $('.content-neutral').addClass('content-no').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #EAC435');
         $('.text-stroke-neutral').addClass('text-stroke-no').removeClass('text-stroke-neutral');
@@ -657,7 +657,6 @@
       if(state == "MAYBE") {
         // Maybe State
         $('body').addClass("bkgd-maybe");
-        $('#river-load-title').css('color', '#E4E6C3');
         $('.content-neutral').addClass('content-maybe').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #E4E6C3');
         $('.text-stroke-neutral').addClass('text-stroke-maybe').removeClass('text-stroke-neutral');
@@ -665,7 +664,6 @@
       if(state == "YES") {
         // Yes State
         $('body').addClass("bkgd-yes");
-        $('#river-load-title').css('color', '#261C15');
         $('.content-neutral').addClass('content-yes').removeClass('content-neutral');
         $('#border-stroke').css('border', '1px solid #261C15');
         $('.text-stroke-neutral').addClass('text-stroke-yes').removeClass('text-stroke-neutral');
