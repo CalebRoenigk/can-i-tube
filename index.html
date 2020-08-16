@@ -368,16 +368,16 @@
         if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
           // Today is safe
           console.log("Today is safe!");
-          formatPage("YES", currentFlow, currentSafeRange);
+          formatPage("YES", realTimeFlowValue, currentSafeRange);
         } else {
           // Today is maybe safe
           console.log("Today is maybe safe?");
-          formatPage("MAYBE", currentFlow, currentSafeRange);
+          formatPage("MAYBE", realTimeFlowValue, currentSafeRange);
         }
       } else {
         // Today is not safe
         console.log("Today is not safe!");
-        formatPage("NO", currentFlow, currentSafeRange);
+        formatPage("NO", realTimeFlowValue, currentSafeRange);
       }
     });
 
@@ -622,7 +622,7 @@
     function formatPage(state, currentFlowValue, safeRange) {
 
       // Clear all formatting
-      $('body').removeClass("bkgd-no bkgd-maybe bkgd-yes");
+      $('body').removeClass("bkgd-neutral bkgd-no bkgd-maybe bkgd-yes");
 
       // Test for state
       if(state == "NO") {
