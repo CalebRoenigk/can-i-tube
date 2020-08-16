@@ -340,7 +340,7 @@ div[data-state="null"] {
 	transform: translate(-50%, -50%);
 	box-sizing: border-box;
 	z-index: 0;
-	transition: .375s cubic-bezier(.625,0,.25,1);
+	transition: .625s cubic-bezier(.625,0,.25,1);
 }
 
 #river-load-title {
@@ -379,6 +379,7 @@ div[data-state="null"] {
 	color: inherit;
 	white-space: nowrap;
 	-webkit-text-stroke-width: 1px;
+	transition: .625s cubic-bezier(.625,0,.25,1);
 }
 
 /* Answer State Styles */
