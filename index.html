@@ -52,6 +52,11 @@
           </div>
         </div>
         <div id="border-stroke"></div>
+        <div id="inner-fill-content">
+          <div class="container">
+            <div id="fill-title-text"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="subtitle-text-wrapper">
@@ -286,8 +291,8 @@
       // Set the border-line transformation
       $('#border-line').attr('style', 'width: 75vw; height: 75vh; transition-duration: .625s;');
 
-      // Add the River Title text to both title divs and turn their opacity to 0
-      $('.title').empty().text(selectionData.title).css('display', 'none').css('transition', 'all 0s 0s linear');
+      // Add the River Title text to the fill mask title
+      $('#fill-title-text').empty().text(selectionData.title);
 
       // Bring in the side content
       // Left
@@ -306,6 +311,7 @@
 
       // Restyle the title content
       $('#river-load-title').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('letter-spacing', '16px').css('font-size', '96px');
+      $('#fill-title-text').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)').css('letter-spacing', '16px').css('font-size', '96px');
 
       // Restyle the subtitle content
       $('#subtitle-text-wrapper').width('500px').height('350px').css('transition', 'all .625s cubic-bezier(.625,0,.25,1)');
@@ -612,7 +618,8 @@
 
       // Begin the title transformation
       $('#river-loader-wrapper').css('top', '12.5vh');
-      $('#river-load-title').css('transform', 'translate(0%, 25%)').addClass('post-load-title');
+      $('#river-load-title').css('transform', 'translate(0%, 25%)');
+      $('#fill-title-text').css('top', '0').css('transform', 'translate(0%, 25%)');
 
       // Remove loading text
       $('#right-border-content > .container > .content-mask > .container').css('transform', 'translateX(-200%) translateY(0%)');
