@@ -376,6 +376,7 @@ div[data-state="null"] {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	color: inherit;
+	white-space: nowrap;
 }
 
 /* Answer State Styles */
