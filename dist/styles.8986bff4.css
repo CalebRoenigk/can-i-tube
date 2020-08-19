@@ -1,0 +1,443 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* END RESET */
+
+html, body {
+	transition: .375s ease;
+	text-transform: uppercase;
+	text-align: center;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	color: #1D1D1D;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	box-sizing: border-box;
+	height: 100vh;
+}
+
+h1 {
+	font-size: 128px;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: 2px;
+}
+
+h2 {
+	font-size: 48px;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: 1px;
+}
+
+h3 {
+	font-size: 21px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: .5px;
+}
+
+h4 {
+	font-size: 16px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+}
+
+h5 {
+	font-size: 12px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+}
+
+.superscript {
+	vertical-align: super;
+}
+
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+/* Loader */
+#border-line {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-sizing: border-box;
+	opacity: 0;
+	transition: all .375s cubic-bezier(.5,0,.25,1);
+}
+
+#border-stroke {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 1px solid #1D1D1D;
+	z-index: -25;
+}
+
+.border-content {
+	position: absolute;
+	display: block;
+	box-sizing: border-box;
+	padding: 8px;
+	z-index: 50;
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	transform-origin: center center;
+	transition: .375s ease;
+}
+
+#left-border-content {
+	top: 50%;
+	left: 0px;
+	transform: rotate(-90deg) translate(-25%, 0%);
+	transform-origin: left center;
+}
+
+#right-border-content {
+	bottom: 50%;
+	right: 0px;
+	transform-origin: center center;
+	transform: rotate(90deg) translate(20%, -135%);
+}
+
+#left-border-content, #right-border-content {
+	pointer-events: none;
+}
+
+#bottom-border-content {
+	bottom: 0px;
+	left: 50%;
+	transform: translate(-50%, 50%) scaleX(1);
+	transform-origin: center center;
+	font-family: 'Kayak Sans Bold';
+}
+
+.content-mask {
+	box-sizing: border-box;
+	padding: 4px;
+	overflow: hidden;
+}
+
+.content-mask .container {
+	transform: translate(200%, 0%);
+	letter-spacing: 1px;
+	white-space: nowrap;
+	transition: all .5s cubic-bezier(.5,0,.25,1);
+}
+
+#right-border-content > .container > .content-mask > .container {
+	color: transparent;
+}
+
+#bottom-border-content > .container > .content-mask > .container {
+	transform: translateX(0%) translateY(-150%) scaleX(1);
+}
+
+#inner-content-wrapper, #inner-content-stroke {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	height: 100%;
+	z-index: -50;
+}
+
+#inner-content-wrapper {
+	overflow: hidden;
+}
+
+#inner-content-stroke {
+	z-index: -100;
+}
+
+.title-block {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	transform: translate(-50%, -30%);
+	transition: all 0.625s cubic-bezier(0.625, 0, 0.25, 1) 0s;
+}
+
+.title {
+	font-family: 'Kayak Sans Bold';
+	letter-spacing: .125px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 48px;
+	transform: translate(-50%, -50%);
+	white-space: nowrap;
+	transition: .25s ease;
+}
+
+.title-stroke {
+	-webkit-text-stroke-width: 1px;
+	color: rgba(0,0,0,0);
+}
+
+#subtitle-text-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 225px;
+	height: 175px;
+	z-index: -25;
+	pointer-events: none;
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.subtitle {
+	position: absolute;
+	left: 50%;
+	font-size: 19px;
+	text-align: center;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	z-index: 25;
+	white-space: nowrap;
+	transition: .375s ease;
+}
+
+#subtitle-top {
+	top: 27%;
+}
+
+#subtitle-bottom {
+	bottom: 17%;
+}
+
+/* Selection Menu */
+.select-menu {
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	transition: .375s cubic-bezier(.5,0,.25,1);
+}
+
+.select-menu select {
+	display: none;
+}
+
+.select-menu-items {
+	display: flex;
+	flex-wrap: no-wrap;
+	flex-direction: column;
+}
+
+#river-select > .select-menu-items > div {
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: .75px;
+	font-size: 42px;
+	padding: 8px;
+	white-space: nowrap;
+	transition: .2s ease;
+}
+
+#river-menu-wrapper[data-open="true"] > .container > .select-menu > .select-menu-items > .same-as-selected {
+	opacity: 1;
+	background-color: rgba(29,29,29, .25);
+	transition: .2s ease;
+}
+
+#river-menu-wrapper[data-open="false"] > .container > .select-menu > .select-menu-items > .same-as-selected {
+	opacity: 1;
+	background-color: rgba(29,29,29, 0);
+	transition: .2s ease;
+}
+
+div[data-state="null"] {
+	color: rgba(29,29,29, .25);
+}
+
+#river-menu-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #E6E6E6;
+	box-sizing: border-box;
+	overflow: hidden;
+	z-index: 0;
+	transition: .375s cubic-bezier(.5,0,.25,1);
+}
+
+#river-menu-wrapper > .container {
+	transition: .375s cubic-bezier(.5,0,.25,1);
+}
+
+#river-loader-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-sizing: border-box;
+	z-index: 0;
+	transition: .625s cubic-bezier(.625,0,.25,1);
+}
+
+#river-load-title {
+	position: relative;
+	white-space: nowrap;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	letter-spacing: .75px;
+	font-size: 42px;
+  color: transparent;
+	-webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #1D1D1D;
+	text-align: center;
+  text-transform: uppercase;
+	z-index: 100;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#inner-fill-content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+#fill-title-text {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	color: inherit;
+	white-space: nowrap;
+	-webkit-text-stroke-width: 1px;
+}
+
+/* Answer State Styles */
+
+.bkgd-no, .bkgd-maybe, .bkgd-yes {
+	transition: .375s ease;
+}
+
+.bkgd-no {
+	background: #C41E3D;
+	color: #EAC435;
+}
+
+.content-no {
+	background-color: #C41E3D;
+}
+
+.text-stroke-no {
+	-webkit-text-stroke-color: #EAC435;
+}
+
+.bkgd-maybe {
+	background: #FF7F11;
+	color: #E4E6C3;
+}
+
+.content-maybe {
+	background-color: #FF7F11;
+}
+
+.text-stroke-maybe {
+	-webkit-text-stroke-color: #E4E6C3;
+}
+
+.bkgd-yes {
+	background: #2E933C;
+	color: #261C15;
+}
+
+.content-yes {
+	background-color: #2E933C;
+}
+
+.text-stroke-yes {
+	-webkit-text-stroke-color: #261C15;
+}
+
+.bkgd-neutral {
+	background-color: #E6E6E6;
+	transition: .375s ease;
+}
+
+.content-neutral {
+	background-color: #E6E6E6;
+}
+
+.text-stroke-neutral {
+	-webkit-text-stroke-color: #1D1D1D;
+}
+
+
+/*# sourceMappingURL=/styles.8986bff4.css.map */

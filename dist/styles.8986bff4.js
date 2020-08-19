@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+})({"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -149,7 +149,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -184,12 +184,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"assets/font/font.css":[function(require,module,exports) {
+},{"./bundle-url":"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"styles.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./Kayak Sans Regular.woff":[["Kayak Sans Regular.db103799.woff","assets/font/Kayak Sans Regular.woff"],"assets/font/Kayak Sans Regular.woff"],"./Kayak Sans Regular (Italic).woff":[["Kayak Sans Regular (Italic).607c53df.woff","assets/font/Kayak Sans Regular (Italic).woff"],"assets/font/Kayak Sans Regular (Italic).woff"],"./Kayak Sans Light.woff":[["Kayak Sans Light.87b57f9e.woff","assets/font/Kayak Sans Light.woff"],"assets/font/Kayak Sans Light.woff"],"./Kayak Sans Light (Italic).woff":[["Kayak Sans Light (Italic).bc1465ab.woff","assets/font/Kayak Sans Light (Italic).woff"],"assets/font/Kayak Sans Light (Italic).woff"],"./Kayak Sans Bold.woff":[["Kayak Sans Bold.c8a2e0c5.woff","assets/font/Kayak Sans Bold.woff"],"assets/font/Kayak Sans Bold.woff"],"./Kayak Sans Bold (Italic).woff":[["Kayak Sans Bold (Italic).52b259c3.woff","assets/font/Kayak Sans Bold (Italic).woff"],"assets/font/Kayak Sans Bold (Italic).woff"],"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"_css_loader":"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -217,7 +217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55195" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -393,5 +393,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/font.2cdded9e.js.map
+},{}]},{},["../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/styles.8986bff4.js.map

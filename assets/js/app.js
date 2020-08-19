@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 var riverInfo = [
   {
     "river": "Cape Fear River",
@@ -150,7 +152,7 @@ function abbrState(input, to){
 
   if (to == 'abbr'){
       input = input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-      for(i = 0; i < states.length; i++){
+      for(var i = 0; i < states.length; i++){
           if(states[i][0] == input){
               return(states[i][1]);
           }
@@ -263,7 +265,7 @@ $('.cta-wrapper').click(async function() {
 // Grab the site data
 var selectedRiverIndex = parseInt($('.selected-river').attr('data-index'));
 var siteCode = riverInfo[selectedRiverIndex].siteID;
-selectedRiver = riverInfo[selectedRiverIndex].river;
+var selectedRiver = riverInfo[selectedRiverIndex].river;
 // Name of the real-time cookie for the current site
 var currentSiteCookieName = "canitube_" + selectedRiver + "_currentData";
 // Name of the real-time height cookie
