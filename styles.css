@@ -440,6 +440,106 @@ h5 {
 	overflow: hidden;
 }
 
+/* Range Styles */
+
+.range-content {
+	position: absolute;
+	bottom: 0px;
+	left: 50%;
+	width: 90%;
+	transform: translate(-50%, 50%);
+}
+
+.range-content > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.border-text {
+	font-size: 16px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+	padding: 8px;
+	overflow: hidden;
+	text-align: center;
+	transform: scaleX(0);
+}
+
+.border-text > .container {
+	transform: translate(0%, -150%);
+}
+
+.range-wrapper {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	width: 75%;
+	height: 42px;
+}
+
+.measurement-number {
+	position: absolute;
+	bottom: 0px;
+	font-size: 12px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 2px;
+	transform: translate(0%, 150%);
+}
+
+.point-indicator {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	background-position: center centeer;
+	background-repeat: no-repeat;
+	background-size: contain;
+	transform: translate(0%, -150%);
+}
+
+#range-indicator {
+	top: 0;
+}
+
+#range-label {
+	padding: 3px;
+}
+
+/* Height Styles */
+
+.height-content {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translate(50%, -50%) rotate(-90deg);
+}
+
+.height-content > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.height-wrapper {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	width: 75%;
+	height: 42px;
+}
+
+#height-indicator {
+	top: 0;
+}
+
+#height-label {
+	padding: 3px;
+}
+
 /* Answer State Styles */
 
 .bkgd-no, .bkgd-maybe, .bkgd-yes {

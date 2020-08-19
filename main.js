@@ -4,8 +4,12 @@ var riverInfo = [
         "siteID": "02102500",
         "state": "North Carolina",
         "safe_range": {
-          "min": 400,
-          "max": 1000
+          "min": 500,
+          "max": 1250
+        },
+        "height_range": {
+          "min": 2,
+          "max": 7
         }
       },
       {
@@ -15,6 +19,10 @@ var riverInfo = [
         "safe_range": {
           "min": 2500,
           "max": 3600
+        },
+        "height_range": {
+          "min": 2,
+          "max": 8
         }
       },
       {
@@ -24,6 +32,10 @@ var riverInfo = [
         "safe_range": {
           "min": 1000,
           "max": 4000
+        },
+        "height_range": {
+          "min": 2.5,
+          "max": 7
         }
       },
       {
@@ -33,6 +45,10 @@ var riverInfo = [
         "safe_range": {
           "min": 250,
           "max": 800
+        },
+        "height_range": {
+          "min": 1,
+          "max": 10
         }
       },
       {
@@ -42,6 +58,10 @@ var riverInfo = [
         "safe_range": {
           "min": 500,
           "max": 2900
+        },
+        "height_range": {
+          "min": 1.5,
+          "max": 4
         }
       },
       {
@@ -51,6 +71,10 @@ var riverInfo = [
         "safe_range": {
           "min": 400,
           "max": 1000
+        },
+        "height_range": {
+          "min": 1,
+          "max": 4.5
         }
       },
       {
@@ -60,6 +84,10 @@ var riverInfo = [
         "safe_range": {
           "min": 600,
           "max": 1100
+        },
+        "height_range": {
+          "min": 2,
+          "max": 6
         }
       }
     ];
@@ -233,6 +261,8 @@ var riverInfo = [
     selectedRiver = riverInfo[selectedRiverIndex].river;
     // Name of the real-time cookie for the current site
     var currentSiteCookieName = "canitube_" + selectedRiver + "_currentData";
+    // Name of the real-time height cookie
+    var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentHeight";
 
     // Delete the item list
     $('.item-list').remove();
@@ -256,11 +286,17 @@ var riverInfo = [
     loadingStage();
     var realTimeFlowValue = await fetchRealTimeData(siteCode, currentSiteCookieName);
 
+    // Grab the real-time height data
+    var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCookieName);
+
     // Finish the load-bar
     $('#fill-title').removeClass('load-bar').addClass('load-bar-finish');
 
     // Begin styling and transitioning the page
     var currentSafeRange = riverInfo[selectedRiverIndex].safe_range;
+
+    // Calculate the look of the height range
+    var currentHeightRange = riverInfo[selectedRiverIndex].height_range;
 
     // Test if the current flow value is within the safe range
     if(realTimeFlowValue > (currentSafeRange.min - 1) && realTimeFlowValue < (currentSafeRange.max + 1)) {
@@ -274,16 +310,16 @@ var riverInfo = [
       if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
         // Today is safe
         console.log("Today is safe!");
-        formatPage("yes", realTimeFlowValue, currentSafeRange);
+        formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
       } else {
         // Today is maybe safe
         console.log("Today is maybe safe?");
-        formatPage("maybe", realTimeFlowValue, currentSafeRange);
+        formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
       }
     } else {
       // Today is not safe
       console.log("Today is not safe!");
-      formatPage("no", realTimeFlowValue, currentSafeRange);
+      formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
     }
   });
 
@@ -469,7 +505,7 @@ var riverInfo = [
           dataType: 'JSON',
           data: '',
           success: function(json){
-            console.log("Data Retreived!");
+            console.log("Real-Time Data Retreived!");
             // Here, convert the data to the app-ready format
             var appReadyData = parseRealTimeJSON(json);
             // Store the app-ready data in a cookie that expires in 1 hour
@@ -508,6 +544,49 @@ var riverInfo = [
     return dataFlow;
   }
 
+  // This function fetches the current data
+  function fetchHeightData(site, cookieName) {
+    var dataCookiePresent = checkCookie(cookieName);
+
+    if(dataCookiePresent == false) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=00065&siteStatus=active",
+          dataType: 'JSON',
+          data: '',
+          success: function(json){
+            console.log("Height Data Retreived!");
+            // Here, convert the data to the app-ready format
+            var appReadyData = parseRealTimeJSON(json);
+            // Store the app-ready data in a cookie that expires in 1 hour
+            var now = new Date();
+            var time = now.getTime();
+            time += 3600 * 1000;
+            var expDate = now.setTime(time);
+            // Write the cookie with the app-ready data
+            writeCookie(cookieName, appReadyData, expDate);
+
+            // Return the app-ready data
+            resolve(parseInt(appReadyData));
+           },
+          error : function(XMLHttpRequest, textStatus, errorThrown) {
+             console.log("Error: AJAX request failed...");
+             console.log(textStatus);
+             console.log(errorThrown);
+          }
+        });
+      })
+    } else {
+      // Note the non-expired data
+      console.log("Data Already Present!");
+      // Here, convert the data to the app-ready format
+      var appReadyData = getCookie(cookieName);
+
+      // Return the app-ready data
+      return parseInt(appReadyData);
+    }
+  }
+
   // This function transitions from the set-up selection stage to the loading stage
   function loadingStage() {
     gsap.timeline()
@@ -526,7 +605,7 @@ var riverInfo = [
   }
 
   // This function formats the page based on the determined safety
-  function formatPage(state, currentFlowValue, safeRange) {
+  function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange) {
     // This object contains the information to determine the formatting of each global style
     var formatChoices = {
       'yes': {
@@ -546,20 +625,73 @@ var riverInfo = [
       }
     }
 
+    // Fill in the border edge content
+    $('#low-range').text(safeRange.min);
+    $('#high-range').text(safeRange.max);
+    // Set the range scale and position the low, high, and indicator
+    if(currentFlowValue > safeRange.max) {
+      var maxScale = currentFlowValue*1.25;
+    } else {
+      var maxScale = safeRange.max*1.25;
+    }
+    var lowLeft = (safeRange.min*100)/maxScale;
+    var highLeft = (safeRange.max*100)/maxScale;
+    var indicatorLeft = (currentFlowValue*100)/maxScale;
+    $('#low-range').css('left', lowLeft + '%');
+    $('#high-range').css('left', highLeft + '%');
+    $('#range-indicator').css('left', indicatorLeft + '%');
+
+    // Height content
+    $('#low-height').text(heightRange.min);
+    $('#high-height').text(heightRange.max);
+
+    // Set the height scale and position the low, high, and indicator
+    var heightRangeSize = heightRange.max - heightRange.min;
+    if(heightValue > heightRange.max) {
+      var maxHeightScale = heightValue + (heightRangeSize*.25);
+      var minHeightScale = 0;
+    } else {
+      var maxHeightScale = heightRange.max + (heightRangeSize*.25);
+      var minHeightScale = 0;
+    }
+    var lowHeightLeft = remapNumber(heightRange.min, minHeightScale, maxHeightScale, 0, 100);
+    var highHeightLeft = remapNumber(heightRange.max, minHeightScale, maxHeightScale, 0, 100);
+    var indicatorHeightLeft = remapNumber(heightValue, minHeightScale, maxHeightScale, 0, 100);
+    $('#low-height').css('left', lowHeightLeft + '%');
+    $('#high-height').css('left', highHeightLeft + '%');
+    $('#height-indicator').css('left', indicatorHeightLeft + '%');
+
+    // Set all point-indicators to the correct color svg
+    $('.point-indicator').css('background-image', 'url(assets/img/indicator-arrow-' + state + '.svg)');
+
     // Begin the transition to the final state
     gsap.timeline()
       .delay(.25)
+      .call(createAnswer, [state, currentFlowValue])
+      .set('#answer > .container', {y: '150%', color: formatChoices[state].text_color})
+      .set('#current-flow > .container', {y: '150%', color: formatChoices[state].text_color})
+      .set('.measurement-number', {color: formatChoices[state].text_color})
+      .set('.border-text > .container', {color: formatChoices[state].text_color})
+      .set('.border-text', {background: formatChoices[state].background_color})
       .to('body', {duration: 1, background: formatChoices[state].background_color})
       .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-125, opacity: 1}, '-=.25')
       .to('#fill-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-38%', color: formatChoices[state].text_color}, '-=.75')
       .to('#stroke-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-38%', textStrokeColor: formatChoices[state].stroke_color}, '-=.75')
       .to('.subtitle', {duration: .75, ease: 'power2.inOut', top: (75 - (($('#fill-title').height()*2.25)*.25)), color: formatChoices[state].text_color}, '-=.75')
       .to('.border-content', {duration: .75, borderColor: formatChoices[state].stroke_color}, '-=.75')
-      .call(createAnswer, [state, currentFlowValue])
-      .set('#answer > .container', {y: '150%', color: formatChoices[state].text_color})
-      .set('#current-flow > .container', {y: '150%', color: formatChoices[state].text_color})
-      .to('#answer > .container', {duration: .75, ease: 'power2.inOut', y: '0%'})
+      .to('#answer > .container', {duration: .75, ease: 'power2.inOut', y: '0%'}, '-=.75')
       .to('#current-flow > .container', {duration: .5, ease: 'power2.inOut', y: '0%'}, '-=.375')
+      .to('.range-content > .container > .border-text', {duration: .375, ease: 'power2.inOut', scaleX: 1}, '-=.25')
+      .to('#range-label > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
+      .to('.range-wrapper > .container > .measurement-number', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
+      .to('#range-indicator', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
+      .to('#range-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
+      .set('.height-content', {width: (($(window).height()-125)*.9)})
+      .to('.height-content > .container > .border-text', {duration: .375, ease: 'power2.inOut', scaleX: 1}, "-=.25")
+      .to('#height-label > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
+      .to('.height-wrapper > .container > .measurement-number', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
+      .to('#height-indicator', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
+      .to('#height-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
   }
 
   // This function populates the answer and flow values
@@ -567,6 +699,11 @@ var riverInfo = [
     var flowText = 'Current Flow: ' + currentFlow + 'FT<span class="superscript">3</span>/S';
     $('#current-flow > .container').append(flowText).css('font-size', '18px').css('letter-spacing', '2px');
     $('#answer > .container').text(state.toUpperCase());
+  }
+
+  // This function returns a remapped a number from an old value range to a new value range
+  function remapNumber(input, low1, high1, low2, high2) {
+    return (low2 + (input - low1) * (high2 - low2) / (high1 - low1))
   }
 
   // This function writes a cookie ith a name, data, and a number of days before expiring
