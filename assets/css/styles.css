@@ -220,7 +220,7 @@ h5 {
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url(assets/img/selector-arrow.svg);
+	background-image: url(../img/selector-arrow.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -236,7 +236,7 @@ h5 {
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url(assets/img/selector-arrow.svg);
+	background-image: url(../img/selector-arrow.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -252,7 +252,7 @@ h5 {
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url(assets/img/selector-arrow.svg);
+	background-image: url(../img/selector-arrow.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;

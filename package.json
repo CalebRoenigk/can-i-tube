@@ -1,0 +1,21 @@
+{
+  "name": "can-i-tube",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:CalebRoenigk/can-i-tube.git",
+  "author": "Chris Weissenberger <chris@Chris-Weissenberger.local>",
+  "license": "MIT",
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
+  "dependencies": {
+    "jquery": "^3.5.1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  }
+}
