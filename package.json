@@ -17,8 +17,8 @@
     "parcel-bundler": "^1.12.4"
   },
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build index.html",
+    "dev": "parcel index.html --out-dir docs",
+    "build": "parcel build index.html --out-dir docs",
     "predeploy": "rm -rf dist && parcel build index.html",
     "deploy": "gh-pages -d dist"
   }
