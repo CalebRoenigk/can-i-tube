@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import moment from 'moment';
 
 var riverInfo = [
   {
