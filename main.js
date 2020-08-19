@@ -215,7 +215,7 @@ var riverInfo = [
 
   // This function closes the menu if the user clicks anywhere outside of the menu
   $(document).click(function (e) {
-    if ($(e.target).closest("#dropdown-wrapper").length === 0) {
+    if ($(e.target).closest("#dropdown-wrapper").length === 0 && $('#answer > .container').text().trim().length < 1) {
       $('#dropdown-wrapper').attr('data-open', 'false');
       $('#dropdown-wrapper').height($('.selected-river').height()+16).width((($('.selected-river').text().length)+3) + 'ch');
       $('body').css('background-color', '');
