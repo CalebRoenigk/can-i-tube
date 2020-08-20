@@ -386,11 +386,6 @@ do {
   }
 } while (percentDone < 100);
 
-// This function returns a random integer between a min and max value
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 // This function generates a keyframe line based on input values
 function progressScale(scalePercent, previousScale, startTime, endTime, totalTime) {
   var easeChoice = getRandomInt(0,3);
@@ -500,6 +495,11 @@ var textLoadClass = '.text-load::after {\n\tposition: relative;\n\tdisplay: bloc
 var textFinishLoadClass = '.text-load-finish::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 100%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}';
 
 $('head').append('<style type="text/css">\n' + keyframes.join('\n') + '\n' + textKeyframes.join('\n') + '\n' + barLoadClass + '\n' + barFinishLoadClass + '\n' + textLoadClass + '\n' + textFinishLoadClass + '\n</style>');
+}
+
+// This function returns a random integer between a min and max value
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // This function fetches the current data
