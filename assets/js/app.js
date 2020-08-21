@@ -603,7 +603,7 @@ gsap.timeline()
   .to('.central-content', {duration: .01, delay: .375, display: 'none'})
   .call(removeElement, [".central-content"])
   .call(removeElement, [".cta-wrapper"])
-  .to('.border-content', {duration: .6, ease: 'power2.inOut', width: $(window).width()-125, opacity: 1})
+  .to('.border-content', {duration: .6, ease: 'power2.inOut', width: $(window).width()-150, opacity: 1})
   .to('#left-subtitle', {duration: .6, ease: 'power2.inOut', left: subtitleSidePosition($('#left-subtitle').width(), $('#fill-title').width(), .625, 2.25, 20), scale: .625, x: '-50%'}, '-=.6')
   .to('#right-subtitle', {duration: .6, ease: 'power2.inOut', right: subtitleSidePosition($('#right-subtitle').width(), $('#fill-title').width(), .625, 2.25, 20), scale: .625, x: '50%'}, '-=.6')
   .to('#fill-title', {duration: .6, ease: 'power2.inOut', top: '50%', left: '50%', x: '-50%', y: '-50%', scale: 2.25, textStroke: '0px rgba(29,29,29,1)', letterSpacing: 2, color: 'rgba(29, 29, 29, 0)'}, '-=.6')
@@ -672,20 +672,30 @@ $('#height-indicator').css('left', indicatorHeightLeft + '%');
 // Set all point-indicators to the correct color svg
 $('.point-indicator').css('background-image', 'url(assets/img/indicator-arrow-' + state + '.svg)');
 
+// Set the display option to default
+$('#icon-translation').css('transform', 'translate(3.2779px, 0px)');
+$('#icon-sun').css('opacity', '0');
+$('#icon-i').css('opacity', '0');
+
 // Begin the transition to the final state
 gsap.timeline()
   .delay(.25)
   .call(createAnswer, [state, currentFlowValue])
+  .set('.border-content', {zIndex: 100})
   .set('#answer > .container', {y: '150%', color: formatChoices[state].text_color})
   .set('#current-flow > .container', {y: '150%', color: formatChoices[state].text_color})
   .set('.measurement-number', {color: formatChoices[state].text_color})
   .set('.border-text > .container', {color: formatChoices[state].text_color})
   .set('.border-text', {background: formatChoices[state].background_color})
+  .set('.settings-text', {color: formatChoices[state].text_color})
+  .set('svg > .svg-stroke-style', {stroke: formatChoices[state].stroke_color})
+  .set('svg .svg-fill-style', {fill: formatChoices[state].stroke_color})
   .to('body', {duration: 1, background: formatChoices[state].background_color})
-  .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-125, opacity: 1}, '-=.25')
-  .to('#fill-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-38%', color: formatChoices[state].text_color}, '-=.75')
-  .to('#stroke-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-38%', textStrokeColor: formatChoices[state].stroke_color}, '-=.75')
-  .to('.subtitle', {duration: .75, ease: 'power2.inOut', top: (75 - (($('#fill-title').height()*2.25)*.25)), color: formatChoices[state].text_color}, '-=.75')
+  .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-150, opacity: 1}, '-=.25')
+  .to('.footer-text', {duration: .75, ease: 'power2.inOut', color: formatChoices[state].text_color}, '-=.75')
+  .to('#fill-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', color: formatChoices[state].text_color}, '-=.75')
+  .to('#stroke-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', textStrokeColor: formatChoices[state].stroke_color}, '-=.75')
+  .to('.subtitle', {duration: .75, ease: 'power2.inOut', top: (75 - (($('#fill-title').height()*2.25)*.25)/2), color: formatChoices[state].text_color}, '-=.75')
   .to('.border-content', {duration: .75, borderColor: formatChoices[state].stroke_color}, '-=.75')
   .to('#answer > .container', {duration: .75, ease: 'power2.inOut', y: '0%'}, '-=.75')
   .to('#current-flow > .container', {duration: .5, ease: 'power2.inOut', y: '0%'}, '-=.375')
@@ -694,12 +704,15 @@ gsap.timeline()
   .to('.range-wrapper > .container > .measurement-number', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
   .to('#range-indicator', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
   .to('#range-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
-  .set('.height-content', {width: (($(window).height()-125)*.9)})
+  .set('.height-content', {width: (($(window).height()-150)*.9)})
   .to('.height-content > .container > .border-text', {duration: .375, ease: 'power2.inOut', scaleX: 1}, "-=.25")
   .to('#height-label > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
   .to('.height-wrapper > .container > .measurement-number', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
   .to('#height-indicator', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
   .to('#height-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
+  .from('#settings-cog', {duration: 1.25, ease: 'power2.inOut', rotation: -720},  "-=.375")
+  .to('#settings-cog', {duration: .375, ease: 'linear', opacity: 1},  "-=1")
+
 }
 
 // This function populates the answer and flow values
@@ -750,3 +763,121 @@ if (cookieCheck == "") {
   }
 }
 }
+
+// This function draws the animated river
+function drawRiverFlow(speed, height, turbulance, resolution) {
+  var xAxis = [];
+  // Create a number of X points
+  for(var i=0; i < ($(window).width()/resolution)+2; i++) {
+    xAxis.push(i*resolution);
+  }
+
+  // SVG animation function
+  function animateWater(iterations) {
+    var masterPhase = new Date().getTime()/400;
+    var waveHeight = [4/30, 3/30, 3/30];
+    var waveWidth = [2, 50, 200];
+    var waveSpeed = [.25, .738, .61];
+    var wavePhase = [2, 1.375, 2.829];
+    var waveShift = 400;
+    var clamper = 50;
+
+    // Waves
+    var points = xAxis.map(x => {
+      var y = (Math.round((((Math.sin(x+(wavePhase[0]*waveSpeed[0]*masterPhase))*waveWidth[0])*waveHeight[0])+waveShift))/clamper)*(Math.round((((Math.sin(x+(wavePhase[1]*waveSpeed[1]*masterPhase))*waveWidth[1])*waveHeight[1])+waveShift))/clamper)*(Math.round((((Math.sin(x+(wavePhase[2]*waveSpeed[2]*masterPhase))*waveWidth[2])*waveHeight[2])+waveShift))/clamper);
+      return [x,y]
+    })
+
+    // Create the SVG path
+    var path = "M0,2000 " + points.map(p => {
+      return p[0] + "," + p[1];
+    }).join(" L");
+
+    $('svg > path').attr('d', path + " L" + $(window).width()+25 + ",2000");
+    requestAnimationFrame(animateWater);
+  }
+
+  animateWater(turbulance);
+}
+
+// Add click event to Settings Icon
+document.getElementById("settings-cog").addEventListener("click", function(){
+  toggleSettings();
+});
+
+// Add click event to each settings-item that prevents them from triggering the parent click event
+document.querySelectorAll(".settings-item > .container").forEach(item => {
+  item.addEventListener("click", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+  });
+})
+
+// Add click event that changes the performance settings
+document.getElementById("settings-performance").addEventListener("click", function(){
+  togglePerformance();
+});
+
+// This function toggles the settings open and closed
+function toggleSettings() {
+  // The animation timeline
+  var settingsAnimationOpen = gsap.timeline({paused: true})
+    .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '120deg'})
+    .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25')
+    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25');
+
+  // The animation timeline
+  var settingsAnimationClose = gsap.timeline({paused: true})
+    .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '0deg'})
+    .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25')
+    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25');
+
+  // If the settings are open, reverse the timeline, else play the timeline
+  if($('.settings').attr('data-expanded') == 'true') {
+    $('.settings').attr('data-expanded', 'false');
+    settingsAnimationClose.play();
+  } else {
+    $('.settings').attr('data-expanded', 'true');
+    settingsAnimationOpen.play();
+  }
+}
+
+// This function toggles the performance settings
+function togglePerformance() {
+  var t1 = gsap.set('#performance-svg > path', {points: "6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8"});
+  t1.play();
+  // // The animation timelines for each toggle state
+  // // Smooth > Rough
+  // var performanceIconToRough = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8'});
+  //
+  // // Rough > None
+  // var performanceIconToNone = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 14 7.6 14 9.2 14 10.8 14 12.4 14 14 14 15.6 14 17.2 14 18.8 14 20.4 14 22 14'});
+  //
+  // // Rough > None
+  // var performanceIconToSmooth = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 22 7.6 20.4 9.2 18.8 10.8 17.2 12.4 15.6 14 14 15.6 12.4 17.2 10.8 18.8 9.2 20.4 7.6 22 6'});
+  //
+  // // Toggle to ...
+  // if($('#performance-svg').attr('data-performance') == 'smooth') {
+  //   // Rough
+  //   console.log('To Rough')
+  //   $('#performance-svg').attr('data-performance', 'rough');
+  //   performanceIconToRough.play();
+  // } else if($('#performance-svg').attr('data-performance') == 'rough') {
+  //   // None
+  //   console.log('To None')
+  //   $('#performance-svg').attr('data-performance', 'none');
+  //   performanceIconToNone.play();
+  // } else {
+  //   // Smooth
+  //   console.log('To Smooth')
+  //   $('#performance-svg').attr('data-performance', 'smooth');
+  //   performanceIconToSmooth.play();
+  // }
+}
+
+// $(document).ready(function() {
+//   drawRiverFlow(1, 1, 3, 250);
+// });

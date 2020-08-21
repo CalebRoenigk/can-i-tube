@@ -107,6 +107,18 @@ h5 {
 	height: 100%;
 }
 
+a{
+  color: inherit;
+}
+
+a:visited{
+  color:inherit;
+}
+
+a:hover{
+  color:inherit;
+}
+
 /* Dropdown */
 
 .content-question, #dropdown-wrapper {
@@ -596,4 +608,85 @@ h5 {
 
 .text-stroke-neutral {
 	-webkit-text-stroke-color: #1D1D1D;
+}
+
+/* Settings */
+
+.settings {
+	position: absolute;
+	bottom: 32px;
+	left: 32px;
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.settings > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	z-index: 5;
+}
+
+#settings-cog {
+	position: relative;
+	width: 24px;
+	height: 24px;
+	margin-right: 12px;
+}
+
+.settings-item {
+	margin-right: 24px;
+	overflow-x: hidden;
+}
+
+.settings-item > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	pointer-events: none;
+}
+
+.settings-item > .container > svg {
+	width: 24px;
+	height: 24px;
+	margin-left: 8px;
+}
+
+.settings-text {
+	font-size: 12px;
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+	letter-spacing: 0px;
+	transform: translate(0%, 25%);
+}
+
+/* Footer */
+
+.footer {
+	position: absolute;
+	bottom: 25px;
+	left: 50%;
+	width: 100%;
+	transform: translate(-50%, 0%);
+	padding-left: 75px;
+	padding-right: 75px;
+	box-sizing: border-box;
+}
+
+.footer > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+.footer-text {
+	font-size: 11px;
+	letter-spacing: 1px;
+	text-align: center;
 }

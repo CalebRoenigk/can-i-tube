@@ -17411,7 +17411,7 @@ function loadingStage() {
   }).call(removeElement, [".central-content"]).call(removeElement, [".cta-wrapper"]).to('.border-content', {
     duration: .6,
     ease: 'power2.inOut',
-    width: (0, _jquery.default)(window).width() - 125,
+    width: (0, _jquery.default)(window).width() - 150,
     opacity: 1
   }).to('#left-subtitle', {
     duration: .6,
@@ -17507,9 +17507,15 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
   (0, _jquery.default)('#high-height').css('left', highHeightLeft + '%');
   (0, _jquery.default)('#height-indicator').css('left', indicatorHeightLeft + '%'); // Set all point-indicators to the correct color svg
 
-  (0, _jquery.default)('.point-indicator').css('background-image', 'url(assets/img/indicator-arrow-' + state + '.svg)'); // Begin the transition to the final state
+  (0, _jquery.default)('.point-indicator').css('background-image', 'url(assets/img/indicator-arrow-' + state + '.svg)'); // Set the display option to default
 
-  gsap.timeline().delay(.25).call(createAnswer, [state, currentFlowValue]).set('#answer > .container', {
+  (0, _jquery.default)('#icon-translation').css('transform', 'translate(3.2779px, 0px)');
+  (0, _jquery.default)('#icon-sun').css('opacity', '0');
+  (0, _jquery.default)('#icon-i').css('opacity', '0'); // Begin the transition to the final state
+
+  gsap.timeline().delay(.25).call(createAnswer, [state, currentFlowValue]).set('.border-content', {
+    zIndex: 100
+  }).set('#answer > .container', {
     y: '150%',
     color: formatChoices[state].text_color
   }).set('#current-flow > .container', {
@@ -17521,32 +17527,42 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     color: formatChoices[state].text_color
   }).set('.border-text', {
     background: formatChoices[state].background_color
+  }).set('.settings-text', {
+    color: formatChoices[state].text_color
+  }).set('svg > .svg-stroke-style', {
+    stroke: formatChoices[state].stroke_color
+  }).set('svg .svg-fill-style', {
+    fill: formatChoices[state].stroke_color
   }).to('body', {
     duration: 1,
     background: formatChoices[state].background_color
   }).to('.border-content', {
     duration: .75,
     ease: 'power2.inOut',
-    height: (0, _jquery.default)(window).height() - 125,
+    height: (0, _jquery.default)(window).height() - 150,
     opacity: 1
-  }, '-=.25').to('#fill-title', {
+  }, '-=.25').to('.footer-text', {
+    duration: .75,
+    ease: 'power2.inOut',
+    color: formatChoices[state].text_color
+  }, '-=.75').to('#fill-title', {
     duration: .75,
     ease: 'power2.inOut',
     top: 75,
     x: '-50%',
-    y: '-38%',
+    y: '-25%',
     color: formatChoices[state].text_color
   }, '-=.75').to('#stroke-title', {
     duration: .75,
     ease: 'power2.inOut',
     top: 75,
     x: '-50%',
-    y: '-38%',
+    y: '-25%',
     textStrokeColor: formatChoices[state].stroke_color
   }, '-=.75').to('.subtitle', {
     duration: .75,
     ease: 'power2.inOut',
-    top: 75 - (0, _jquery.default)('#fill-title').height() * 2.25 * .25,
+    top: 75 - (0, _jquery.default)('#fill-title').height() * 2.25 * .25 / 2,
     color: formatChoices[state].text_color
   }, '-=.75').to('.border-content', {
     duration: .75,
@@ -17580,7 +17596,7 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     ease: 'power2.inOut',
     y: '0%'
   }, "-=.25").set('.height-content', {
-    width: ((0, _jquery.default)(window).height() - 125) * .9
+    width: ((0, _jquery.default)(window).height() - 150) * .9
   }).to('.height-content > .container > .border-text', {
     duration: .375,
     ease: 'power2.inOut',
@@ -17601,7 +17617,15 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     duration: .375,
     ease: 'power2.inOut',
     y: '0%'
-  }, "-=.25");
+  }, "-=.25").from('#settings-cog', {
+    duration: 1.25,
+    ease: 'power2.inOut',
+    rotation: -720
+  }, "-=.375").to('#settings-cog', {
+    duration: .375,
+    ease: 'linear',
+    opacity: 1
+  }, "-=1");
 } // This function populates the answer and flow values
 
 
@@ -17656,7 +17680,142 @@ function checkCookie(name) {
       return true;
     }
   }
-}
+} // This function draws the animated river
+
+
+function drawRiverFlow(speed, height, turbulance, resolution) {
+  var xAxis = []; // Create a number of X points
+
+  for (var i = 0; i < (0, _jquery.default)(window).width() / resolution + 2; i++) {
+    xAxis.push(i * resolution);
+  } // SVG animation function
+
+
+  function animateWater(iterations) {
+    var masterPhase = new Date().getTime() / 400;
+    var waveHeight = [4 / 30, 3 / 30, 3 / 30];
+    var waveWidth = [2, 50, 200];
+    var waveSpeed = [.25, .738, .61];
+    var wavePhase = [2, 1.375, 2.829];
+    var waveShift = 400;
+    var clamper = 50; // Waves
+
+    var points = xAxis.map(x => {
+      var y = Math.round(Math.sin(x + wavePhase[0] * waveSpeed[0] * masterPhase) * waveWidth[0] * waveHeight[0] + waveShift) / clamper * (Math.round(Math.sin(x + wavePhase[1] * waveSpeed[1] * masterPhase) * waveWidth[1] * waveHeight[1] + waveShift) / clamper) * (Math.round(Math.sin(x + wavePhase[2] * waveSpeed[2] * masterPhase) * waveWidth[2] * waveHeight[2] + waveShift) / clamper);
+      return [x, y];
+    }); // Create the SVG path
+
+    var path = "M0,2000 " + points.map(p => {
+      return p[0] + "," + p[1];
+    }).join(" L");
+    (0, _jquery.default)('svg > path').attr('d', path + " L" + (0, _jquery.default)(window).width() + 25 + ",2000");
+    requestAnimationFrame(animateWater);
+  }
+
+  animateWater(turbulance);
+} // Add click event to Settings Icon
+
+
+document.getElementById("settings-cog").addEventListener("click", function () {
+  toggleSettings();
+}); // Add click event to each settings-item that prevents them from triggering the parent click event
+
+document.querySelectorAll(".settings-item > .container").forEach(item => {
+  item.addEventListener("click", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+}); // Add click event that changes the performance settings
+
+document.getElementById("settings-performance").addEventListener("click", function () {
+  togglePerformance();
+}); // This function toggles the settings open and closed
+
+function toggleSettings() {
+  // The animation timeline
+  var settingsAnimationOpen = gsap.timeline({
+    paused: true
+  }).to('#settings-cog', {
+    duration: .375,
+    ease: 'power2.inOut',
+    rotation: '120deg'
+  }).to('#settings-performance > .container', {
+    duration: .375,
+    ease: 'power2.inOut',
+    x: '0%',
+    opacity: 1
+  }, '-=.25').to('#settings-display > .container', {
+    duration: .375,
+    ease: 'power2.inOut',
+    x: '0%',
+    opacity: 1
+  }, '-=.25'); // The animation timeline
+
+  var settingsAnimationClose = gsap.timeline({
+    paused: true
+  }).to('#settings-cog', {
+    duration: .375,
+    ease: 'power2.inOut',
+    rotation: '0deg'
+  }).to('#settings-performance > .container', {
+    duration: .375,
+    ease: 'power2.inOut',
+    x: '-25%',
+    opacity: 0
+  }, '-=.25').to('#settings-display > .container', {
+    duration: .375,
+    ease: 'power2.inOut',
+    x: '-25%',
+    opacity: 0
+  }, '-=.25'); // If the settings are open, reverse the timeline, else play the timeline
+
+  if ((0, _jquery.default)('.settings').attr('data-expanded') == 'true') {
+    (0, _jquery.default)('.settings').attr('data-expanded', 'false');
+    settingsAnimationClose.play();
+  } else {
+    (0, _jquery.default)('.settings').attr('data-expanded', 'true');
+    settingsAnimationOpen.play();
+  }
+} // This function toggles the performance settings
+
+
+function togglePerformance() {
+  var t1 = gsap.set('#performance-svg > path', {
+    points: "6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8"
+  });
+  t1.play(); // // The animation timelines for each toggle state
+  // // Smooth > Rough
+  // var performanceIconToRough = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8'});
+  //
+  // // Rough > None
+  // var performanceIconToNone = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 14 7.6 14 9.2 14 10.8 14 12.4 14 14 14 15.6 14 17.2 14 18.8 14 20.4 14 22 14'});
+  //
+  // // Rough > None
+  // var performanceIconToSmooth = gsap.timeline({paused: true})
+  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 22 7.6 20.4 9.2 18.8 10.8 17.2 12.4 15.6 14 14 15.6 12.4 17.2 10.8 18.8 9.2 20.4 7.6 22 6'});
+  //
+  // // Toggle to ...
+  // if($('#performance-svg').attr('data-performance') == 'smooth') {
+  //   // Rough
+  //   console.log('To Rough')
+  //   $('#performance-svg').attr('data-performance', 'rough');
+  //   performanceIconToRough.play();
+  // } else if($('#performance-svg').attr('data-performance') == 'rough') {
+  //   // None
+  //   console.log('To None')
+  //   $('#performance-svg').attr('data-performance', 'none');
+  //   performanceIconToNone.play();
+  // } else {
+  //   // Smooth
+  //   console.log('To Smooth')
+  //   $('#performance-svg').attr('data-performance', 'smooth');
+  //   performanceIconToSmooth.play();
+  // }
+} // $(document).ready(function() {
+//   drawRiverFlow(1, 1, 3, 250);
+// });
 },{"jquery":"node_modules/jquery/dist/jquery.js","moment":"node_modules/moment/moment.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -17685,7 +17844,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50657" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60462" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
