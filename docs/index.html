@@ -5,9 +5,6 @@
     <link rel="stylesheet" href="/font.2cdded9e.css">
 <script src="/styles.5072464b.js"></script><script src="/font.2cdded9e.js"></script></head>
 <body class="bkgd-neutral">
-  <!--<svg width="100%" height="100%" style="position: absolute; top: 0;">
-    <path d="M10,10 L50,50" fill="#1D1D1D"></path>
-  </svg>-->
   <div id="title-wrapper" style="opacity: 0;">
     <div class="container">
       <div id="left-subtitle" class="subtitle">Is The</div>
@@ -39,6 +36,14 @@
   </div>
   <div class="border-content">
     <div class="container">
+      <div class="date-content">
+        <div class="container">
+          <div class="date-mask">
+            <div class="container">
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="answer-content">
         <div class="container">
           <div id="answer">
@@ -53,16 +58,29 @@
       </div>
       <div class="range-content">
         <div class="container">
+          <div class="tooltip-cover" id="range-tooltip">
+            <div class="container">
+              <div class="tooltip-item"></div>
+            </div>
+          </div>
           <div class="border-text" id="range-label">
             <div class="container">
-              Safe Range
+              <div>Safe Range</div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="5.3" fill="none" stroke="#1D1D1D" stroke-miterlimit="10" class="svg-stroke-style"></circle>
+                <path d="M8 5.5c.5 0 .9.1 1.1.4.3.3.5.7.5 1.1 0 .4-.1.7-.3 1-.3.2-.6.4-1 .4V9h-.6V7.8H8c.2 0 .4 0 .6-.1.2-.2.3-.4.3-.7s-.1-.5-.3-.6c-.2-.1-.4-.2-.6-.2-.2 0-.4 0-.6.1-.2.2-.3.4-.3.7l-.7-.1c0-.4.2-.8.4-1 .4-.2.7-.4 1.2-.4zm0 4.2c.1 0 .2 0 .3.1.1.1.1.2.1.3 0 .1 0 .2-.1.3-.1.1-.2.1-.3.1-.1 0-.2 0-.3-.1-.1-.1-.1-.2-.1-.3 0-.1 0-.2.1-.3.1-.1.2-.1.3-.1z" fill="#1D1D1D" style="transform: scale(1.15); transform-origin: center center;" class="svg-fill-style"></path>
+              </svg>
             </div>
           </div>
           <div class="range-wrapper">
             <div class="container">
               <div class="measurement-number" id="low-range"></div>
               <div class="measurement-number" id="high-range"></div>
-              <div class="point-indicator" id="range-indicator"></div>
+              <div class="point-indicator" id="range-indicator">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M11.8 18.8l8-13.9h-16l8 13.9z" fill="#1D1D1D"></path>
+                </svg>
+              </div>
             </div>
           </div>
           <div class="border-text" id="range-unit">
@@ -83,7 +101,11 @@
             <div class="container">
               <div class="measurement-number" id="low-height"></div>
               <div class="measurement-number" id="high-height"></div>
-              <div class="point-indicator" id="height-indicator"></div>
+              <div class="point-indicator" id="height-indicator">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M11.8 18.8l8-13.9h-16l8 13.9z" fill="#1D1D1D"></path>
+                </svg>
+              </div>
             </div>
           </div>
           <div class="border-text" id="height-unit">
@@ -103,8 +125,8 @@
               <div class="settings-text">
                 Performance
               </div>
-              <svg version="1.1" id="performance-svg" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 28 28" xml:space="preserve" data-performance="smooth">
-                <path d="M6 22l1.6-1.6 1.6-1.6 1.6-1.6 1.6-1.6L14 14l1.6-1.6 1.6-1.6 1.6-1.6 1.6-1.6L22 6" fill="none" stroke="#1D1D1D" stroke-miterlimit="10" class="svg-stroke-style" id="points1"></path>
+              <svg version="1.1" id="performance-svg" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 28 28" xml:space="preserve" data-performance="smooth" data-resolution="25">
+                <polyline points="6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6" fill="none" stroke="#1D1D1D" stroke-miterlimit="10" class="svg-stroke-style" style="transition: .25s ease;"></polyline>
                 <!--<polyline class="st0" points="6.9,22.8 6.9,19.6 10.1,19.6 10.1,16.4 13.3,16.4 13.3,13.2 16.5,13.2 16.5,10 19.7,10 19.7,6.8 22.9,6.8"/>  data-performance="rough"-->
                 <!--<polyline class="st0" points="6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14"/>  data-performance="none"-->
                 <rect x="2" y="2" width="24" height="24" fill="none" stroke="#1D1D1D" stroke-miterlimit="10" class="svg-stroke-style"></rect>
@@ -151,6 +173,18 @@
           </div>
         </div>
       </div>
+      <svg id="background-wave" data-speed="1" data-height="-25">
+        <mask xmlns="http://www.w3.org/2000/svg" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%" id="wave-mask">
+        	<g>
+        		<linearGradient id="wave-mask-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="12.5%" x2="0" y2="100%">
+        			<stop offset="0" style="stop-color:#FFFFFF"></stop>
+        			<stop offset="1" style="stop-color:#000000"></stop>
+        		</linearGradient>
+        		<rect width="100%" height="100%" fill="url(#wave-mask-gradient)"></rect>
+        	</g>
+        </mask>
+        <path d="M10,10 L50,50" mask="url(#wave-mask)" fill="#1D1D1D"></path>
+      </svg>
     </div>
   </div>
   <div id="stroke-title" class="main-title" style="opacity: 0;"></div>

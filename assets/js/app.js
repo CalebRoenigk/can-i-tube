@@ -10,6 +10,10 @@ var riverInfo = [
       "min": 500,
       "max": 1250
     },
+    "flow_range_source": {
+      "link": "https://capefearadventures.com/cape-fear-river-info/water-levels",
+      "name": "Cape Fear Adventures"
+    },
     "height_range": {
       "min": 2,
       "max": 7
@@ -22,6 +26,10 @@ var riverInfo = [
     "safe_range": {
       "min": 2500,
       "max": 3600
+    },
+    "flow_range_source": {
+      "link": "https://rockinriveradventures.com/river-levels/",
+      "name": "Rockin River Adventures"
     },
     "height_range": {
       "min": 2,
@@ -36,6 +44,10 @@ var riverInfo = [
       "min": 1000,
       "max": 4000
     },
+    "flow_range_source": {
+      "link": "https://palmettooutdoor.com/faq-page",
+      "name": "Palmettoo Outdoor"
+    },
     "height_range": {
       "min": 2.5,
       "max": 7
@@ -48,6 +60,10 @@ var riverInfo = [
     "safe_range": {
       "min": 250,
       "max": 800
+    },
+    "flow_range_source": {
+      "link": "https://waterdata.usgs.gov/usa/nwis/uv?site_no=02071000",
+      "name": "Estimation based on averages from USGS"
     },
     "height_range": {
       "min": 1,
@@ -62,6 +78,10 @@ var riverInfo = [
       "min": 500,
       "max": 2900
     },
+    "flow_range_source": {
+      "link": "https://www.frenchbroadoutfitters.com/river-flow-charts/",
+      "name": "French Broad Outfitters"
+    },
     "height_range": {
       "min": 1.5,
       "max": 4
@@ -75,6 +95,10 @@ var riverInfo = [
       "min": 400,
       "max": 1000
     },
+    "flow_range_source": {
+      "link": "https://www.ncparks.gov/new-river-state-park/home",
+      "name": "New River State Park"
+    },
     "height_range": {
       "min": 1,
       "max": 4.5
@@ -86,7 +110,11 @@ var riverInfo = [
     "state": "South Carolina",
     "safe_range": {
       "min": 600,
-      "max": 1100
+      "max": 1300
+    },
+    "flow_range_source": {
+      "link": "https://www.dominionenergy.com/lakes-and-recreation/lower-saluda-river-sc",
+      "name": "Dominion Energy"
     },
     "height_range": {
       "min": 2,
@@ -181,7 +209,6 @@ function generateSelectionMenu() {
       }
     }
   }
-  console.log(selectionGroups);
 
   // Iterate over each selection group, placing the group in the item-list
   for(var i=0; i < selectionGroups.length; i++) {
@@ -290,6 +317,14 @@ $('#stroke-title').text($('.selected-river').text()).css('top', $('.selected-riv
 // Animate out the dropdown arrow and CTA
 $('.cta-mask > .container').css('transform', 'translateY(125%)');
 $('#dropdown-wrapper').attr('data-open', '').attr('data-animating', 'true');
+
+// Fill in today's date
+$('.date-mask > .container').text(moment().format("MMM Do"));
+
+// Fill in the range tooltip text
+var rangeTooltip = 'This range should only be used as a rough estimate. Always check\nwith local outfitters or state/national parks before visiting.\n';
+$('#range-tooltip > .container > .tooltip-item').text(rangeTooltip).append('<span class="tooltip-subtext">This data was sourced from: <a href="' + riverInfo[selectedRiverIndex].flow_range_source.link + '" target="_blank">' + riverInfo[selectedRiverIndex].flow_range_source.name + '</a></span>');
+
 // Start the call to the USGS after animating to the loading phase
 loadingStage();
 var realTimeFlowValue = await fetchRealTimeData(siteCode, currentSiteCookieName);
@@ -517,12 +552,8 @@ if(dataCookiePresent == false) {
         // Here, convert the data to the app-ready format
         var appReadyData = parseRealTimeJSON(json);
         // Store the app-ready data in a cookie that expires in 1 hour
-        var now = new Date();
-        var time = now.getTime();
-        time += 3600 * 1000;
-        var expDate = now.setTime(time);
         // Write the cookie with the app-ready data
-        writeCookie(cookieName, appReadyData, expDate);
+        writeCookie(cookieName, appReadyData, 1);
 
         // Return the app-ready data
         resolve(parseInt(appReadyData));
@@ -567,12 +598,8 @@ if(dataCookiePresent == false) {
         // Here, convert the data to the app-ready format
         var appReadyData = parseRealTimeJSON(json);
         // Store the app-ready data in a cookie that expires in 1 hour
-        var now = new Date();
-        var time = now.getTime();
-        time += 3600 * 1000;
-        var expDate = now.setTime(time);
         // Write the cookie with the app-ready data
-        writeCookie(cookieName, appReadyData, expDate);
+        writeCookie(cookieName, appReadyData, 1);
 
         // Return the app-ready data
         resolve(parseInt(appReadyData));
@@ -668,14 +695,16 @@ var indicatorHeightLeft = remapNumber(heightValue, minHeightScale, maxHeightScal
 $('#low-height').css('left', lowHeightLeft + '%');
 $('#high-height').css('left', highHeightLeft + '%');
 $('#height-indicator').css('left', indicatorHeightLeft + '%');
-
-// Set all point-indicators to the correct color svg
-$('.point-indicator').css('background-image', 'url(assets/img/indicator-arrow-' + state + '.svg)');
+gsap.to('#background-wave', {duration: 2.5, delay: 1.25, ease: 'power2.inOut', attr:{'data-height': indicatorHeightLeft}})
 
 // Set the display option to default
 $('#icon-translation').css('transform', 'translate(3.2779px, 0px)');
 $('#icon-sun').css('opacity', '0');
 $('#icon-i').css('opacity', '0');
+
+// Set the wave mask to the correct size
+$('#background-wave > mask').attr('width', $(window).width()).attr('height', $(window).height());
+$('#background-wave > mask > g > rect').attr('width', $(window).width()).attr('height', $(window).height());
 
 // Begin the transition to the final state
 gsap.timeline()
@@ -687,11 +716,17 @@ gsap.timeline()
   .set('.measurement-number', {color: formatChoices[state].text_color})
   .set('.border-text > .container', {color: formatChoices[state].text_color})
   .set('.border-text', {background: formatChoices[state].background_color})
+  .set('.date-content', {skewX: 0, skewY: 0, rotation: '-90', scaleX: 0, scaleY: 1})
+  .set('.date-mask > .container', {color: formatChoices[state].text_color})
+  .set('.date-mask', {background: formatChoices[state].background_color})
   .set('.settings-text', {color: formatChoices[state].text_color})
   .set('svg > .svg-stroke-style', {stroke: formatChoices[state].stroke_color})
   .set('svg .svg-fill-style', {fill: formatChoices[state].stroke_color})
+  .set('.point-indicator > svg > path', {fill: formatChoices[state].stroke_color})
+  .set('.tooltip-item', {color: formatChoices[state].background_color, background: formatChoices[state].text_color})
   .to('body', {duration: 1, background: formatChoices[state].background_color})
   .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-150, opacity: 1}, '-=.25')
+  .to('#background-wave > path', {duration: .75, ease: 'power2.inOut', fill: formatChoices[state].text_color}, '-=.75')
   .to('.footer-text', {duration: .75, ease: 'power2.inOut', color: formatChoices[state].text_color}, '-=.75')
   .to('#fill-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', color: formatChoices[state].text_color}, '-=.75')
   .to('#stroke-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', textStrokeColor: formatChoices[state].stroke_color}, '-=.75')
@@ -699,6 +734,8 @@ gsap.timeline()
   .to('.border-content', {duration: .75, borderColor: formatChoices[state].stroke_color}, '-=.75')
   .to('#answer > .container', {duration: .75, ease: 'power2.inOut', y: '0%'}, '-=.75')
   .to('#current-flow > .container', {duration: .5, ease: 'power2.inOut', y: '0%'}, '-=.375')
+  .to('.date-content', {duration: .5, ease: 'power2.inOut', scaleX: 1, scaleY: 1, rotation: '-90', skewX: 0, skewY: 0}, '-=.375')
+  .to('.date-mask > .container', {duration: .5, ease: 'power2.inOut', x: '0%'}, '-=.375')
   .to('.range-content > .container > .border-text', {duration: .375, ease: 'power2.inOut', scaleX: 1}, '-=.25')
   .to('#range-label > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
   .to('.range-wrapper > .container > .measurement-number', {duration: .375, ease: 'power2.inOut', y: '0%'}, '-=.25')
@@ -712,6 +749,7 @@ gsap.timeline()
   .to('#height-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
   .from('#settings-cog', {duration: 1.25, ease: 'power2.inOut', rotation: -720},  "-=.375")
   .to('#settings-cog', {duration: .375, ease: 'linear', opacity: 1},  "-=1")
+  .set('#range-tooltip', {pointerEvents: 'all'})
 
 }
 
@@ -728,11 +766,10 @@ return (low2 + (input - low1) * (high2 - low2) / (high1 - low1))
 }
 
 // This function writes a cookie ith a name, data, and a number of days before expiring
-function writeCookie(name, data, expire) {
-var now = new Date();
-now.setDate(now.getDate() + expire);
-var exp = now;
-document.cookie = name + "=" + data + ";" + "expires=" + exp.toUTCString() + ";";
+function writeCookie(name, data, hoursTilExpire) {
+var date = new Date();
+var exp = date.setTime(+ date + (hoursTilExpire * 3600000));
+document.cookie = name + "=" + data + ";" + "expires=" + date.toGMTString() + ";";
 }
 
 // This function returns the data in a cookie of a specified name
@@ -765,26 +802,47 @@ if (cookieCheck == "") {
 }
 
 // This function draws the animated river
-function drawRiverFlow(speed, height, turbulance, resolution) {
-  var xAxis = [];
-  // Create a number of X points
-  for(var i=0; i < ($(window).width()/resolution)+2; i++) {
-    xAxis.push(i*resolution);
-  }
-
+function drawRiverFlow(speed, height) {
+  // Time value
+  var t = 0;
   // SVG animation function
-  function animateWater(iterations) {
-    var masterPhase = new Date().getTime()/400;
-    var waveHeight = [4/30, 3/30, 3/30];
-    var waveWidth = [2, 50, 200];
-    var waveSpeed = [.25, .738, .61];
-    var wavePhase = [2, 1.375, 2.829];
-    var waveShift = 400;
-    var clamper = 50;
+  function animateWater() {
+    // Set the animation resoultion
+    var resolution = parseInt($('#performance-svg').attr('data-resolution'));
+    // Set the animation height
+    // First get the percentage of height
+    var height = parseFloat($('#background-wave').attr('data-height'));
+    // Invert the height
+    height = remapNumber(height, 0, 100, 100, 0);
+    // Convert the percentage to a window height value
+    // 0% = (($(window).height()/2)+($('.height-wrapper').width()/2)) This value represents the bottom of the height range wrapper as a pixel value from the top of the window
+    // 100% = (($(window).height()/2)-($('.height-wrapper').width()/2)) This value represents the top of the height range wrapper as a pixel value from the top of the window
+    var heightWrapperHeight = (($(window).height()-150)*.9)*.75;
+    var topOfHeightRange = (($(window).height()-150)*.9)*.125;
+    height = topOfHeightRange + (heightWrapperHeight*(height/100));
 
-    // Waves
+
+
+    var xAxis = [];
+    // Create a number of X points
+    for(var i=0; i < ($(window).width()/resolution)+2; i++) {
+      xAxis.push(i*resolution);
+    }
+
+    // This value controls the speed of the river
+    var masterPhase = t*(-8*speed);
+
     var points = xAxis.map(x => {
-      var y = (Math.round((((Math.sin(x+(wavePhase[0]*waveSpeed[0]*masterPhase))*waveWidth[0])*waveHeight[0])+waveShift))/clamper)*(Math.round((((Math.sin(x+(wavePhase[1]*waveSpeed[1]*masterPhase))*waveWidth[1])*waveHeight[1])+waveShift))/clamper)*(Math.round((((Math.sin(x+(wavePhase[2]*waveSpeed[2]*masterPhase))*waveWidth[2])*waveHeight[2])+waveShift))/clamper);
+      // sin wave = (waveAmp[0]*(Math.sin(x+wavePhase[0])*wavePeriod[0]))
+      var sinA = 8 * Math.sin((x+masterPhase) / 209);
+      var sinB = 4 * Math.sin((x+(masterPhase*3.218)) / 272);
+      var sinC = 1 * Math.sin((x+(masterPhase*2.1047)) / 729);
+      // if(x == 0) {
+      //   console.log(sinA, sinB, sinC)
+      // }
+
+      // var y = (sinA*sinB*sinC)+height;
+      var y = (sinA*sinB*sinC)+height;
       return [x,y]
     })
 
@@ -792,12 +850,14 @@ function drawRiverFlow(speed, height, turbulance, resolution) {
     var path = "M0,2000 " + points.map(p => {
       return p[0] + "," + p[1];
     }).join(" L");
+    $('#background-wave > path').attr('d', path + " L" + $(window).width()+25 + ",2000");
 
-    $('svg > path').attr('d', path + " L" + $(window).width()+25 + ",2000");
+    // Add 1 to time
+    t += 1;
     requestAnimationFrame(animateWater);
   }
 
-  animateWater(turbulance);
+  animateWater();
 }
 
 // Add click event to Settings Icon
@@ -822,18 +882,26 @@ document.getElementById("settings-performance").addEventListener("click", functi
 function toggleSettings() {
   // The animation timeline
   var settingsAnimationOpen = gsap.timeline({paused: true})
+    .set('#range-tooltip', {pointerEvents: 'none'})
     .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '120deg'})
     .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25')
     .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25');
 
   // The animation timeline
   var settingsAnimationClose = gsap.timeline({paused: true})
+    .set('#range-tooltip', {pointerEvents: 'all'})
     .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '0deg'})
     .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25')
     .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25');
 
   // If the settings are open, reverse the timeline, else play the timeline
   if($('.settings').attr('data-expanded') == 'true') {
+    // When the settings close, save the current state of the options
+    // Performance
+    writeCookie('canitube_Settings_Performance', $('#performance-svg').attr('data-performance'), 10000000);
+    // Display
+    writeCookie('canitube_Settings_Display', $('#display-svg').attr('data-display'), 10000000);
+
     $('.settings').attr('data-expanded', 'false');
     settingsAnimationClose.play();
   } else {
@@ -844,40 +912,65 @@ function toggleSettings() {
 
 // This function toggles the performance settings
 function togglePerformance() {
-  var t1 = gsap.set('#performance-svg > path', {points: "6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8"});
-  t1.play();
-  // // The animation timelines for each toggle state
-  // // Smooth > Rough
-  // var performanceIconToRough = gsap.timeline({paused: true})
-  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6.9 22.8 6.9 19.6 10.1 19.6 10.1 16.4 13.3 16.4 13.3 13.2 16.5 13.2 16.5 10 19.7 10 19.7 6.8 22.9 6.8'});
-  //
-  // // Rough > None
-  // var performanceIconToNone = gsap.timeline({paused: true})
-  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 14 7.6 14 9.2 14 10.8 14 12.4 14 14 14 15.6 14 17.2 14 18.8 14 20.4 14 22 14'});
-  //
-  // // Rough > None
-  // var performanceIconToSmooth = gsap.timeline({paused: true})
-  //   .to('#performance-svg > polyline', {duration: .25, ease: 'power3.inOut', points: '6 22 7.6 20.4 9.2 18.8 10.8 17.2 12.4 15.6 14 14 15.6 12.4 17.2 10.8 18.8 9.2 20.4 7.6 22 6'});
-  //
-  // // Toggle to ...
-  // if($('#performance-svg').attr('data-performance') == 'smooth') {
-  //   // Rough
-  //   console.log('To Rough')
-  //   $('#performance-svg').attr('data-performance', 'rough');
-  //   performanceIconToRough.play();
-  // } else if($('#performance-svg').attr('data-performance') == 'rough') {
-  //   // None
-  //   console.log('To None')
-  //   $('#performance-svg').attr('data-performance', 'none');
-  //   performanceIconToNone.play();
-  // } else {
-  //   // Smooth
-  //   console.log('To Smooth')
-  //   $('#performance-svg').attr('data-performance', 'smooth');
-  //   performanceIconToSmooth.play();
-  // }
+  // Read the current state
+  var currentState = $('#performance-svg').attr('data-performance');
+  // Show the next state and store the state
+  if(currentState == 'smooth') {
+    // Rough
+    $('#performance-svg').attr('data-performance', 'rough');
+    $('#performance-svg > polyline').attr('points', '6.9,22.8 6.9,19.6 10.1,19.6 10.1,16.4 13.3,16.4 13.3,13.2 16.5,13.2 16.5,10 19.7,10 19.7,6.8 22.9,6.8');
+    gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':250}})
+  } else if(currentState == 'rough') {
+    // None
+    $('#performance-svg').attr('data-performance', 'none');
+    $('#performance-svg > polyline').attr('points', '6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14');
+    gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':1000}});
+    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 0})
+  } else {
+    // Smooth
+    $('#performance-svg').attr('data-performance', 'smooth');
+    $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
+    gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
+    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+  }
 }
 
-// $(document).ready(function() {
-//   drawRiverFlow(1, 1, 3, 250);
-// });
+// When the document is ready, aka startup function
+$(document).ready(function() {
+  var settingsPerformanceCookiePresent = checkCookie('canitube_Settings_Performance');
+  var settingsDisplayCookiePresent = checkCookie('canitube_Settings_Display');
+  // If there are no settings cookies, create cookies for the default settings
+  if(settingsPerformanceCookiePresent == false && settingsDisplayCookiePresent == false) {
+    // Performance
+    writeCookie('canitube_Settings_Performance', 'smooth', 10000000);
+    // Display
+    writeCookie('canitube_Settings_Display', 'none', 10000000);
+  } else {
+    // If these cookies are present, read their data and set their states
+    // Performance
+    var performanceSetting = getCookie('canitube_Settings_Performance');
+    if(performanceSetting == 'none') {
+      // None
+      $('#performance-svg').attr('data-performance', 'none');
+      $('#performance-svg > polyline').attr('points', '6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14');
+      gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':1000}});
+      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 0})
+    } else if(performanceSetting == 'rough') {
+      // Rough
+      $('#performance-svg').attr('data-performance', 'rough');
+      $('#performance-svg > polyline').attr('points', '6.9,22.8 6.9,19.6 10.1,19.6 10.1,16.4 13.3,16.4 13.3,13.2 16.5,13.2 16.5,10 19.7,10 19.7,6.8 22.9,6.8');
+      gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':250}})
+    } else {
+      // Smooth
+      $('#performance-svg').attr('data-performance', 'smooth');
+      $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
+      gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
+      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+    }
+    console.log('finish display code here!')
+  }
+
+
+  // Begin the water animation
+  drawRiverFlow(1, 1);
+});

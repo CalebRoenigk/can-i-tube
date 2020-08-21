@@ -481,7 +481,63 @@ a:hover{
 }
 
 .border-text > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
 	transform: translate(0%, -150%);
+}
+
+.border-text > .container > svg {
+	margin-left: 4px;
+	margin-right: 4px;
+	width: 16px;
+	height: 16px;
+}
+
+.tooltip-cover {
+ z-index: 15;
+ cursor: help;
+}
+
+#range-tooltip {
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	width: 110px;
+	height: 50%;
+	transform: translate(0%, -50%);
+}
+
+#range-tooltip > .container > .tooltip-item {
+	position: absolute;
+	top: 50%;
+	left: 105%;
+	background-color: #1D1D1D;
+	border-radius: 4px;
+	padding-top: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 2px;
+	text-align: left;
+	font-size: 14px;
+	line-height: 1.25;
+	letter-spacing: .625px;
+	transform: translate(-10px, -50%);
+	white-space: pre;
+	opacity: 0;
+	pointer-events: none;
+	transition: .375s .1s ease;
+}
+
+#range-tooltip:hover > .container > .tooltip-item {
+	transform: translate(0px, -50%);
+	opacity: 1;
+}
+
+.tooltip-subtext {
+	font-size: 9px;
+	line-height: 2.25;
 }
 
 .range-wrapper {
@@ -505,10 +561,13 @@ a:hover{
 	position: absolute;
 	width: 24px;
 	height: 24px;
-	background-position: center centeer;
-	background-repeat: no-repeat;
-	background-size: contain;
 	transform: translate(0%, -150%);
+}
+
+.point-indicator > svg {
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 
 #range-indicator {
@@ -550,6 +609,25 @@ a:hover{
 
 #height-label {
 	padding: 3px;
+}
+
+/* Date Styles */
+
+.date-content {
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	transform: translate(-50%, -50%) rotate(-90deg) scale(0, 1) skew(0,0);
+}
+
+.date-mask {
+	overflow: hidden;
+	padding: 8px;
+	background-color: #E6E6E6;
+}
+
+.date-mask > .container {
+	transform: translate(-150%, 0%);
 }
 
 /* Answer State Styles */
@@ -663,6 +741,20 @@ a:hover{
 	font-family: 'Kayak Sans Regular', arial, sans-serif;
 	letter-spacing: 0px;
 	transform: translate(0%, 25%);
+}
+
+/* Background Wave */
+
+#background-wave {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	overflow: hidden;
+	opacity: .5;
 }
 
 /* Footer */
