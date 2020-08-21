@@ -17044,17 +17044,17 @@ function generateSelectionMenu() {
   } // Iterate over each item in the river info list, placing each one in its appropriate dropdown group
 
 
-  for (var i = 0; i < riverInfo.length; i++) {
-    var selectionIDText = riverInfo[i].river.toLowerCase().split(" ").join("-") + "-selection";
+  riverInfo.forEach(riverData => {
+    var selectionIDText = riverData.river.toLowerCase().split(" ").join("-") + "-selection";
     var currentItem = document.createElement('div');
-    currentItem.id = riverInfo[i].river.toLowerCase().split(" ").join("-") + '-selection';
+    currentItem.id = riverData.river.toLowerCase().split(" ").join("-") + '-selection';
     currentItem.classList.add('item');
     currentItem.dataset.index = i;
     currentItem.addEventListener('click', () => selectItem(selectionIDText));
-    currentItem.innerHTML = riverInfo[i].river;
-    var itemGroup = '#' + abbrState(riverInfo[i].state, 'abbr') + '-group';
+    currentItem.innerHTML = riverData.river;
+    var itemGroup = '#' + abbrState(riverData.state, 'abbr') + '-group';
     (0, _jquery.default)(itemGroup).append(currentItem);
-  }
+  });
 } // This function expands and collapses the dropdown menu when it is clicked on
 
 
@@ -17989,4 +17989,4 @@ function togglePerformance() {
   drawRiverFlow(1, 1);
 });
 },{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.74df103d.js.map
+//# sourceMappingURL=app.e44957b5.js.map
