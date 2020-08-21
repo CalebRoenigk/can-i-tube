@@ -695,7 +695,7 @@ var indicatorHeightLeft = remapNumber(heightValue, minHeightScale, maxHeightScal
 $('#low-height').css('left', lowHeightLeft + '%');
 $('#high-height').css('left', highHeightLeft + '%');
 $('#height-indicator').css('left', indicatorHeightLeft + '%');
-gsap.to('#background-wave', {duration: 2.5, delay: 1.25, ease: 'power2.inOut', attr:{'data-height': indicatorHeightLeft}})
+gsap.to('svg[data-wave]', {duration: 2.5, delay: 1.25, ease: 'power2.inOut', attr:{'data-height': indicatorHeightLeft}})
 
 // Set the display option to default
 $('#icon-translation').css('transform', 'translate(3.2779px, 0px)');
@@ -703,8 +703,8 @@ $('#icon-sun').css('opacity', '0');
 $('#icon-i').css('opacity', '0');
 
 // Set the wave mask to the correct size
-$('#background-wave > mask').attr('width', $(window).width()).attr('height', $(window).height());
-$('#background-wave > mask > g > rect').attr('width', $(window).width()).attr('height', $(window).height());
+$('svg[data-wave] > mask').attr('width', $(window).width()).attr('height', $(window).height());
+$('svg[data-wave] > mask > g > rect').attr('width', $(window).width()).attr('height', $(window).height());
 
 // Begin the transition to the final state
 gsap.timeline()
@@ -726,7 +726,7 @@ gsap.timeline()
   .set('.tooltip-item', {color: formatChoices[state].background_color, background: formatChoices[state].text_color})
   .to('body', {duration: 1, background: formatChoices[state].background_color})
   .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-150, opacity: 1}, '-=.25')
-  .to('#background-wave > path', {duration: .75, ease: 'power2.inOut', fill: formatChoices[state].text_color}, '-=.75')
+  .to('svg[data-wave] > path', {duration: .75, ease: 'power2.inOut', fill: formatChoices[state].text_color}, '-=.75')
   .to('.footer-text', {duration: .75, ease: 'power2.inOut', color: formatChoices[state].text_color}, '-=.75')
   .to('#fill-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', color: formatChoices[state].text_color}, '-=.75')
   .to('#stroke-title', {duration: .75, ease: 'power2.inOut', top: 75, x: '-50%', y: '-25%', textStrokeColor: formatChoices[state].stroke_color}, '-=.75')
@@ -811,7 +811,7 @@ function drawRiverFlow(speed, height) {
     var resolution = parseInt($('#performance-svg').attr('data-resolution'));
     // Set the animation height
     // First get the percentage of height
-    var height = parseFloat($('#background-wave').attr('data-height'));
+    var height = parseFloat($('svg[data-wave]').attr('data-height'));
     // Invert the height
     height = remapNumber(height, 0, 100, 100, 0);
     // Convert the percentage to a window height value
@@ -850,7 +850,7 @@ function drawRiverFlow(speed, height) {
     var path = "M0,2000 " + points.map(p => {
       return p[0] + "," + p[1];
     }).join(" L");
-    $('#background-wave > path').attr('d', path + " L" + $(window).width()+25 + ",2000");
+    $('svg[data-wave] > path').attr('d', path + " L" + $(window).width()+25 + ",2000");
 
     // Add 1 to time
     t += 1;
@@ -925,13 +925,13 @@ function togglePerformance() {
     $('#performance-svg').attr('data-performance', 'none');
     $('#performance-svg > polyline').attr('points', '6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':1000}});
-    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 0})
+    gsap.to('svg[data-wave]', {duration: .5, ease: 'power2.inOut', opacity: 0})
   } else {
     // Smooth
     $('#performance-svg').attr('data-performance', 'smooth');
     $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
-    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+    gsap.to('svg[data-wave]', {duration: .5, ease: 'power2.inOut', opacity: 1})
   }
 }
 
@@ -954,7 +954,7 @@ $(document).ready(function() {
       $('#performance-svg').attr('data-performance', 'none');
       $('#performance-svg > polyline').attr('points', '6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14');
       gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':1000}});
-      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 0})
+      gsap.to('svg[data-wave]', {duration: .5, ease: 'power2.inOut', opacity: 0})
     } else if(performanceSetting == 'rough') {
       // Rough
       $('#performance-svg').attr('data-performance', 'rough');
@@ -965,7 +965,7 @@ $(document).ready(function() {
       $('#performance-svg').attr('data-performance', 'smooth');
       $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
       gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
-      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+      gsap.to('svg[data-wave]', {duration: .5, ease: 'power2.inOut', opacity: 1})
     }
     console.log('finish display code here!')
   }

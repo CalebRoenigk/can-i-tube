@@ -745,7 +745,7 @@ a:hover{
 
 /* Background Wave */
 
-#background-wave {
+svg[data-wave] {
 	position: absolute;
 	top: 50%;
 	left: 50%;
