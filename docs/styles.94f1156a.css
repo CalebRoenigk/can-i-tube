@@ -232,7 +232,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -248,7 +248,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -264,7 +264,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -782,3 +782,6 @@ a:hover{
 	letter-spacing: 1px;
 	text-align: center;
 }
+
+
+/*# sourceMappingURL=styles.94f1156a.css.map */
