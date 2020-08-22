@@ -237,7 +237,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(/selector-arrow.2c6915c0.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -253,7 +253,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(/selector-arrow.2c6915c0.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -269,7 +269,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url(../img/selector-arrow.svg);
+	background-image: url(/selector-arrow.2c6915c0.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -787,3 +787,6 @@ a:hover{
 	letter-spacing: 1px;
 	text-align: center;
 }
+
+
+/*# sourceMappingURL=/styles.5072464b.css.map */
