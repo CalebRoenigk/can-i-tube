@@ -660,6 +660,9 @@ var formatChoices = {
   }
 }
 
+// Swap favicons
+swapFavicon(state);
+
 // Fill in the border edge content
 $('#low-range').text(safeRange.min);
 $('#high-range').text(safeRange.max);
@@ -751,6 +754,71 @@ gsap.timeline()
   .to('#settings-cog', {duration: .375, ease: 'linear', opacity: 1},  "-=1")
   .set('#range-tooltip', {pointerEvents: 'all'})
 
+}
+
+// This function hot-swaps the favicon based on the page formatting
+function swapFavicon(state) {
+  // Grab the various favicons to update
+  // <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" id="favicon32">
+  // <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" id="favicon16">
+  // <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#1d1d1d" id="safari-icon"> ONLY UPDATE COLOR
+  // <link rel="shortcut icon" href="assets/favicon/favicon.ico" id="faviconICO">
+  // <meta name="theme-color" content="#e6e6e6" id="themeColor">
+  var themeSettings = {
+    'default': {
+      favicon: {
+        favicon32: 'assets/favicon/favicon-32x32.png',
+        favicon16: 'assets/favicon/favicon-16x16.png',
+        faviconICO: 'assets/favicon/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#1d1d1d',
+        theme_color: '#e6e6e6'
+      }
+    },
+    'no': {
+      favicon: {
+        favicon32: 'assets/favicon/no/favicon-32x32.png',
+        favicon16: 'assets/favicon/no/favicon-16x16.png',
+        faviconICO: 'assets/favicon/no/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#c41e3d',
+        theme_color: '#c41e3d'
+      }
+    },
+    'maybe': {
+      favicon: {
+        favicon32: 'assets/favicon/maybe/favicon-32x32.png',
+        favicon16: 'assets/favicon/maybe/favicon-16x16.png',
+        faviconICO: 'assets/favicon/maybe/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#ff7f11',
+        theme_color: '#ff7f11'
+      }
+    },
+    'yes': {
+      favicon: {
+        favicon32: 'assets/favicon/yes/favicon-32x32.png',
+        favicon16: 'assets/favicon/yes/favicon-16x16.png',
+        faviconICO: 'assets/favicon/yes/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#2e933c',
+        theme_color: '#2e933c'
+      }
+    }
+  }
+
+  // Change colors
+  $('#themeColor').attr('content', themeSettings[state].theme_color.theme_color);
+  $('#safari-icon').attr('color', themeSettings[state].theme_color.safari_color);
+
+  // Change icon
+  $('#faviconICO').attr('href', themeSettings[state].favicon.faviconICO);
+  $('#favicon16').attr('href', themeSettings[state].favicon.favicon16);
+  $('#favicon32').attr('href', themeSettings[state].favicon.favicon32);
 }
 
 // This function populates the answer and flow values

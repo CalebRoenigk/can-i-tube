@@ -17493,7 +17493,9 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
       text_color: '#EAC435',
       stroke_color: '#EAC435'
     }
-  }; // Fill in the border edge content
+  }; // Swap favicons
+
+  swapFavicon(state); // Fill in the border edge content
 
   (0, _jquery.default)('#low-range').text(safeRange.min);
   (0, _jquery.default)('#high-range').text(safeRange.max); // Set the range scale and position the low, high, and indicator
@@ -17692,6 +17694,69 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
   }, "-=1").set('#range-tooltip', {
     pointerEvents: 'all'
   });
+} // This function hot-swaps the favicon based on the page formatting
+
+
+function swapFavicon(state) {
+  // Grab the various favicons to update
+  // <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" id="favicon32">
+  // <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" id="favicon16">
+  // <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#1d1d1d" id="safari-icon"> ONLY UPDATE COLOR
+  // <link rel="shortcut icon" href="assets/favicon/favicon.ico" id="faviconICO">
+  // <meta name="theme-color" content="#e6e6e6" id="themeColor">
+  var themeSettings = {
+    'default': {
+      favicon: {
+        favicon32: 'assets/favicon/favicon-32x32.png',
+        favicon16: 'assets/favicon/favicon-16x16.png',
+        faviconICO: 'assets/favicon/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#1d1d1d',
+        theme_color: '#e6e6e6'
+      }
+    },
+    'no': {
+      favicon: {
+        favicon32: 'assets/favicon/no/favicon-32x32.png',
+        favicon16: 'assets/favicon/no/favicon-16x16.png',
+        faviconICO: 'assets/favicon/no/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#c41e3d',
+        theme_color: '#c41e3d'
+      }
+    },
+    'maybe': {
+      favicon: {
+        favicon32: 'assets/favicon/maybe/favicon-32x32.png',
+        favicon16: 'assets/favicon/maybe/favicon-16x16.png',
+        faviconICO: 'assets/favicon/maybe/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#ff7f11',
+        theme_color: '#ff7f11'
+      }
+    },
+    'yes': {
+      favicon: {
+        favicon32: 'assets/favicon/yes/favicon-32x32.png',
+        favicon16: 'assets/favicon/yes/favicon-16x16.png',
+        faviconICO: 'assets/favicon/yes/favicon.ico'
+      },
+      theme_color: {
+        safari_color: '#2e933c',
+        theme_color: '#2e933c'
+      }
+    }
+  }; // Change colors
+
+  (0, _jquery.default)('#themeColor').attr('content', themeSettings[state].theme_color.theme_color);
+  (0, _jquery.default)('#safari-icon').attr('color', themeSettings[state].theme_color.safari_color); // Change icon
+
+  (0, _jquery.default)('#faviconICO').attr('href', themeSettings[state].favicon.faviconICO);
+  (0, _jquery.default)('#favicon16').attr('href', themeSettings[state].favicon.favicon16);
+  (0, _jquery.default)('#favicon32').attr('href', themeSettings[state].favicon.favicon32);
 } // This function populates the answer and flow values
 
 
@@ -17989,4 +18054,4 @@ function togglePerformance() {
   drawRiverFlow(1, 1);
 });
 },{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.e44957b5.js.map
+//# sourceMappingURL=app.ac13b87f.js.map
