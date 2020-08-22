@@ -37,6 +37,23 @@ var riverInfo = [
     }
   },
   {
+    "river": "Clinch River",
+    "siteID": "03527220",
+    "state": "Virgina",
+    "safe_range": {
+      "min": 100,
+      "max": 900
+    },
+    "flow_range_source": {
+      "link": "https://waterdata.usgs.gov/nwis/uv?site_no=03524000",
+      "name": "Estimation based on averages from USGS"
+    },
+    "height_range": {
+      "min": 1,
+      "max": 6
+    }
+  },
+  {
     "river": "Congaree River",
     "siteID": "02169500",
     "state": "South Carolina",
@@ -88,6 +105,57 @@ var riverInfo = [
     }
   },
   {
+    "river": "Holston North Fork",
+    "siteID": "03490000",
+    "state": "Virgina",
+    "safe_range": {
+      "min": 75,
+      "max": 500
+    },
+    "flow_range_source": {
+      "link": "https://waterdata.usgs.gov/nwis/uv?03488000",
+      "name": "Estimation based on averages from USGS"
+    },
+    "height_range": {
+      "min": .5,
+      "max": 4
+    }
+  },
+  {
+    "river": "James River",
+    "siteID": "02019500",
+    "state": "Virgina",
+    "safe_range": {
+      "min": 300,
+      "max": 900
+    },
+    "flow_range_source": {
+      "link": "http://jamesriver.com/river-conditions/",
+      "name": "James River Runners"
+    },
+    "height_range": {
+      "min": 1,
+      "max": 3
+    }
+  },
+  {
+    "river": "Maury River",
+    "siteID": "02024000",
+    "state": "Virgina",
+    "safe_range": {
+      "min": 100,
+      "max": 600
+    },
+    "flow_range_source": {
+      "link": "https://www.wildernesscanoecompany.com/river-gauge.html",
+      "name": "Wilderness Canoe Company"
+    },
+    "height_range": {
+      "min": 2,
+      "max": 3.75
+    }
+  },
+  {
     "river": "New River",
     "siteID": "03161000",
     "state": "North Carolina",
@@ -119,6 +187,23 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 6
+    }
+  },
+  {
+    "river": "South Fork Shenandoah",
+    "siteID": "01629500",
+    "state": "Virgina",
+    "safe_range": {
+      "min": 300,
+      "max": 1200
+    },
+    "flow_range_source": {
+      "link": "https://shenandoah-river.com/canoe-kayak-tube-raft-rentals/river-levels-new/",
+      "name": "Shenandoah River Outfitters"
+    },
+    "height_range": {
+      "min": 2,
+      "max": 5.5
     }
   }
 ];
