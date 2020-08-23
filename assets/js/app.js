@@ -420,6 +420,10 @@ var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCooki
 // Finish the load-bar
 $('#fill-title').removeClass('load-bar').addClass('load-bar-finish');
 
+// Finish the load-bar
+$('.text-load').addClass('text-load-finish').removeClass('text-load');
+gsap.to('#loader-text', {duration: .375, opacity: 0});
+
 // Begin styling and transitioning the page
 var currentSafeRange = riverInfo[selectedRiverIndex].safe_range;
 
@@ -612,7 +616,7 @@ var barFinishLoadClass = '.load-bar-finish::after {\n\tclip-path: polygon(0% 0%,
 
 // Create the loader text class
 var textLoadClass = '.text-load::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 0%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n\tanimation: loadTextIn ' + time/1000 + 's linear both;\n}';
-var textFinishLoadClass = '.text-load-finish::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 100%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}';
+var textFinishLoadClass = '.text-load-finish::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 100%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n\ttransition: .25s .125s ease;\n}';
 
 $('head').append('<style type="text/css">\n' + keyframes.join('\n') + '\n' + textKeyframes.join('\n') + '\n' + barLoadClass + '\n' + barFinishLoadClass + '\n' + textLoadClass + '\n' + textFinishLoadClass + '\n</style>');
 }
@@ -722,6 +726,8 @@ gsap.timeline()
   .to('#stroke-title', {duration: .6, ease: 'power2.inOut', top: '50%', left: '50%', x: '-50%', y: '-50%', scale: 2.25, color: 'rgba(29, 29, 29, 0)'}, '-=.6')
   .set('.main-title', {fontFamily: 'Kayak Sans Bold'})
   .call(elementAddClass, ['load-bar', '#fill-title'])
+  .call(elementAddClass, ['text-load', '#loader-text'])
+  .from('#loader-text', {duration: .25, y: '-150%'})
 }
 
 // This function formats the page based on the determined safety
@@ -1127,3 +1133,81 @@ $(document).ready(function() {
   // Begin the water animation
   drawRiverFlow(1, 1);
 });
+
+// Look for the key combo that triggers the dev console (SHIFT + ~)
+document.addEventListener ("keydown", function (zEvent) {
+    if (zEvent.shiftKey && zEvent.key === "~") {  // case sensitive
+        // If the dev console doesn't already exist create it, else destory it
+        if($('#dev-console-area').length) {
+          // Destory the dev console and return to the site
+          devConsoleDestory();
+        } else {
+          // Initalize the dev console
+          devConsoleInt();
+        }
+    }
+} );
+
+// This function creates the dev console
+function devConsoleInt() {
+  // Add  the console area to the front of the body
+  let consoleArea = '<div id="dev-console-area"></div>';
+  $('body').prepend(consoleArea);
+
+  // Add the base console elements
+  $('#dev-console-area').append('<div class="container"></div>');
+  let devConsoleContentArea = $('#dev-console-area > .container');
+  let devConsoleTitle = '<div class="dev-console-info" id="dev-console-title"><div class="container">Dev Console</div></div>';
+  let devConsoleInstruction = '<div class="dev-console-info" id="dev-console-instruction"><div class="container">Press SHIFT + TILDA to close the console</div></div>';
+  let devConsoleTime = '<div class="dev-console-info" id="dev-console-time"><div class="container"></div></div>';
+  devConsoleContentArea.append(devConsoleTitle).append(devConsoleInstruction).append(devConsoleTime);
+
+  // Add the Cookie wrapper and actions wrapper
+  let devConsoleItemsWrapper = '<div id="dev-console-items"><div class="container"></div></div>';
+  devConsoleContentArea.append(devConsoleItemsWrapper);
+  let cookieWrapper = '<div id="dev-console-cookies"></div>';
+  let actionsWrapper = '<div id="dev-console-actions"></div>';
+  $('#dev-console-items').append(cookieWrapper).append(actionsWrapper);
+
+  // Add actions to the actions wrapper
+  $('#dev-console-actions').append('<div id="actions-title">ACTIONS\n<span class="dev-console-subtitle">Warning: these actions cannot be undone.</span></div>').append('<div class="actions-item" id="clear-settings">Clear Settings</div>').append('<div class="actions-item" id="clear-all-rivers">Clear All River Data</div>').append('<div class="actions-item" id="factory-reset">Factory Reset & Reload</div>');
+
+  // Start running the time function for the console
+  updateTime();
+
+  gsap.timeline()
+    .to('#dev-console-area', {duration: .5, ease: 'power2.inOut', background: 'rgba(29, 29, 29, .38)'})
+    .to('.central-content', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+    .to('#title-wrapper', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+    .to('.cta-wrapper', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+    .to('.border-content', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+    .to('#stroke-title', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+    .to('.footer', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
+}
+
+// This function removes the dev console
+function devConsoleDestory() {
+  gsap.timeline()
+    .to('#dev-console-area', {duration: .375, ease: 'power2.inOut', background: 'rgba(29, 29, 29, 0)'})
+    .to('.central-content', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .to('#title-wrapper', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .to('.cta-wrapper', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .to('.border-content', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .to('#stroke-title', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .to('.footer', {duration: .375, ease: 'power2.inOut', filter: 'blur(0px)'}, '-.375')
+    .call(removeElement, ["#dev-console-area"])
+}
+
+
+// This function updates the console time every second
+function updateTime() {
+    let currentTime = moment().format('MMM DD, YYYY　　hh:mm:ss A');
+
+    // Only if the dev console time div exists should this function loop
+    if($('#dev-console-time').length) {
+      // set the content of the element with the ID time to the formatted string
+      $('#dev-console-time').text(currentTime);
+      // call this function again in 1000ms
+      setTimeout(updateTime, 1000);
+    }
+}
