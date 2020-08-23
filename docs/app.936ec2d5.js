@@ -16884,6 +16884,7 @@ var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var appVersion = "2.9";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -16919,7 +16920,7 @@ var riverInfo = [{
 }, {
   "river": "Clinch River",
   "siteID": "03527220",
-  "state": "Virgina",
+  "state": "Virginia",
   "safe_range": {
     "min": 100,
     "max": 900
@@ -16983,7 +16984,7 @@ var riverInfo = [{
 }, {
   "river": "Holston North Fork",
   "siteID": "03490000",
-  "state": "Virgina",
+  "state": "Virginia",
   "safe_range": {
     "min": 75,
     "max": 500
@@ -16999,7 +17000,7 @@ var riverInfo = [{
 }, {
   "river": "James River",
   "siteID": "02019500",
-  "state": "Virgina",
+  "state": "Virginia",
   "safe_range": {
     "min": 300,
     "max": 900
@@ -17015,7 +17016,7 @@ var riverInfo = [{
 }, {
   "river": "Maury River",
   "siteID": "02024000",
-  "state": "Virgina",
+  "state": "Virginia",
   "safe_range": {
     "min": 100,
     "max": 600
@@ -17063,7 +17064,7 @@ var riverInfo = [{
 }, {
   "river": "South Fork Shenandoah",
   "siteID": "01629500",
-  "state": "Virgina",
+  "state": "Virginia",
   "safe_range": {
     "min": 300,
     "max": 1200
@@ -17124,7 +17125,7 @@ function generateSelectionMenu() {
   } // Iterate over each item in the river info list, placing each one in its appropriate dropdown group
 
 
-  riverInfo.forEach(riverData => {
+  riverInfo.forEach((riverData, i) => {
     var selectionIDText = riverData.river.toLowerCase().split(" ").join("-") + "-selection";
     var currentItem = document.createElement('div');
     currentItem.id = riverData.river.toLowerCase().split(" ").join("-") + '-selection';
@@ -17197,9 +17198,9 @@ function selectItem(itemID) {
   var siteCode = riverInfo[selectedRiverIndex].siteID;
   var selectedRiver = riverInfo[selectedRiverIndex].river; // Name of the real-time cookie for the current site
 
-  var currentSiteCookieName = "canitube_" + selectedRiver + "_currentData"; // Name of the real-time height cookie
+  var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata"; // Name of the real-time height cookie
 
-  var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentHeight"; // Delete the item list
+  var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight"; // Delete the item list
 
   (0, _jquery.default)('.item-list').remove(); // Create the fake loading bar keyframes
 
@@ -17226,7 +17227,13 @@ function selectItem(itemID) {
 
   var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCookieName); // Finish the load-bar
 
-  (0, _jquery.default)('#fill-title').removeClass('load-bar').addClass('load-bar-finish'); // Begin styling and transitioning the page
+  (0, _jquery.default)('#fill-title').removeClass('load-bar').addClass('load-bar-finish'); // Finish the load-bar
+
+  (0, _jquery.default)('.text-load').addClass('text-load-finish').removeClass('text-load');
+  gsap.to('#loader-text', {
+    duration: .375,
+    opacity: 0
+  }); // Begin styling and transitioning the page
 
   var currentSafeRange = riverInfo[selectedRiverIndex].safe_range; // Calculate the look of the height range
 
@@ -17412,7 +17419,7 @@ function generateLoadFrames(time) {
   var barFinishLoadClass = '.load-bar-finish::after {\n\tclip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);\n\tcolor: #1D1D1D;\n\tcontent: attr(data-text);\n\tposition: absolute;\n\ttop: 50%;\n\tleft: 0;\n\twidth: 100%;\n\ttransform: translate(0%, -50%);\n\tz-index: -1;\n}'; // Create the loader text class
 
   var textLoadClass = '.text-load::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 0%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n\tanimation: loadTextIn ' + time / 1000 + 's linear both;\n}';
-  var textFinishLoadClass = '.text-load-finish::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 100%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n}';
+  var textFinishLoadClass = '.text-load-finish::after {\n\tposition: relative;\n\tdisplay: block;\n\twidth: 100%;\n\theight: 100%;\n\tcontent: "Loading 100%";\n\twhite-space: nowrap;\n\tfont-family: "Kayak Sans Regular", arial, sans-serif;\n\tletter-spacing: 1px;\n\tfont-size: 16px;\n\tcolor: #1D1D1D;\n\ttext-align: center;\n\ttext-transform: uppercase;\n\t-webkit-user-select: none;\n\t-moz-user-select: none;\n\t-ms-user-select: none;\n\tuser-select: none;\n\ttransition: .25s .125s ease;\n}';
   (0, _jquery.default)('head').append('<style type="text/css">\n' + keyframes.join('\n') + '\n' + textKeyframes.join('\n') + '\n' + barLoadClass + '\n' + barFinishLoadClass + '\n' + textLoadClass + '\n' + textFinishLoadClass + '\n</style>');
 } // This function returns a random integer between a min and max value
 
@@ -17551,7 +17558,10 @@ function loadingStage() {
     color: 'rgba(29, 29, 29, 0)'
   }, '-=.6').set('.main-title', {
     fontFamily: 'Kayak Sans Bold'
-  }).call(elementAddClass, ['load-bar', '#fill-title']);
+  }).call(elementAddClass, ['load-bar', '#fill-title']).call(elementAddClass, ['text-load', '#loader-text']).from('#loader-text', {
+    duration: .25,
+    y: '-150%'
+  });
 } // This function formats the page based on the determined safety
 
 
@@ -17920,14 +17930,9 @@ function drawRiverFlow(speed, height) {
 
     var masterPhase = t * (-8 * speed);
     var points = xAxis.map(x => {
-      // sin wave = (waveAmp[0]*(Math.sin(x+wavePhase[0])*wavePeriod[0]))
       var sinA = 8 * Math.sin((x + masterPhase) / 209);
       var sinB = 4 * Math.sin((x + masterPhase * 3.218) / 272);
-      var sinC = 1 * Math.sin((x + masterPhase * 2.1047) / 729); // if(x == 0) {
-      //   console.log(sinA, sinB, sinC)
-      // }
-      // var y = (sinA*sinB*sinC)+height;
-
+      var sinC = 1 * Math.sin((x + masterPhase * 2.1047) / 729);
       var y = sinA * sinB * sinC + height;
       return [x, y];
     }); // Create the SVG path
@@ -18132,6 +18137,214 @@ function togglePerformance() {
 
 
   drawRiverFlow(1, 1);
-});
+}); // Look for the key combo that triggers the dev console (SHIFT + ~)
+
+document.addEventListener("keydown", function (zEvent) {
+  if (zEvent.shiftKey && zEvent.key === "~") {
+    // case sensitive
+    // If the dev console doesn't already exist create it, else destory it
+    if ((0, _jquery.default)('#dev-console-area').length) {
+      // Destory the dev console and return to the site
+      devConsoleDestory();
+    } else {
+      // Initalize the dev console
+      devConsoleInt();
+    }
+  }
+}); // This function creates the dev console
+
+function devConsoleInt() {
+  // Add  the console area to the front of the body
+  let consoleArea = '<div id="dev-console-area"></div>';
+  (0, _jquery.default)('body').prepend(consoleArea); // Add the base console elements
+
+  (0, _jquery.default)('#dev-console-area').append('<div class="container"></div>');
+  let devConsoleContentArea = (0, _jquery.default)('#dev-console-area > .container');
+  let devConsoleTitle = '<div class="dev-console-info" id="dev-console-title"><div class="container">Dev Console</div></div>';
+  let devConsoleInstruction = '<div class="dev-console-info" id="dev-console-instruction"><div class="container">Press SHIFT + TILDA to close the console</div></div>';
+  let devConsoleTime = '<div class="dev-console-info" id="dev-console-time"><div class="container"></div></div>';
+  let devConsoleVersion = '<div class="dev-console-info" id="dev-console-version"><div class="container">Can I Tube <span class="lower-case">v</span>' + appVersion + '</div></div>';
+  devConsoleContentArea.append(devConsoleTitle).append(devConsoleInstruction).append(devConsoleTime).append(devConsoleVersion); // Add the Cookie wrapper and actions wrapper
+
+  let devConsoleItemsWrapper = '<div id="dev-console-items"><div class="container"></div></div>';
+  devConsoleContentArea.append(devConsoleItemsWrapper);
+  let cookieWrapper = '<div id="dev-console-cookies"></div>';
+  let actionsWrapper = '<div id="dev-console-actions"></div>';
+  (0, _jquery.default)('#dev-console-items > .container').append(cookieWrapper).append(actionsWrapper); // Add actions to the actions wrapper
+
+  (0, _jquery.default)('#dev-console-actions').append('<div id="actions-title">ACTIONS\n<span class="dev-console-subtitle">Warning: these actions cannot be undone.</span></div>').append('<div class="actions-item" id="clear-settings">Clear Settings</div>').append('<div class="actions-item" id="clear-all-rivers">Clear All River Data</div>').append('<div class="actions-item" id="factory-reset">Factory Reset & Reload</div>'); // Add event listeners to each action
+
+  document.getElementById('clear-settings').addEventListener("click", function () {
+    clearSettings();
+  });
+  document.getElementById('clear-all-rivers').addEventListener("click", function () {
+    clearAllRiverData();
+  });
+  document.getElementById('factory-reset').addEventListener("click", function () {
+    factoryReset();
+  }); // Populate the cookies wrapper with each major cookie and its checkbox
+
+  let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
+
+  for (var i = 0; i < uniqueValueCookies.length; i++) {
+    let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
+    (0, _jquery.default)('#dev-console-cookies').append(currentCookieGroup); // Create the checkbox and label
+
+    let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
+    (0, _jquery.default)('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
+  } // Iterate over each cookie
+
+
+  let allCookies = document.cookie.split("; ");
+
+  for (var i = 0; i < allCookies.length; i++) {
+    // For each cookie determine which group it belongs in
+    let cookieName = allCookies[i].split("_")[1];
+    let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
+    let cookieData = allCookies[i].split("_")[2].split("=")[1]; // Craft the current cookie data entry
+
+    let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '">' + cookieDataType + '</div>'; // Append the current data entry into the cookie group
+
+    (0, _jquery.default)('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
+  } // Add the clear selected cookies action
+
+
+  let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
+  (0, _jquery.default)('#dev-console-cookies').append(selectedCookieClearAction);
+  document.getElementById('cookie-clear-selected').addEventListener("click", function () {
+    clearSelectedCookies();
+  }); // Start running the time function for the console
+
+  updateTime(); // Animate in the console
+
+  gsap.timeline().to('#dev-console-area', {
+    duration: .5,
+    ease: 'power2.inOut',
+    background: 'rgba(29, 29, 29, .38)'
+  }).to('.central-content', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5').to('#title-wrapper', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5').to('.cta-wrapper', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5').to('.border-content', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5').to('#stroke-title', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5').to('.footer', {
+    duration: .5,
+    ease: 'power2.inOut',
+    filter: 'blur(24px)'
+  }, '-.5');
+} // This function removes the dev console
+
+
+function devConsoleDestory() {
+  gsap.timeline().to('#dev-console-area', {
+    duration: .375,
+    ease: 'power2.inOut',
+    background: 'rgba(29, 29, 29, 0)'
+  }).to('.central-content', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').to('#title-wrapper', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').to('.cta-wrapper', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').to('.border-content', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').to('#stroke-title', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').to('.footer', {
+    duration: .375,
+    ease: 'power2.inOut',
+    filter: 'blur(0px)'
+  }, '-.375').call(removeElement, ["#dev-console-area"]);
+} // This function updates the console time every second
+
+
+function updateTime() {
+  let currentTime = (0, _moment.default)().format('MMM DD, YYYY　　hh:mm:ss A'); // Only if the dev console time div exists should this function loop
+
+  if ((0, _jquery.default)('#dev-console-time').length) {
+    // set the content of the element with the ID time to the formatted string
+    (0, _jquery.default)('#dev-console-time').text(currentTime); // call this function again in 1000ms
+
+    setTimeout(updateTime, 1000);
+  }
+} // This function acts as a filter method for arrays that returns only unique values
+
+
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+} // This function resets the settings to the default values
+
+
+function clearSettings() {
+  writeCookie('canitube_Settings_Performance', 'smooth', 1000000);
+  writeCookie('canitube_Settings_Display', 'simple', 1000000);
+} // This function clears all river data
+
+
+function clearAllRiverData() {
+  let cookieArray = document.cookie.split("; ");
+
+  for (var i = 0; i < cookieArray.length; i++) {
+    // If the cookie isn't a settings cookie
+    if (cookieArray[i].split("_")[1] !== 'Settings') {
+      writeCookie('canitube_' + cookieArray[i].split("_")[1] + '_' + cookieArray[i].split("_")[2].split("=")[0], 'null', -1000);
+    }
+  }
+} // This function resets all cookies and reloads the page
+
+
+function factoryReset() {
+  let cookieArray = document.cookie.split("; ");
+
+  for (var i = 0; i < cookieArray.length; i++) {
+    // Delete every cookie
+    writeCookie('canitube_' + cookieArray[i].split("_")[1] + '_' + cookieArray[i].split("_")[2].split("=")[0], 'null', -100);
+  } // Reload the page
+
+
+  location.reload();
+} // This function clears all selected cookies in the dev console
+
+
+function clearSelectedCookies() {
+  (0, _jquery.default)('input[name="cookie-selection"]:checkbox:checked').each(function () {
+    const toTitleCase = phrase => {
+      return phrase.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }; // Get the current cookie name
+
+
+    let currentCookieName = toTitleCase((0, _jquery.default)(this).attr('id').replace(/-/g, ' ')).split(" ");
+    currentCookieName = currentCookieName.splice(0, currentCookieName.length - 2).join(" "); // Write a cookie for each data point in this group that expires in the past so the cookie is deleted
+
+    let cookieDataListParentID = currentCookieName.toLowerCase().replace(/\s/g, '-') + '-cookies';
+    (0, _jquery.default)('#' + cookieDataListParentID + ' .cookie-data-point').each(function () {
+      writeCookie('canitube_' + currentCookieName + '_' + (0, _jquery.default)(this).attr('id').split("-")[2], 'null', -1000);
+    });
+  });
+} // When any cookie is selected turn up opacity on clear selected cookie
 },{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.318ef4ca.js.map
+//# sourceMappingURL=app.936ec2d5.js.map

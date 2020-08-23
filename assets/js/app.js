@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import moment from 'moment';
 
+var appVersion = "2.9";
+
 var riverInfo = [
   {
     "river": "Cape Fear River",
@@ -39,7 +41,7 @@ var riverInfo = [
   {
     "river": "Clinch River",
     "siteID": "03527220",
-    "state": "Virgina",
+    "state": "Virginia",
     "safe_range": {
       "min": 100,
       "max": 900
@@ -107,7 +109,7 @@ var riverInfo = [
   {
     "river": "Holston North Fork",
     "siteID": "03490000",
-    "state": "Virgina",
+    "state": "Virginia",
     "safe_range": {
       "min": 75,
       "max": 500
@@ -124,7 +126,7 @@ var riverInfo = [
   {
     "river": "James River",
     "siteID": "02019500",
-    "state": "Virgina",
+    "state": "Virginia",
     "safe_range": {
       "min": 300,
       "max": 900
@@ -141,7 +143,7 @@ var riverInfo = [
   {
     "river": "Maury River",
     "siteID": "02024000",
-    "state": "Virgina",
+    "state": "Virginia",
     "safe_range": {
       "min": 100,
       "max": 600
@@ -192,7 +194,7 @@ var riverInfo = [
   {
     "river": "South Fork Shenandoah",
     "siteID": "01629500",
-    "state": "Virgina",
+    "state": "Virginia",
     "safe_range": {
       "min": 300,
       "max": 1200
@@ -302,7 +304,7 @@ function generateSelectionMenu() {
   }
 
   // Iterate over each item in the river info list, placing each one in its appropriate dropdown group
-  riverInfo.forEach(riverData => {
+  riverInfo.forEach((riverData, i) => {
     var selectionIDText = riverData.river.toLowerCase().split(" ").join("-") + "-selection";
     var currentItem = document.createElement('div');
     currentItem.id = riverData.river.toLowerCase().split(" ").join("-") + '-selection';
@@ -380,9 +382,9 @@ var selectedRiverIndex = parseInt($('.selected-river').attr('data-index'));
 var siteCode = riverInfo[selectedRiverIndex].siteID;
 var selectedRiver = riverInfo[selectedRiverIndex].river;
 // Name of the real-time cookie for the current site
-var currentSiteCookieName = "canitube_" + selectedRiver + "_currentData";
+var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata";
 // Name of the real-time height cookie
-var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentHeight";
+var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight";
 
 // Delete the item list
 $('.item-list').remove();
@@ -992,15 +994,9 @@ function drawRiverFlow(speed, height) {
     var masterPhase = t*(-8*speed);
 
     var points = xAxis.map(x => {
-      // sin wave = (waveAmp[0]*(Math.sin(x+wavePhase[0])*wavePeriod[0]))
       var sinA = 8 * Math.sin((x+masterPhase) / 209);
       var sinB = 4 * Math.sin((x+(masterPhase*3.218)) / 272);
       var sinC = 1 * Math.sin((x+(masterPhase*2.1047)) / 729);
-      // if(x == 0) {
-      //   console.log(sinA, sinB, sinC)
-      // }
-
-      // var y = (sinA*sinB*sinC)+height;
       var y = (sinA*sinB*sinC)+height;
       return [x,y]
     })
@@ -1160,21 +1156,67 @@ function devConsoleInt() {
   let devConsoleTitle = '<div class="dev-console-info" id="dev-console-title"><div class="container">Dev Console</div></div>';
   let devConsoleInstruction = '<div class="dev-console-info" id="dev-console-instruction"><div class="container">Press SHIFT + TILDA to close the console</div></div>';
   let devConsoleTime = '<div class="dev-console-info" id="dev-console-time"><div class="container"></div></div>';
-  devConsoleContentArea.append(devConsoleTitle).append(devConsoleInstruction).append(devConsoleTime);
+  let devConsoleVersion = '<div class="dev-console-info" id="dev-console-version"><div class="container">Can I Tube <span class="lower-case">v</span>' + appVersion + '</div></div>';
+  devConsoleContentArea.append(devConsoleTitle).append(devConsoleInstruction).append(devConsoleTime).append(devConsoleVersion);
 
   // Add the Cookie wrapper and actions wrapper
   let devConsoleItemsWrapper = '<div id="dev-console-items"><div class="container"></div></div>';
   devConsoleContentArea.append(devConsoleItemsWrapper);
   let cookieWrapper = '<div id="dev-console-cookies"></div>';
   let actionsWrapper = '<div id="dev-console-actions"></div>';
-  $('#dev-console-items').append(cookieWrapper).append(actionsWrapper);
+  $('#dev-console-items > .container').append(cookieWrapper).append(actionsWrapper);
 
   // Add actions to the actions wrapper
   $('#dev-console-actions').append('<div id="actions-title">ACTIONS\n<span class="dev-console-subtitle">Warning: these actions cannot be undone.</span></div>').append('<div class="actions-item" id="clear-settings">Clear Settings</div>').append('<div class="actions-item" id="clear-all-rivers">Clear All River Data</div>').append('<div class="actions-item" id="factory-reset">Factory Reset & Reload</div>');
 
+  // Add event listeners to each action
+  document.getElementById('clear-settings').addEventListener("click", function() {
+    clearSettings();
+  });
+  document.getElementById('clear-all-rivers').addEventListener("click", function() {
+    clearAllRiverData();
+  });
+  document.getElementById('factory-reset').addEventListener("click", function() {
+    factoryReset();
+  });
+
+  // Populate the cookies wrapper with each major cookie and its checkbox
+  let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
+  for(var i=0; i < uniqueValueCookies.length; i++) {
+    let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
+    $('#dev-console-cookies').append(currentCookieGroup);
+
+    // Create the checkbox and label
+    let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
+    $('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
+  }
+
+  // Iterate over each cookie
+  let allCookies = document.cookie.split("; ");
+  for(var i=0; i < allCookies.length; i++) {
+    // For each cookie determine which group it belongs in
+    let cookieName = allCookies[i].split("_")[1];
+    let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
+    let cookieData = allCookies[i].split("_")[2].split("=")[1];
+
+    // Craft the current cookie data entry
+    let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '">' + cookieDataType + '</div>';
+
+    // Append the current data entry into the cookie group
+    $('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
+  }
+
+  // Add the clear selected cookies action
+  let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
+  $('#dev-console-cookies').append(selectedCookieClearAction);
+  document.getElementById('cookie-clear-selected').addEventListener("click", function() {
+    clearSelectedCookies();
+  });
+
   // Start running the time function for the console
   updateTime();
 
+  // Animate in the console
   gsap.timeline()
     .to('#dev-console-area', {duration: .5, ease: 'power2.inOut', background: 'rgba(29, 29, 29, .38)'})
     .to('.central-content', {duration: .5, ease: 'power2.inOut', filter: 'blur(24px)'}, '-.5')
@@ -1198,7 +1240,6 @@ function devConsoleDestory() {
     .call(removeElement, ["#dev-console-area"])
 }
 
-
 // This function updates the console time every second
 function updateTime() {
     let currentTime = moment().format('MMM DD, YYYY　　hh:mm:ss A');
@@ -1211,3 +1252,61 @@ function updateTime() {
       setTimeout(updateTime, 1000);
     }
 }
+
+// This function acts as a filter method for arrays that returns only unique values
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
+// This function resets the settings to the default values
+function clearSettings() {
+  writeCookie('canitube_Settings_Performance', 'smooth', 1000000);
+  writeCookie('canitube_Settings_Display', 'simple', 1000000);
+}
+
+// This function clears all river data
+function clearAllRiverData() {
+  let cookieArray = document.cookie.split("; ");
+  for(var i=0; i < cookieArray.length; i++) {
+    // If the cookie isn't a settings cookie
+    if(cookieArray[i].split("_")[1] !== 'Settings') {
+      writeCookie('canitube_' + cookieArray[i].split("_")[1] + '_' + cookieArray[i].split("_")[2].split("=")[0], 'null', -1000);
+    }
+  }
+}
+
+// This function resets all cookies and reloads the page
+function factoryReset() {
+  let cookieArray = document.cookie.split("; ");
+  for(var i=0; i < cookieArray.length; i++) {
+    // Delete every cookie
+    writeCookie('canitube_' + cookieArray[i].split("_")[1] + '_' + cookieArray[i].split("_")[2].split("=")[0], 'null', -100);
+  }
+
+  // Reload the page
+  location.reload();
+}
+
+// This function clears all selected cookies in the dev console
+function clearSelectedCookies() {
+  $('input[name="cookie-selection"]:checkbox:checked').each(function() {
+    const toTitleCase = (phrase) => {
+      return phrase
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    };
+    // Get the current cookie name
+    let currentCookieName = toTitleCase($(this).attr('id').replace(/-/g, ' ')).split(" ");
+    currentCookieName = currentCookieName.splice(0, currentCookieName.length-2).join(" ");
+
+    // Write a cookie for each data point in this group that expires in the past so the cookie is deleted
+    let cookieDataListParentID = currentCookieName.toLowerCase().replace(/\s/g, '-') + '-cookies';
+    $('#' + cookieDataListParentID + ' .cookie-data-point').each(function() {
+      writeCookie('canitube_' + currentCookieName + '_' + $(this).attr('id').split("-")[2], 'null', -1000);
+    })
+  })
+}
+
+// When any cookie is selected turn up opacity on clear selected cookie
