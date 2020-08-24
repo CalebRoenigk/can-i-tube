@@ -1181,53 +1181,8 @@ function devConsoleInt() {
   });
 
   // Populate the cookies wrapper with each major cookie and its checkbox
-  let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
-  for(var i=0; i < uniqueValueCookies.length; i++) {
-    let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
-    $('#dev-console-cookies').append(currentCookieGroup);
-
-    // Create the checkbox and label
-    let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
-    $('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
-  }
-
-  // Iterate over each cookie
-  let allCookies = document.cookie.split("; ");
-  for(var i=0; i < allCookies.length; i++) {
-    // For each cookie determine which group it belongs in
-    let cookieName = allCookies[i].split("_")[1];
-    let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
-    let cookieData = allCookies[i].split("_")[2].split("=")[1];
-
-    // Determine the unit of measure
-    if(cookieDataType == 'currentdata') {
-      var cookieUnit = 'CUFT3/S';
-    } else if(cookieDataType == 'currentheight') {
-      var cookieUnit = 'FT';
-    } else {
-      var cookieUnit = '';
-    }
-
-    // Craft the current cookie data entry
-    let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>';
-
-    // Append the current data entry into the cookie group
-    $('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
-  }
-
-  // Add the clear selected cookies action
-  let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
-  $('#dev-console-cookies').append(selectedCookieClearAction);
-  document.getElementById('cookie-clear-selected').addEventListener("click", function() {
-    clearSelectedCookies();
-  });
-
-  // Add event listeners to each cookie group
-  document.querySelectorAll('.cookie-group').forEach(element => {
-    element.addEventListener("click", function() {
-      cookieGroupClick();
-    })
-  });
+  // MOVING THIS TO A FUNCTION
+  generateCookies();
 
   // Start running the time function for the console
   updateTime();
@@ -1335,4 +1290,95 @@ function cookieGroupClick() {
     // If there aren't any boxes checked
     $('#cookie-clear-selected').css('opacity', '');
   }
+}
+
+// This function refreshes and generates cookies into the dev console
+function generateCookies() {
+  // Check if the number of groups in the cookie pannel is the same as the number of cookies in the document currently, if they are the same number, do nothing but update the refresh counter
+  if($('.cookie-data-point').length !== document.cookie.split("; ")) {
+    // If they are not equal then add all the cookies
+    $('#dev-console-cookies').empty();
+
+    let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
+    for(var i=0; i < uniqueValueCookies.length; i++) {
+      let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
+      $('#dev-console-cookies').append(currentCookieGroup);
+
+      // Create the checkbox and label
+      let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
+      $('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
+    }
+
+    // Iterate over each cookie
+    let allCookies = document.cookie.split("; ");
+    for(var i=0; i < allCookies.length; i++) {
+      // For each cookie determine which group it belongs in
+      let cookieName = allCookies[i].split("_")[1];
+      let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
+      let cookieData = allCookies[i].split("_")[2].split("=")[1];
+
+      // Determine the unit of measure
+      if(cookieDataType == 'currentdata') {
+        var cookieUnit = 'CUFT3/S';
+      } else if(cookieDataType == 'currentheight') {
+        var cookieUnit = 'FT';
+      } else {
+        var cookieUnit = '';
+      }
+
+      // Craft the current cookie data entry
+      let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>';
+
+      // Append the current data entry into the cookie group
+      $('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
+    }
+
+    // Add event listeners to each cookie group
+    document.querySelectorAll('.cookie-group').forEach(element => {
+      element.addEventListener("click", function() {
+        cookieGroupClick();
+      })
+    });
+
+    // Add the clear selected cookies action
+    let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
+    $('#dev-console-cookies').append(selectedCookieClearAction);
+    document.getElementById('cookie-clear-selected').addEventListener("click", function() {
+      clearSelectedCookies();
+    });
+
+    // Add the refresh button
+    let refreshAction = '<div id="cookie-refresh"><div id="refresh-cookie-countdown"></div></div>';
+    $('#dev-console-cookies').append(refreshAction);
+
+    // Restart the refresh timer
+    refreshTimer();
+  } else {
+    // Restart the refresh timer
+    refreshTimer();
+  }
+}
+
+// This function creates a refresh timer in the dev console
+function refreshTimer() {
+  // Empty the refresh timer text
+  $('#refresh-cookie-countdown').empty();
+
+  // Start the countdown
+  let timeLeft = 30;
+  var refreshInterval = setInterval(function(){
+    if(timeLeft <= 0){
+      clearInterval(refreshInterval);
+      generateCookies();
+    }
+
+    // Set some refresh text
+    let refreshText = 'Refreshing in ' + timeLeft + ' seconds';
+    if(timeLeft == 1) {
+      refreshText = 'Refreshing in ' + timeLeft + ' second';
+    }
+
+    $('#refresh-cookie-countdown').empty().text(refreshText);
+    timeLeft -= 1;
+  }, 1000);
 }

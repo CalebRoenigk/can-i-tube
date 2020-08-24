@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/process/browser.js":[function(require,module,exports) {
+})({"g5IB":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -326,7 +326,7 @@ process.chdir = function (dir) {
 process.umask = function () {
   return 0;
 };
-},{}],"node_modules/jquery/dist/jquery.js":[function(require,module,exports) {
+},{}],"HlZQ":[function(require,module,exports) {
 var global = arguments[3];
 var process = require("process");
 var define;
@@ -11203,7 +11203,7 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"node_modules/process/browser.js"}],"node_modules/moment/moment.js":[function(require,module,exports) {
+},{"process":"g5IB"}],"iROh":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 //! moment.js
@@ -16875,7 +16875,7 @@ var global = arguments[3];
 
 })));
 
-},{}],"assets/js/app.js":[function(require,module,exports) {
+},{}],"i5Wi":[function(require,module,exports) {
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
@@ -18183,52 +18183,9 @@ function devConsoleInt() {
   document.getElementById('factory-reset').addEventListener("click", function () {
     factoryReset();
   }); // Populate the cookies wrapper with each major cookie and its checkbox
+  // MOVING THIS TO A FUNCTION
 
-  let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
-
-  for (var i = 0; i < uniqueValueCookies.length; i++) {
-    let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
-    (0, _jquery.default)('#dev-console-cookies').append(currentCookieGroup); // Create the checkbox and label
-
-    let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
-    (0, _jquery.default)('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
-  } // Iterate over each cookie
-
-
-  let allCookies = document.cookie.split("; ");
-
-  for (var i = 0; i < allCookies.length; i++) {
-    // For each cookie determine which group it belongs in
-    let cookieName = allCookies[i].split("_")[1];
-    let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
-    let cookieData = allCookies[i].split("_")[2].split("=")[1]; // Determine the unit of measure
-
-    if (cookieDataType == 'currentdata') {
-      var cookieUnit = 'CUFT3/S';
-    } else if (cookieDataType == 'currentheight') {
-      var cookieUnit = 'FT';
-    } else {
-      var cookieUnit = '';
-    } // Craft the current cookie data entry
-
-
-    let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>'; // Append the current data entry into the cookie group
-
-    (0, _jquery.default)('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
-  } // Add the clear selected cookies action
-
-
-  let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
-  (0, _jquery.default)('#dev-console-cookies').append(selectedCookieClearAction);
-  document.getElementById('cookie-clear-selected').addEventListener("click", function () {
-    clearSelectedCookies();
-  }); // Add event listeners to each cookie group
-
-  document.querySelectorAll('.cookie-group').forEach(element => {
-    element.addEventListener("click", function () {
-      cookieGroupClick();
-    });
-  }); // Start running the time function for the console
+  generateCookies(); // Start running the time function for the console
 
   updateTime(); // Animate in the console
 
@@ -18373,210 +18330,92 @@ function cookieGroupClick() {
     // If there aren't any boxes checked
     (0, _jquery.default)('#cookie-clear-selected').css('opacity', '');
   }
-}
-},{"jquery":"node_modules/jquery/dist/jquery.js","moment":"node_modules/moment/moment.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
-var global = arguments[3];
-var OVERLAY_ID = '__parcel__error__overlay__';
-var OldModule = module.bundle.Module;
+} // This function refreshes and generates cookies into the dev console
 
-function Module(moduleName) {
-  OldModule.call(this, moduleName);
-  this.hot = {
-    data: module.bundle.hotData,
-    _acceptCallbacks: [],
-    _disposeCallbacks: [],
-    accept: function (fn) {
-      this._acceptCallbacks.push(fn || function () {});
-    },
-    dispose: function (fn) {
-      this._disposeCallbacks.push(fn);
-    }
-  };
-  module.bundle.hotData = null;
-}
 
-module.bundle.Module = Module;
-var checkedAssets, assetsToAccept;
-var parent = module.bundle.parent;
+function generateCookies() {
+  // Check if the number of groups in the cookie pannel is the same as the number of cookies in the document currently, if they are the same number, do nothing but update the refresh counter
+  if ((0, _jquery.default)('.cookie-data-point').length !== document.cookie.split("; ")) {
+    // If they are not equal then add all the cookies
+    (0, _jquery.default)('#dev-console-cookies').empty();
+    let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
 
-if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
-  var hostname = "" || location.hostname;
-  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59921" + '/');
+    for (var i = 0; i < uniqueValueCookies.length; i++) {
+      let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
+      (0, _jquery.default)('#dev-console-cookies').append(currentCookieGroup); // Create the checkbox and label
 
-  ws.onmessage = function (event) {
-    checkedAssets = {};
-    assetsToAccept = [];
-    var data = JSON.parse(event.data);
+      let currentCookieLabel = '<label for="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data"><input type="checkbox" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookie-data" name="cookie-selection" value="' + uniqueValueCookies[i] + '"><div class="cookie-label">' + uniqueValueCookies[i] + '</div></label>';
+      (0, _jquery.default)('#' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookieLabel);
+    } // Iterate over each cookie
 
-    if (data.type === 'update') {
-      var handled = false;
-      data.assets.forEach(function (asset) {
-        if (!asset.isNew) {
-          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
 
-          if (didAccept) {
-            handled = true;
-          }
-        }
-      }); // Enable HMR for CSS by default.
+    let allCookies = document.cookie.split("; ");
 
-      handled = handled || data.assets.every(function (asset) {
-        return asset.type === 'css' && asset.generated.js;
+    for (var i = 0; i < allCookies.length; i++) {
+      // For each cookie determine which group it belongs in
+      let cookieName = allCookies[i].split("_")[1];
+      let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
+      let cookieData = allCookies[i].split("_")[2].split("=")[1]; // Determine the unit of measure
+
+      if (cookieDataType == 'currentdata') {
+        var cookieUnit = 'CUFT3/S';
+      } else if (cookieDataType == 'currentheight') {
+        var cookieUnit = 'FT';
+      } else {
+        var cookieUnit = '';
+      } // Craft the current cookie data entry
+
+
+      let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>'; // Append the current data entry into the cookie group
+
+      (0, _jquery.default)('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
+    } // Add event listeners to each cookie group
+
+
+    document.querySelectorAll('.cookie-group').forEach(element => {
+      element.addEventListener("click", function () {
+        cookieGroupClick();
       });
+    }); // Add the clear selected cookies action
 
-      if (handled) {
-        console.clear();
-        data.assets.forEach(function (asset) {
-          hmrApply(global.parcelRequire, asset);
-        });
-        assetsToAccept.forEach(function (v) {
-          hmrAcceptRun(v[0], v[1]);
-        });
-      } else if (location.reload) {
-        // `location` global exists in a web worker context but lacks `.reload()` function.
-        location.reload();
-      }
+    let selectedCookieClearAction = '<div id="cookie-clear-selected">Clear Selected</div>';
+    (0, _jquery.default)('#dev-console-cookies').append(selectedCookieClearAction);
+    document.getElementById('cookie-clear-selected').addEventListener("click", function () {
+      clearSelectedCookies();
+    }); // Add the refresh button
+
+    let refreshAction = '<div id="cookie-refresh"><div id="refresh-cookie-countdown"></div></div>';
+    (0, _jquery.default)('#dev-console-cookies').append(refreshAction); // Restart the refresh timer
+
+    refreshTimer();
+  } else {
+    // Restart the refresh timer
+    refreshTimer();
+  }
+} // This function creates a refresh timer in the dev console
+
+
+function refreshTimer() {
+  // Empty the refresh timer text
+  (0, _jquery.default)('#refresh-cookie-countdown').empty(); // Start the countdown
+
+  let timeLeft = 30;
+  var refreshInterval = setInterval(function () {
+    if (timeLeft <= 0) {
+      clearInterval(refreshInterval);
+      generateCookies();
+    } // Set some refresh text
+
+
+    let refreshText = 'Refreshing in ' + timeLeft + ' seconds';
+
+    if (timeLeft == 1) {
+      refreshText = 'Refreshing in ' + timeLeft + ' second';
     }
 
-    if (data.type === 'reload') {
-      ws.close();
-
-      ws.onclose = function () {
-        location.reload();
-      };
-    }
-
-    if (data.type === 'error-resolved') {
-      console.log('[parcel] ✨ Error resolved');
-      removeErrorOverlay();
-    }
-
-    if (data.type === 'error') {
-      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
-      removeErrorOverlay();
-      var overlay = createErrorOverlay(data);
-      document.body.appendChild(overlay);
-    }
-  };
+    (0, _jquery.default)('#refresh-cookie-countdown').empty().text(refreshText);
+    timeLeft -= 1;
+  }, 1000);
 }
-
-function removeErrorOverlay() {
-  var overlay = document.getElementById(OVERLAY_ID);
-
-  if (overlay) {
-    overlay.remove();
-  }
-}
-
-function createErrorOverlay(data) {
-  var overlay = document.createElement('div');
-  overlay.id = OVERLAY_ID; // html encode message and stack trace
-
-  var message = document.createElement('div');
-  var stackTrace = document.createElement('pre');
-  message.innerText = data.error.message;
-  stackTrace.innerText = data.error.stack;
-  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
-  return overlay;
-}
-
-function getParents(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return [];
-  }
-
-  var parents = [];
-  var k, d, dep;
-
-  for (k in modules) {
-    for (d in modules[k][1]) {
-      dep = modules[k][1][d];
-
-      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
-        parents.push(k);
-      }
-    }
-  }
-
-  if (bundle.parent) {
-    parents = parents.concat(getParents(bundle.parent, id));
-  }
-
-  return parents;
-}
-
-function hmrApply(bundle, asset) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (modules[asset.id] || !bundle.parent) {
-    var fn = new Function('require', 'module', 'exports', asset.generated.js);
-    asset.isNew = !modules[asset.id];
-    modules[asset.id] = [fn, asset.deps];
-  } else if (bundle.parent) {
-    hmrApply(bundle.parent, asset);
-  }
-}
-
-function hmrAcceptCheck(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (!modules[id] && bundle.parent) {
-    return hmrAcceptCheck(bundle.parent, id);
-  }
-
-  if (checkedAssets[id]) {
-    return;
-  }
-
-  checkedAssets[id] = true;
-  var cached = bundle.cache[id];
-  assetsToAccept.push([bundle, id]);
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    return true;
-  }
-
-  return getParents(global.parcelRequire, id).some(function (id) {
-    return hmrAcceptCheck(global.parcelRequire, id);
-  });
-}
-
-function hmrAcceptRun(bundle, id) {
-  var cached = bundle.cache[id];
-  bundle.hotData = {};
-
-  if (cached) {
-    cached.hot.data = bundle.hotData;
-  }
-
-  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
-    cached.hot._disposeCallbacks.forEach(function (cb) {
-      cb(bundle.hotData);
-    });
-  }
-
-  delete bundle.cache[id];
-  bundle(id);
-  cached = bundle.cache[id];
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    cached.hot._acceptCallbacks.forEach(function (cb) {
-      cb();
-    });
-
-    return true;
-  }
-}
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","assets/js/app.js"], null)
-//# sourceMappingURL=/app.56908c73.js.map
+},{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
+//# sourceMappingURL=app.81859da3.js.map

@@ -241,7 +241,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url(/selector-arrow.2c6915c0.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -257,7 +257,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url(/selector-arrow.2c6915c0.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -273,7 +273,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url(/selector-arrow.2c6915c0.svg);
+	background-image: url(selector-arrow.e078bd8b.svg);
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -886,7 +886,7 @@ a:hover{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-	width: auto;
+	width: 250px;
 }
 
 #dev-console-cookies::before {
@@ -988,7 +988,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('/child-line.2fc40ccd.svg');
+	background-image: url('child-line.19bd7a5c.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1002,7 +1002,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('/child-line-terminate.d9403a4a.svg');
+	background-image: url('child-line-terminate.08480dfd.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1034,8 +1034,27 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	letter-spacing: 1px;
 }
 
+#cookie-refresh {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	transform: translate(0%, 150%);
+}
+
+#refresh-cookie-countdown {
+	text-align: left;
+	font-size: 10px;
+	transform: translate(0%, 2px);
+	opacity: .5;
+}
+
 #dev-console-actions, #dev-console-cookies {
-	margin-bottom: 25px;
+	margin-bottom: 50px;
 }
 
 #dev-console-actions {
@@ -1070,4 +1089,4 @@ input[type="checkbox"]:checked + .cookie-label::before {
 }
 
 
-/*# sourceMappingURL=/styles.5072464b.css.map */
+/*# sourceMappingURL=styles.c16cbfbd.css.map */
