@@ -241,7 +241,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url(selector-arrow.e078bd8b.svg);
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -257,7 +257,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url(selector-arrow.e078bd8b.svg);
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -273,7 +273,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url(selector-arrow.e078bd8b.svg);
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -1088,5 +1088,50 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	cursor: pointer;
 }
 
+/* Banners */
 
-/*# sourceMappingURL=styles.c16cbfbd.css.map */
+.banner {
+	position: absolute;
+	left: 0px;
+	width: 100%;
+	height: 25px;
+	background: -moz-linear-gradient(left, rgba(29,29,29,0) 0%, rgba(29,29,29,.38) 20%, rgba(29,29,29,.38) 80%, rgba(29,29,29,0) 100%);
+	background: -webkit-linear-gradient(left, rgba(29,29,29,0) 0%,rgba(29,29,29,.38) 20%,rgba(29,29,29,.38) 80%,rgba(29,29,29,0) 100%);
+	background: linear-gradient(to right, rgba(29,29,29,0) 0%,rgba(29,29,29,.38) 20%,rgba(29,29,29,.38) 80%,rgba(29,29,29,0) 100%);
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	z-index: 250;
+}
+
+#cookie-policy-banner {
+	top: 0px;
+	color: #E6E6E6;
+	font-size: 11px;
+	letter-spacing: .75px;
+	line-height: 1.5;
+}
+
+#cookie-policy-banner > .container {
+	display: grid;
+	place-items: center;
+}
+
+#cookie-policy-close-button {
+	width: 16px;
+	height: 16px;
+	background-image: url('close-button.d326a291.svg');
+	background-position: center center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	margin-left: 12px;
+	cursor: pointer;
+	float: right;
+	clear: both;
+}
+
+
+/*# sourceMappingURL=styles.cd97e180.css.map */

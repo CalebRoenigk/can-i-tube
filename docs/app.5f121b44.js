@@ -16884,7 +16884,7 @@ var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.0";
+var appVersion = "3.01";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -17182,6 +17182,23 @@ function selectItem(itemID) {
 
 
 (0, _jquery.default)(document).ready(function () {
+  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
+  if (getCookie('canitube_User_Cookie Policy') == 'accepted') {
+    (0, _jquery.default)('#cookie-policy-banner').remove();
+  } else {
+    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000); // Add event listener to cookie-policy close button
+
+    document.getElementById('cookie-policy-close-button').addEventListener("click", function () {
+      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
+      gsap.to('#cookie-policy-banner', {
+        duration: .375,
+        ease: 'power2.inOut',
+        y: '-150%'
+      });
+      (0, _jquery.default)('#cookie-policy-banner').remove();
+    });
+  }
+
   generateSelectionMenu(); // Set the central content transform to half the width and height of its loaded width and height
 
   var contentWidth = (0, _jquery.default)('.central-content').width();
@@ -18418,4 +18435,4 @@ function refreshTimer() {
   }, 1000);
 }
 },{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.64579813.js.map
+//# sourceMappingURL=app.5f121b44.js.map

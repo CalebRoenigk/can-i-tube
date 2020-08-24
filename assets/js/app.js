@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import moment from 'moment';
 
-var appVersion = "3.0";
+var appVersion = "3.01";
 
 var riverInfo = [
   {
@@ -363,15 +363,27 @@ function selectItem(itemID) {
 
 // When the document is ready
 $(document).ready(function() {
-generateSelectionMenu();
+  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
+  if(getCookie('canitube_User_Cookie Policy') == 'accepted') {
+    $('#cookie-policy-banner').remove();
+  } else {
+    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000);
+    // Add event listener to cookie-policy close button
+    document.getElementById('cookie-policy-close-button').addEventListener("click", function() {
+      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
+      gsap.to('#cookie-policy-banner', {duration: .375, ease: 'power2.inOut', y: '-150%'})
+      $('#cookie-policy-banner').remove();
+    })
+  }
+  generateSelectionMenu();
 
-// Set the central content transform to half the width and height of its loaded width and height
-var contentWidth = $('.central-content').width();
-var contentHeight = $('.central-content').height();
-$('.central-content').css('transform', 'translate(' + (-contentWidth/2) + 'px, ' + (-contentHeight/2) + 'px)');
+  // Set the central content transform to half the width and height of its loaded width and height
+  var contentWidth = $('.central-content').width();
+  var contentHeight = $('.central-content').height();
+  $('.central-content').css('transform', 'translate(' + (-contentWidth/2) + 'px, ' + (-contentHeight/2) + 'px)');
 
-// Store the width and height values on the object
-$('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight);
+  // Store the width and height values on the object
+  $('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight);
 });
 
 // Dectect when the user clicks Check Now and run the transition sequence
