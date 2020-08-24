@@ -16884,7 +16884,7 @@ var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "2.9";
+var appVersion = "3.0";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -18418,4 +18418,4 @@ function refreshTimer() {
   }, 1000);
 }
 },{"jquery":"HlZQ","moment":"iROh"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.81859da3.js.map
+//# sourceMappingURL=app.64579813.js.map

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import moment from 'moment';
 
-var appVersion = "2.9";
+var appVersion = "3.0";
 
 var riverInfo = [
   {
