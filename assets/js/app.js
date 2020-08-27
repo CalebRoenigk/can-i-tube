@@ -1,7 +1,8 @@
 import $ from 'jquery';
 import moment from 'moment';
+import convert from 'convert-units';
 
-var appVersion = "3.01";
+var appVersion = "3.03";
 
 var riverInfo = [
   {
@@ -19,6 +20,14 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 7
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "35.4061111",
+      "long": "-78.8133333"
     }
   },
   {
@@ -36,6 +45,14 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 8
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "35.28527778",
+      "long": "-81.1011111"
     }
   },
   {
@@ -53,6 +70,15 @@ var riverInfo = [
     "height_range": {
       "min": 1,
       "max": 6
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065",
+      "water_temperature": "00010"
+    },
+    "geo_location": {
+      "lat": "36.57280708",
+      "long": "-82.938754"
     }
   },
   {
@@ -70,6 +96,14 @@ var riverInfo = [
     "height_range": {
       "min": 2.5,
       "max": 7
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "33.99320985",
+      "long": "-81.049815"
     }
   },
   {
@@ -87,6 +121,14 @@ var riverInfo = [
     "height_range": {
       "min": 1,
       "max": 10
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "36.4125",
+      "long": "-79.8261111"
     }
   },
   {
@@ -104,6 +146,15 @@ var riverInfo = [
     "height_range": {
       "min": 1.5,
       "max": 4
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065",
+      "water_temperature": "00010"
+    },
+    "geo_location": {
+      "lat": "35.60888889",
+      "long": "-82.5780556"
     }
   },
   {
@@ -121,6 +172,15 @@ var riverInfo = [
     "height_range": {
       "min": .5,
       "max": 4
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065",
+      "water_temperature": "00010"
+    },
+    "geo_location": {
+      "lat": "36.60871119",
+      "long": "-82.567931"
     }
   },
   {
@@ -138,6 +198,14 @@ var riverInfo = [
     "height_range": {
       "min": 1,
       "max": 3
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "37.53068995",
+      "long": "-79.6789281"
     }
   },
   {
@@ -155,6 +223,14 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 3.75
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "37.76263275",
+      "long": "-79.3914251"
     }
   },
   {
@@ -172,6 +248,14 @@ var riverInfo = [
     "height_range": {
       "min": 1,
       "max": 4.5
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "36.3933333",
+      "long": "-81.4069444"
     }
   },
   {
@@ -189,6 +273,14 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 6
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "34.17457619",
+      "long": "-81.864002"
     }
   },
   {
@@ -206,6 +298,14 @@ var riverInfo = [
     "height_range": {
       "min": 2,
       "max": 5.5
+    },
+    "site_parameters": {
+      "discharge": "00060",
+      "gage_height": "00065"
+    },
+    "geo_location": {
+      "lat": "38.6462305",
+      "long": "-78.5347329"
     }
   }
 ];
@@ -938,11 +1038,16 @@ function remapNumber(input, low1, high1, low2, high2) {
 return (low2 + (input - low1) * (high2 - low2) / (high1 - low1))
 }
 
-// This function writes a cookie ith a name, data, and a number of days before expiring
+// This function writes a cookie with a name, data, and a number of hours before expiring
 function writeCookie(name, data, hoursTilExpire) {
-var date = new Date();
-var exp = date.setTime(+ date + (hoursTilExpire * 3600000));
-document.cookie = name + "=" + data + ";" + "expires=" + date.toGMTString() + ";";
+  var date = new Date();
+  var exp = date.setTime(+ date + (hoursTilExpire * 3600000));
+  document.cookie = name + "=" + data + ";" + "expires=" + date.toGMTString() + ";";
+}
+
+// This function writes a cookie with a name, data, and a unix expire timestamp
+function writeCookieUnix(name, data, unixExpire) {
+  document.cookie = name + "=" + data + ";" + "expires=" + unixExpire.toGMTString() + ";";
 }
 
 // This function returns the data in a cookie of a specified name
@@ -1313,6 +1418,7 @@ function generateCookies() {
 
     let uniqueValueCookies = document.cookie.split("; ").map(i => i.split("_")[1]).filter(onlyUnique);
     for(var i=0; i < uniqueValueCookies.length; i++) {
+      // If the current cookie group is not weather
       let currentCookieGroup = '<div class="cookie-group" id="' + uniqueValueCookies[i].toLowerCase().replace(/\s/g, '-') + '-cookies"></div>';
       $('#dev-console-cookies').append(currentCookieGroup);
 
@@ -1327,22 +1433,42 @@ function generateCookies() {
       // For each cookie determine which group it belongs in
       let cookieName = allCookies[i].split("_")[1];
       let cookieDataType = allCookies[i].split("_")[2].split("=")[0];
-      let cookieData = allCookies[i].split("_")[2].split("=")[1];
+      if(cookieDataType == 'Weather') {
+        cookieDataType = '[W] ' + allCookies[i].split("_")[3].split("=")[0];
+        var cookieDataName = allCookies[i].split("_")[3].split("=")[0];
+        if(cookieDataName.split(" ")[0] !== 'Current') {
+          // If the weather cookie is not current then its data should be replaced with an Object notation
+          var cookieData = '{Object}';
+        } else {
+          var cookieData = allCookies[i].split("_")[3].split("=")[1];
+        }
+      } else {
+        cookieDataType = cookieDataType.split("=")[0];
+        var cookieDataName = cookieDataType;
+        var cookieData = allCookies[i].split("_")[2].split("=")[1];
+      }
 
       // Determine the unit of measure
-      if(cookieDataType == 'currentdata') {
+      if(cookieDataName == 'currentdata') {
         var cookieUnit = 'CUFT3/S';
-      } else if(cookieDataType == 'currentheight') {
+      } else if(cookieDataName == 'currentheight') {
         var cookieUnit = 'FT';
+      } else if(cookieDataName == 'Current Temperature') {
+        var cookieUnit = 'K';
+      } else if(cookieDataName == 'Current Wind Speed') {
+        var cookieUnit = 'M/S';
+      } else if(cookieDataName == 'Current Cloud Cover') {
+        var cookieUnit = '%';
       } else {
         var cookieUnit = '';
       }
 
       // Craft the current cookie data entry
-      let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataType.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>';
+      let currentCookie = '<div class="cookie-data-point" id="cookie-' + cookieName.toLowerCase() + '-' + cookieDataName.toLowerCase().replace(/\s/g, '-') + '" data-value="' + cookieData + '" data-unit="' + cookieUnit + '">' + cookieDataType + '</div>';
 
       // Append the current data entry into the cookie group
       $('#' + cookieName.toLowerCase().replace(/\s/g, '-') + '-cookies').append(currentCookie);
+
     }
 
     // Add event listeners to each cookie group

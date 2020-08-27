@@ -886,7 +886,7 @@ a:hover{
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-	width: 250px;
+	width: 350px;
 }
 
 #dev-console-cookies::before {
@@ -912,13 +912,13 @@ a:hover{
 	clip-path: polygon(-5px -5px, 10px -5px, 10px 16px, 142px 16px, 142px -5px, 105% -5px, 105% 105%, -5px 105%);
 }
 
-.cookie-group {
+.cookie-group, .cookie-major-group {
 	margin-bottom: 8px;
 	z-index: 1050;
 	text-align: left;
 }
 
-.cookie-group > label > input[type="checkbox"] {
+.cookie-group > label > input[type="checkbox"], .cookie-major-group > label > input[type="checkbox"] {
 	display: none;
 }
 
