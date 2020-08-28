@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.03";
+var appVersion = "3.1";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -22130,4 +22130,4 @@ function convertDOW(dowNum, typeOfString) {
   return dowConverter[Object.keys(dowConverter)[dowNum % 7 - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.bf4fb447.js.map
+//# sourceMappingURL=app.6a76f7d2.js.map

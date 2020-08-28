@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.03";
+var appVersion = "3.1";
 
 var riverInfo = [
   {
