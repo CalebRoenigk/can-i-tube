@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.1";
+var appVersion = "3.3";
 
 var riverInfo = [
   {
@@ -919,7 +919,7 @@ $('#background-wave > mask').attr('width', $(window).width()).attr('height', $(w
 $('#background-wave > mask > g > rect').attr('width', $(window).width()).attr('height', $(window).height());
 
 // Call a weather display update
-weatherUpdate(siteGeoLocation, siteName, unitSet);
+weatherUpdate(siteGeoLocation, siteName, unitSet, formatChoices[state].stroke_color);
 
 // Begin the transition to the final state
 gsap.timeline()
@@ -935,7 +935,7 @@ gsap.timeline()
   .set('.date-mask > .container', {color: formatChoices[state].text_color})
   .set('.date-mask', {background: formatChoices[state].background_color})
   .set('.settings-text', {color: formatChoices[state].text_color})
-  .set('svg > .svg-stroke-style', {stroke: formatChoices[state].stroke_color})
+  .set('svg .svg-stroke-style', {stroke: formatChoices[state].stroke_color})
   .set('svg .svg-fill-style', {fill: formatChoices[state].stroke_color})
   .set('.point-indicator > svg > path', {fill: formatChoices[state].stroke_color})
   .set('.tooltip-item', {color: formatChoices[state].background_color, background: formatChoices[state].text_color})
@@ -1058,7 +1058,7 @@ function writeCookie(name, data, hoursTilExpire) {
 
 // This function writes a cookie with a name, data, and a unix expire timestamp
 function writeCookieUnix(name, data, unixExpire) {
-  document.cookie = name + "=" + data + ";" + "expires=" + unixExpire.toGMTString() + ";";
+  document.cookie = name + "=" + data + ";" + "expires=" + new Date(unixExpire).toGMTString() + ";";
 }
 
 // This function returns the data in a cookie of a specified name
@@ -1088,6 +1088,105 @@ if (cookieCheck == "") {
     return true;
   }
 }
+}
+
+// This function writes data to local storage
+// Expire time is an array which contains an operation cue and a value given the operation
+function writeLocalStorage(name, data, expireTime, category) {
+  let expiringEpoch = 0;
+  if(expireTime[0] == 'epoch') {
+    // Expire time provided as an exact epoch time
+    expiringEpoch = expireTime[1];
+  }
+  if(expireTime[0] == 'hourstil') {
+    // Expire time provided as hours until
+    let date = new Date();
+    let exp = date.setTime(+ date + (expireTime[1] * 3600000));
+
+    expiringEpoch = Math.floor(exp/1000);
+  }
+  if(expireTime[0] == 'eod') {
+    // Expire time set to End of current day
+    let midnight = new Date();
+    midnight.setHours(23,59,59,0);
+
+    expiringEpoch = midnight.getTime()/1000;
+  }
+
+  category = category || 'Default';
+
+  const item = {
+    value: data,
+    category: category,
+    expiry: expiringEpoch
+  }
+
+  localStorage.setItem(name, JSON.stringify(item));
+}
+
+// This function reads data from local storage and returns the data and expiry in an object
+function readLocalStorage(name) {
+  let fetchedItem = JSON.parse(localStorage.getItem(name));
+
+  const item = {
+    'value': fetchedItem.value,
+    'category': fetchedItem.category,
+    'expiry': fetchedItem.expiry
+  }
+
+  return item;
+}
+
+// This function checks for an item in local storage, returns a bool value if the item exists or not
+function checkLocalStorage(name) {
+  if(localStorage.getItem(name) === null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// This function removes an item from local storage
+function removeItemLocalStorage(name) {
+  localStorage.removeItem(name);
+}
+
+// This function removes items from local storage that have expired
+function expireLocalStorage() {
+  let search = [],
+      keys = Object.keys(localStorage),
+      i = 0, key;
+
+  for (; key = keys[i]; i++) {
+    let item = JSON.parse(localStorage.getItem(key));
+    let currentTime = new Date();
+    currentTime = Math.floor(currentTime.getTime()/1000);
+    if(item.expiry <= currentTime) {
+      removeItemLocalStorage(key);
+    }
+
+  }
+}
+
+// This function looks for items in local storage that match a category tag
+function localStorageCategorySearch(category) {
+  let search = [],
+      keys = Object.keys(localStorage),
+      i = 0, key;
+
+  for (; key = keys[i]; i++) {
+    let item = JSON.parse(localStorage.getItem(key));
+    if(item.category == category) {
+      search.push(key);
+    }
+  }
+
+  // If items are found return their key array, else return false
+  if(search.length > 0) {
+    return search;
+  } else {
+    return false;
+  }
 }
 
 // This function draws the animated river
@@ -1220,6 +1319,10 @@ function togglePerformance() {
 
 // When the document is ready, aka startup function
 $(document).ready(function() {
+  // Check local storage and expire any items that are old
+  expireLocalStorage();
+
+  // Check settings cookies
   var settingsPerformanceCookiePresent = checkCookie('canitube_Settings_Performance');
   var settingsDisplayCookiePresent = checkCookie('canitube_Settings_Display');
   // If there are no settings cookies, create cookies for the default settings
@@ -1535,114 +1638,114 @@ function refreshTimer() {
 // This function updates the weather cookies for the current site
 async function weatherUpdate(siteLocation, siteName, unitSet) {
   // Find all the cookie categories currently present
-  let cookieCategories = document.cookie.split("; ").map(item => item.split("_")[2]);
+  let localStorageItemSearch = localStorageCategorySearch('Weather');
 
   // Test if there are any Weather cookies
-  if(cookieCategories.indexOf('Weather') == -1) {
-    console.log('There are no weather cookies!')
-    // Set the weather API cookie to 0 calls and expire in 24 hours
-    writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24);
-    // Also write a cookie that contains the cookie expire date
+  if(localStorageItemSearch == false) {
+    console.log('There are no weather items!')
+    // Set the weather API item to 0 calls and expire in 24 hours
+    writeLocalStorage('canitube_' + siteName + '_API Calls', 0, ['hourstil', 24], 'Weather');
+    // Also write a local storage item that contains the item expire date
     let expDate = new Date();
     expDate = expDate.setTime(+ expDate + (24 * 3600000));
-    writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24);
+    writeLocalStorage('canitube_' + siteName + '_API Calls Expire', expDate, ['hourstil', 24], 'Weather');
 
-    // Standard cookie call
+    // Standard API call
     let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName);
 
     // Set the new total of API calls
-    let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-    writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+    let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+    writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
 
   } else {
-    console.log('There are weather cookies!')
-    // Test if the API call cookie is present
-    let cookieDataType = document.cookie.split("; ").map(item => item.split("_")[2].split("=")[0]);
-    if(cookieDataType.indexOf('API Calls') == -1) {
-      console.log('There is no API calls cookie!');
-      // Set the weather API cookie to 0 calls and expire in 24 hours
-      writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24);
-      // Also write a cookie that contains the cookie expire date
+    console.log('There are weather items!')
+    // Test if the API call item is present
+    let apiItem = checkLocalStorage('canitube_' + siteName + '_API Calls');
+    if(apiItem == false) {
+      console.log('There is no API calls item!');
+      // Set the weather API item to 0 calls and expire in 24 hours
+      writeLocalStorage('canitube_' + siteName + '_API Calls', 0, ['hourstil', 24], 'Weather');
+      // Also write a local storage item that contains the item expire date
       let expDate = new Date();
       expDate = expDate.setTime(+ expDate + (24 * 3600000));
-      writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24);
+      writeLocalStorage('canitube_' + siteName + '_API Calls Expire', expDate, ['hourstil', 24], 'Weather');
 
-      // Standard cookie call
+      // Standard API call
       let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName);
 
       // Set the new total of API calls
-      let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-      writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+      let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+      writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
 
     } else {
       // If the API calls value is less than 3
-      console.log('There is an API calls cookie! Its value is: ' + getCookie('canitube_' + siteName + '_Weather_API Calls'));
-      let cookieWeatherAPICalls = getCookie('canitube_' + siteName + '_Weather_API Calls');
-      if(cookieWeatherAPICalls < 3) {
+      console.log('There is an API calls item! Its value is: ' + readLocalStorage('canitube_' + siteName + '_API Calls').value);
+      let itemWeatherAPICalls = readLocalStorage('canitube_' + siteName + '_API Calls').value;
+      if(itemWeatherAPICalls < 3) {
         console.log('There are less than 3 API calls!');
         // Check if new weather data is needed
-        let hourlyWeather = checkCookie('canitube_' + siteName + '_Weather_Hourly Weather');
-        let hourlyTemperature = checkCookie('canitube_' + siteName + '_Weather_Hourly Temperature');
-        let hourlyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed');
-        let hourlyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover');
-        let dailyWeather = checkCookie('canitube_' + siteName + '_Weather_Daily Weather');
-        let dailyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Daily Wind Speed');
-        let dailyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover');
+        let hourlyWeather = checkLocalStorage('canitube_' + siteName + '_Hourly Weather');
+        let hourlyTemperature = checkLocalStorage('canitube_' + siteName + '_Hourly Temperature');
+        let hourlyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Hourly Wind Speed');
+        let hourlyCloudCover = checkLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover');
+        let dailyWeather = checkLocalStorage('canitube_' + siteName + '_Daily Weather');
+        let dailyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Daily Wind Speed');
+        let dailyCloudCover = checkLocalStorage('canitube_' + siteName + '_Daily Cloud Cover');
 
         if(hourlyWeather*hourlyTemperature*hourlyWindSpeed*hourlyCloudCover*dailyWeather*dailyWindSpeed*dailyCloudCover == 0) {
-          console.log('A hourly or daily weather cookie is missing!');
-          // At least 1 of the needed cookies is missing, run standard cookie call
-          // Standard cookie call
+          console.log('A hourly or daily weather item is missing!');
+          // At least 1 of the needed items is missing, run standard item call
+          // Standard API call
           let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName);
 
           // Set the new total of API calls
-          let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-          writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+          let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+          writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
 
         } else {
-          console.log('All hourly and daily cookies are here!');
-          // All of the needed cookies are present, check if the current cookies are present
-          let currentWeather = checkCookie('canitube_' + siteName + '_Weather_Current Weather');
-          let currentWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
-          let currentCloudCover = checkCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
-          let currentTemperature = checkCookie('canitube_' + siteName + '_Weather_Current Temperature');
+          console.log('All hourly and daily item are here!');
+          // All of the needed items are present, check if the current item are present
+          let currentWeather = checkLocalStorage('canitube_' + siteName + '_Current Weather');
+          let currentWindSpeed = checkLocalStorage('canitube_' + siteName + '_Current Wind Speed');
+          let currentCloudCover = checkLocalStorage('canitube_' + siteName + '_Current Cloud Cover');
+          let currentTemperature = checkLocalStorage('canitube_' + siteName + '_Current Temperature');
 
           if(currentWeather*currentWindSpeed*currentCloudCover*currentTemperature !== 1) {
-            console.log('A current cookie needs to be updated!');
-            // The current cookies are not present, perform operations to update current values
+            console.log('A current item needs to be updated!');
+            // The current items are not present, perform operations to update current values
             // Determine the current time as a unix timestamp and read the hourly weather values for the current values at the current hour unix timestring
-            function getFirstCookie(data) {
+            function getFirstTime(data) {
                 const times = Object.keys(data);
                 const now = new Date().getTime();
-                const [firstCookie] = times.filter(time => now < (time * 1000))
-                return firstCookie;
+                const [firstTime] = times.filter(time => now < (time * 1000))
+                return firstTime;
             }
 
             // Store the current closest time key
-            let timeKey = getFirstCookie(JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather')));
+            let timeKey = getFirstTime(JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value));
 
             // Use the time key to grab the value for all of the current value items from hourly items
-            let currentTemperatureJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Temperature'));
-            let currentWeatherJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
-            let currentWindSpeedJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
-            let currentCloudCoverJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover'));
+            let currentTemperatureJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Temperature').value);
+            let currentWeatherJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value);
+            let currentWindSpeedJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
+            let currentCloudCoverJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value);
 
-            let cookieCurrentTemperature = currentTemperatureJSON[timeKey];
-            let cookieCurrentWeather = currentWeatherJSON[timeKey];
-            let cookieCurrentWindSpeed = currentWindSpeedJSON[timeKey];
-            let cookieCurrentCloudCover = currentCloudCoverJSON[timeKey];
+            let itemCurrentTemperature = currentTemperatureJSON[timeKey];
+            let itemCurrentWeather = currentWeatherJSON[timeKey];
+            let itemCurrentWindSpeed = currentWindSpeedJSON[timeKey];
+            let itemCurrentCloudCover = currentCloudCoverJSON[timeKey];
 
             // Store these new current values
-            let cookiePrefix = 'canitube';
-            let cookieCategory = 'Weather';
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', cookieCurrentTemperature, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', cookieCurrentWeather, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', cookieCurrentWindSpeed, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', cookieCurrentCloudCover, 1);
+            let appPrefix = 'canitube';
+            let itemCategory = 'Weather';
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Temperature', itemCurrentTemperature, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Weather', itemCurrentWeather, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Wind Speed', itemCurrentWindSpeed, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Cloud Cover', itemCurrentCloudCover, ['hourstil', 1], 'Weather');
 
             // Check for sun values
-            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
-            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+            let sunriseCheck = checkLocalStorage('canitube_' + siteName + '_Sunrise');
+            let sunsetCheck = checkLocalStorage('canitube_' + siteName + '_Sunset');
             if(sunriseCheck*sunsetCheck !== 1) {
               console.log('Sunrise or Sunset are missing!');
               // Fill Sunrise/Sunset with default values
@@ -1654,15 +1757,15 @@ async function weatherUpdate(siteLocation, siteName, unitSet) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime()/1000.0), hoursUntilMidnight());
-              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime()/1000.0), hoursUntilMidnight());
+              writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime()/1000.0), );
+              writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime()/1000.0), );
             }
 
           } else {
             console.log('All current cookies are here!');
             // Check if the sun cookies are present
-            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
-            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+            let sunriseCheck = checkCookie('canitube_' + siteName + '_Sunrise');
+            let sunsetCheck = checkCookie('canitube_' + siteName + '_Sunset');
             if(sunriseCheck*sunsetCheck !== 1) {
               console.log('Sunrise or Sunset are missing!');
               // Fill Sunrise/Sunset with default values
@@ -1674,15 +1777,15 @@ async function weatherUpdate(siteLocation, siteName, unitSet) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime()/1000.0), hoursUntilMidnight());
-              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime()/1000.0), hoursUntilMidnight());
+              writeCookie('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime()/1000.0), ['epoch', sunriseDefaultTime], 'Weather');
+              writeCookie('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime()/1000.0), ['epoch', sunriseDefaultTime], 'Weather');
             }
           }
         }
       } else {
         // For now log an error message in the console
         // CODE HERE //
-        console.log('Total API Calls: ' + cookieWeatherAPICalls + '. Not doing anything!');
+        console.log('Total API Calls: ' + itemWeatherAPICalls + '. Not doing anything!');
 
         // Even if there are 3 api calls, still check updates on current temperature and sun, and push error message to display.
         // Also add yikes message to outside of function if api calls exist but no weather data is present
@@ -1704,13 +1807,13 @@ function weatherFetch(latCoord, longCoord, siteName) {
       success: function(json){
         console.log("Weather Data Retreived!");
         // Here, store the data as cookies to an app-ready format
-        let cookiePrefix = 'canitube';
+        let appPrefix = 'canitube';
         let cookieCategory = 'Weather';
         // 1 Hour Expire
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', json.current.feels_like, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', json.current.weather[0].id, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', json.current.wind_speed, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', json.current.clouds, 1);
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Temperature', json.current.feels_like, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Weather', json.current.weather[0].id, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Wind Speed', json.current.wind_speed, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Cloud Cover', json.current.clouds, ['hourstil', 1], 'Weather');
         // 8 Hour Expire
         // Hourly Data
         let hourlyWeather = {};
@@ -1723,10 +1826,10 @@ function weatherFetch(latCoord, longCoord, siteName) {
           hourlyCloudCover[json.hourly[i].dt] = json.hourly[i].clouds;
           hourlyTemperature[json.hourly[i].dt] = json.hourly[i].feels_like;
         }
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Weather', JSON.stringify(hourlyWeather), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Wind Speed', JSON.stringify(hourlyWindSpeed), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Cloud Cover', JSON.stringify(hourlyCloudCover), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Temperature', JSON.stringify(hourlyTemperature), 8);
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Weather', JSON.stringify(hourlyWeather), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Wind Speed', JSON.stringify(hourlyWindSpeed), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Cloud Cover', JSON.stringify(hourlyCloudCover), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Temperature', JSON.stringify(hourlyTemperature), ['hourstil', 8], 'Weather');
         // Daily Data
         let dailyWeather = {};
         let dailyWindSpeed = {};
@@ -1736,16 +1839,16 @@ function weatherFetch(latCoord, longCoord, siteName) {
           dailyWindSpeed[json.daily[i].dt] = json.daily[i].wind_speed;
           dailyCloudCover[json.daily[i].dt] = json.daily[i].clouds;
         }
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Weather', JSON.stringify(dailyWeather), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Wind Speed', JSON.stringify(dailyWindSpeed), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Cloud Cover', JSON.stringify(dailyCloudCover), 8);
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Weather', JSON.stringify(dailyWeather), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Wind Speed', JSON.stringify(dailyWindSpeed), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Cloud Cover', JSON.stringify(dailyCloudCover), ['hourstil', 8], 'Weather');
         // End Of Day Expire
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunrise', json.current.sunrise, hoursUntilMidnight());
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunset', json.current.sunset, hoursUntilMidnight());
+        writeLocalStorage(appPrefix + '_' + siteName + '_Sunrise', json.current.sunrise, ['eod'], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Sunset', json.current.sunset, ['eod'], 'Weather');
 
 
         // Return the number of total API calls if the data has been retreived
-        let apiCalls = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls'));
+        let apiCalls = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').value);
         apiCalls = apiCalls + 1;
         resolve(apiCalls);
        },
@@ -1756,16 +1859,6 @@ function weatherFetch(latCoord, longCoord, siteName) {
       }
     });
   })
-}
-
-//  This function gives the amount of hours until midnight
-function hoursUntilMidnight() {
-  var midnight = new Date();
-  midnight.setHours( 24 );
-  midnight.setMinutes( 0 );
-  midnight.setSeconds( 0 );
-  midnight.setMilliseconds( 0 );
-  return Math.ceil(( midnight.getTime() - new Date().getTime() ) / 1000 / 60 / 60);
 }
 
 // This function populates weather data into the weather display
@@ -1798,8 +1891,15 @@ function weatherDisplayPopulate(siteName, unitSet) {
     unitsTo.volume_flow_rate = 'm3/s';
   }
   // Update the current local temperatures
-  let currentWaterTemperature = getCookie('canitube_' + siteName + '_Water Temperature');
-  let currentAirTemperature = getCookie('canitube_' + siteName + '_Weather_ Current Temperature');
+  // Check if water temperature exists for this site
+  let currentWaterTemperature = "";
+  if(checkLocalStorage('canitube_' + siteName + '_Water Temperature') == true) {
+    currentWaterTemperature = readLocalStorage('canitube_' + siteName + '_Water Temperature').value;
+  } else {
+    currentWaterTemperature = "null";
+  }
+
+  let currentAirTemperature = readLocalStorage('canitube_' + siteName + '_Current Temperature').value;
 
   // Convert the current measurements into their appropriate units
   // Default Water Temp measurement is Celsius
@@ -1808,9 +1908,9 @@ function weatherDisplayPopulate(siteName, unitSet) {
   if(currentWaterTemperature == "null") {
     currentWaterTemperature = "-";
   } else {
-    currentWaterTemperature = convert(parseFloat(currentWaterTemperature)).from('C').to(unitsTo.temperature);
+    currentWaterTemperature = Math.round(convert(parseFloat(currentWaterTemperature)).from('C').to(unitsTo.temperature));
   }
-  currentAirTemperature = convert(parseFloat(currentAirTemperature)).from('K').to(unitsTo.temperature);
+  currentAirTemperature = Math.round(convert(parseFloat(currentAirTemperature)).from('K').to(unitsTo.temperature));
 
   // Add the current measurements to their display fields
   // Water Temp
@@ -1818,16 +1918,16 @@ function weatherDisplayPopulate(siteName, unitSet) {
   document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
   document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature);
   // Air Temp
-  document.querySelector("#water-temp").innerHTML = "Air: " + currentAirTemperature;
-  document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
-  document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature);
+  document.querySelector("#air-temp").innerHTML = "Air: " + currentAirTemperature;
+  document.querySelector("#air-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector("#air-temp").insertAdjacentText('beforeend', unitsTo.temperature);
 
   // Calculate the current condition
-  let currentWeatherCode = getCookie('canitube_' + siteName + '_Weather_Current Weather');
-  let currentWindSpeed = getCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
-  let currentCloudCover = getCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
-  let sunRise = getCookie('canitube_' + siteName + '_Weather_Sunrise');
-  let sunSet = getCookie('canitube_' + siteName + '_Weather_Sunset');
+  let currentWeatherCode = parseInt(readLocalStorage('canitube_' + siteName + '_Current Weather').value);
+  let currentWindSpeed = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Wind Speed').value);
+  let currentCloudCover = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Cloud Cover').value);
+  let sunRise = parseInt(readLocalStorage('canitube_' + siteName + '_Sunrise').value);
+  let sunSet = parseInt(readLocalStorage('canitube_' + siteName + '_Sunset').value);
 
   let currentCondition = calculateCondition(currentWeatherCode, currentWindSpeed, currentCloudCover, {"rise": sunRise, "set": sunSet});
 
@@ -1838,9 +1938,9 @@ function weatherDisplayPopulate(siteName, unitSet) {
   document.querySelector("#now-icon").insertAdjacentHTML('afterbegin', conditionSVG(currentCondition));
 
   // Calculate the next biggest change in weather
-  let hourlyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
-  let hourlyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
-  let hourlyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover'));
+  let hourlyWeather = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value);
+  let hourlyWindSpeed = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
+  let hourlyCloudCover = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value);
 
   // Iterate over the hour array until a new condition is found or until the 24hr item is reached
   let laterCondition = {"weather": "", "time": ""};
@@ -1855,14 +1955,11 @@ function weatherDisplayPopulate(siteName, unitSet) {
       if(testCondition !== currentCondition) {
         // If the hourly condition is different from the current condition return
         laterCondition.weather = testCondition;
-        laterCondition.time = Object.keys(hourlyWeather)[i];
+        laterCondition.time = moment.unix(parseInt(Object.keys(hourlyWeather)[i])).local().format('hA');
         break;
       }
     }
   }
-
-  // Convert later condition time to local time
-  laterCondition.time = moment().unix(laterCondition.time).format('LT');
 
   // Add next condition text
   document.querySelector("#timeline-later").innerHTML = laterCondition.weather + " Likely At " + laterCondition.time;
@@ -1871,15 +1968,15 @@ function weatherDisplayPopulate(siteName, unitSet) {
   document.querySelector("#later-icon").insertAdjacentHTML('afterbegin', conditionSVG(laterCondition.weather));
 
   // Calculate 3 days of forecast
-  let dailyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Weather'));
-  let dailyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Wind Speed'));
-  let dailyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover'));
+  let dailyWeather = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Weather').value);
+  let dailyWindSpeed = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Wind Speed').value);
+  let dailyCloudCover = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Cloud Cover').value);
 
   // Get the days of the week of the 3 day forecast
   let daysKeyList = Object.keys(dailyWeather);
-  let tomorrowDOW = moment(daysKeyList[0]).isoWeekday();
-  let twoDayDOW = moment(daysKeyList[1]).isoWeekday();
-  let threeDayDOW = moment(daysKeyList[2]).isoWeekday();
+  let tomorrowDOW = moment.unix(parseInt(daysKeyList[1])).isoWeekday();
+  let twoDayDOW = moment.unix(parseInt(daysKeyList[2])).isoWeekday();
+  let threeDayDOW = moment.unix(parseInt(daysKeyList[3])).isoWeekday();
 
   // Convert the DOW number to a string
   tomorrowDOW = convertDOW(tomorrowDOW, 'abr');
@@ -1887,9 +1984,9 @@ function weatherDisplayPopulate(siteName, unitSet) {
   threeDayDOW = convertDOW(threeDayDOW, 'abr');
 
   // Get the conditions for the 3 day forecast
-  let tomorrowCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[0]], dailyWindSpeed[Object.keys(dailyWindSpeed)[0]], dailyCloudCover[Object.keys(dailyCloudCover)[0]], {"rise": sunRise, "set": sunSet});
-  let twoDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[1]], dailyWindSpeed[Object.keys(dailyWindSpeed)[1]], dailyCloudCover[Object.keys(dailyCloudCover)[1]], {"rise": sunRise, "set": sunSet});
-  let threeDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[2]], dailyWindSpeed[Object.keys(dailyWindSpeed)[2]], dailyCloudCover[Object.keys(dailyCloudCover)[2]], {"rise": sunRise, "set": sunSet});
+  let tomorrowCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[1]], dailyWindSpeed[Object.keys(dailyWindSpeed)[1]], dailyCloudCover[Object.keys(dailyCloudCover)[1]], {"rise": sunRise, "set": sunSet});
+  let twoDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[2]], dailyWindSpeed[Object.keys(dailyWindSpeed)[2]], dailyCloudCover[Object.keys(dailyCloudCover)[2]], {"rise": sunRise, "set": sunSet});
+  let threeDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[3]], dailyWindSpeed[Object.keys(dailyWindSpeed)[3]], dailyCloudCover[Object.keys(dailyCloudCover)[3]], {"rise": sunRise, "set": sunSet});
 
   // Add the 3 day forecast DOWs
   document.querySelector("#tomorrow-forecast > .forecast-text").innerHTML = tomorrowDOW;
@@ -2070,6 +2167,13 @@ function conditionSVG(condition) {
 
 // This function returns a day of week string based on an input number (Uses ISO week standard, 1 = Monday 7 = Sunday)
 function convertDOW(dowNum, typeOfString) {
+  if(dowNum > 7) {
+    if(dowNum%7 == 0) {
+      dowNum = 7;
+    } else {
+      dowNum = dowNum%7;
+    }
+  }
   let dowConverter = {
     "1": {
       "abr": "Mon",
@@ -2100,6 +2204,5 @@ function convertDOW(dowNum, typeOfString) {
       "full": "Sunday"
     }
   }
-
-  return dowConverter[Object.keys(dowConverter)[(dowNum%7)-1]][typeOfString];
+  return dowConverter[Object.keys(dowConverter)[dowNum-1]][typeOfString];
 }

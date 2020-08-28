@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/process/browser.js":[function(require,module,exports) {
+})({"g5IB":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -326,7 +326,7 @@ process.chdir = function (dir) {
 process.umask = function () {
   return 0;
 };
-},{}],"node_modules/jquery/dist/jquery.js":[function(require,module,exports) {
+},{}],"HlZQ":[function(require,module,exports) {
 var global = arguments[3];
 var process = require("process");
 var define;
@@ -11203,7 +11203,7 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"node_modules/process/browser.js"}],"node_modules/moment/moment.js":[function(require,module,exports) {
+},{"process":"g5IB"}],"iROh":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 //! moment.js
@@ -16875,7 +16875,7 @@ var global = arguments[3];
 
 })));
 
-},{}],"node_modules/lodash._objecttypes/index.js":[function(require,module,exports) {
+},{}],"FCJt":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16897,7 +16897,7 @@ var objectTypes = {
 
 module.exports = objectTypes;
 
-},{}],"node_modules/lodash.isobject/index.js":[function(require,module,exports) {
+},{}],"e1kN":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16938,7 +16938,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{"lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash._renative/index.js":[function(require,module,exports) {
+},{"lodash._objecttypes":"FCJt"}],"xFRP":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16963,7 +16963,7 @@ var reNative = RegExp('^' +
 
 module.exports = reNative;
 
-},{}],"node_modules/lodash._shimkeys/index.js":[function(require,module,exports) {
+},{}],"KOa5":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17003,7 +17003,7 @@ var shimKeys = function(object) {
 
 module.exports = shimKeys;
 
-},{"lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash.keys/index.js":[function(require,module,exports) {
+},{"lodash._objecttypes":"FCJt"}],"LvIh":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17041,7 +17041,7 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._renative":"node_modules/lodash._renative/index.js","lodash._shimkeys":"node_modules/lodash._shimkeys/index.js"}],"node_modules/lodash.noop/index.js":[function(require,module,exports) {
+},{"lodash.isobject":"e1kN","lodash._renative":"xFRP","lodash._shimkeys":"KOa5"}],"Ae5J":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17069,7 +17069,7 @@ function noop() {
 
 module.exports = noop;
 
-},{}],"node_modules/lodash._basecreate/index.js":[function(require,module,exports) {
+},{}],"g5yM":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
@@ -17114,7 +17114,7 @@ if (!nativeCreate) {
 
 module.exports = baseCreate;
 
-},{"lodash.isobject":"node_modules/lodash.isobject/index.js","lodash.noop":"node_modules/lodash.noop/index.js","lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._setbinddata/index.js":[function(require,module,exports) {
+},{"lodash.isobject":"e1kN","lodash.noop":"Ae5J","lodash._renative":"xFRP"}],"aPlf":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17159,7 +17159,7 @@ var setBindData = !defineProperty ? noop : function(func, value) {
 
 module.exports = setBindData;
 
-},{"lodash.noop":"node_modules/lodash.noop/index.js","lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._basebind/index.js":[function(require,module,exports) {
+},{"lodash.noop":"Ae5J","lodash._renative":"xFRP"}],"HCZV":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17219,7 +17219,7 @@ function baseBind(bindData) {
 
 module.exports = baseBind;
 
-},{"lodash._basecreate":"node_modules/lodash._basecreate/index.js","lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js"}],"node_modules/lodash._slice/index.js":[function(require,module,exports) {
+},{"lodash._basecreate":"g5yM","lodash.isobject":"e1kN","lodash._setbinddata":"aPlf"}],"kl0L":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17259,7 +17259,7 @@ function slice(array, start, end) {
 
 module.exports = slice;
 
-},{}],"node_modules/lodash._basecreatewrapper/index.js":[function(require,module,exports) {
+},{}],"dgEA":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17339,7 +17339,7 @@ function baseCreateWrapper(bindData) {
 
 module.exports = baseCreateWrapper;
 
-},{"lodash._basecreate":"node_modules/lodash._basecreate/index.js","lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js","lodash._slice":"node_modules/lodash._slice/index.js"}],"node_modules/lodash.isfunction/index.js":[function(require,module,exports) {
+},{"lodash._basecreate":"g5yM","lodash.isobject":"e1kN","lodash._setbinddata":"aPlf","lodash._slice":"kl0L"}],"YDGf":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17368,7 +17368,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{}],"node_modules/lodash._createwrapper/index.js":[function(require,module,exports) {
+},{}],"kFkX":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17468,7 +17468,7 @@ function createWrapper(func, bitmask, partialArgs, partialRightArgs, thisArg, ar
 
 module.exports = createWrapper;
 
-},{"lodash._basebind":"node_modules/lodash._basebind/index.js","lodash._basecreatewrapper":"node_modules/lodash._basecreatewrapper/index.js","lodash.isfunction":"node_modules/lodash.isfunction/index.js"}],"node_modules/lodash.bind/index.js":[function(require,module,exports) {
+},{"lodash._basebind":"HCZV","lodash._basecreatewrapper":"dgEA","lodash.isfunction":"YDGf"}],"TxJR":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17511,7 +17511,7 @@ function bind(func, thisArg) {
 
 module.exports = bind;
 
-},{"lodash._createwrapper":"node_modules/lodash._createwrapper/index.js","lodash._renative":"node_modules/lodash._renative/index.js","lodash._slice":"node_modules/lodash._slice/index.js"}],"node_modules/lodash.identity/index.js":[function(require,module,exports) {
+},{"lodash._createwrapper":"kFkX","lodash._renative":"xFRP","lodash._slice":"kl0L"}],"JB8l":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17541,7 +17541,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],"node_modules/lodash.support/index.js":[function(require,module,exports) {
+},{}],"PKq7":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
@@ -17584,7 +17584,7 @@ support.funcNames = typeof Function.name == 'string';
 
 module.exports = support;
 
-},{"lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._basecreatecallback/index.js":[function(require,module,exports) {
+},{"lodash._renative":"xFRP"}],"r2yT":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17666,7 +17666,7 @@ function baseCreateCallback(func, thisArg, argCount) {
 
 module.exports = baseCreateCallback;
 
-},{"lodash.bind":"node_modules/lodash.bind/index.js","lodash.identity":"node_modules/lodash.identity/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js","lodash.support":"node_modules/lodash.support/index.js"}],"node_modules/lodash.forown/index.js":[function(require,module,exports) {
+},{"lodash.bind":"TxJR","lodash.identity":"JB8l","lodash._setbinddata":"aPlf","lodash.support":"PKq7"}],"TKRq":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17718,7 +17718,7 @@ var forOwn = function(collection, callback, thisArg) {
 
 module.exports = forOwn;
 
-},{"lodash._basecreatecallback":"node_modules/lodash._basecreatecallback/index.js","lodash.keys":"node_modules/lodash.keys/index.js","lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash.foreach/index.js":[function(require,module,exports) {
+},{"lodash._basecreatecallback":"r2yT","lodash.keys":"LvIh","lodash._objecttypes":"FCJt"}],"KHBi":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17775,7 +17775,7 @@ function forEach(collection, callback, thisArg) {
 
 module.exports = forEach;
 
-},{"lodash._basecreatecallback":"node_modules/lodash._basecreatecallback/index.js","lodash.forown":"node_modules/lodash.forown/index.js"}],"node_modules/convert-units/lib/definitions/length.js":[function(require,module,exports) {
+},{"lodash._basecreatecallback":"r2yT","lodash.forown":"TKRq"}],"pd3d":[function(require,module,exports) {
 var metric,
 imperial;
 
@@ -17863,7 +17863,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/area.js":[function(require,module,exports) {
+},{}],"HOEa":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -17958,7 +17958,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/mass.js":[function(require,module,exports) {
+},{}],"PLJ8":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18038,7 +18038,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/volume.js":[function(require,module,exports) {
+},{}],"smp0":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18240,7 +18240,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/each.js":[function(require,module,exports) {
+},{}],"wQDr":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18272,7 +18272,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/temperature.js":[function(require,module,exports) {
+},{}],"ESHn":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18329,7 +18329,7 @@ module.exports = {
 };
 
 
-},{}],"node_modules/convert-units/lib/definitions/time.js":[function(require,module,exports) {
+},{}],"SGR5":[function(require,module,exports) {
 var time;
 var daysInYear = 365.25;
 
@@ -18417,7 +18417,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/digital.js":[function(require,module,exports) {
+},{}],"bxlf":[function(require,module,exports) {
 var bits
   , bytes;
 
@@ -18512,7 +18512,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/partsPer.js":[function(require,module,exports) {
+},{}],"yVy1":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18558,7 +18558,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/speed.js":[function(require,module,exports) {
+},{}],"JPpx":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18618,7 +18618,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/pace.js":[function(require,module,exports) {
+},{}],"VhYO":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18671,7 +18671,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/pressure.js":[function(require,module,exports) {
+},{}],"dzZ2":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18752,7 +18752,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/current.js":[function(require,module,exports) {
+},{}],"yIye":[function(require,module,exports) {
 var current;
 
 current = {
@@ -18789,7 +18789,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/voltage.js":[function(require,module,exports) {
+},{}],"Ycrg":[function(require,module,exports) {
 var voltage;
 
 voltage = {
@@ -18826,7 +18826,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/power.js":[function(require,module,exports) {
+},{}],"nElb":[function(require,module,exports) {
 var power;
 
 power = {
@@ -18877,7 +18877,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/reactivePower.js":[function(require,module,exports) {
+},{}],"jcfx":[function(require,module,exports) {
 var reactivePower;
 
 reactivePower = {
@@ -18928,7 +18928,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/apparentPower.js":[function(require,module,exports) {
+},{}],"zmOF":[function(require,module,exports) {
 var apparentPower;
 
 apparentPower = {
@@ -18979,7 +18979,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/energy.js":[function(require,module,exports) {
+},{}],"rJDc":[function(require,module,exports) {
 var energy;
 
 energy = {
@@ -19044,7 +19044,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/reactiveEnergy.js":[function(require,module,exports) {
+},{}],"a6Bq":[function(require,module,exports) {
 var reactiveEnergy;
 
 reactiveEnergy = {
@@ -19095,7 +19095,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/volumeFlowRate.js":[function(require,module,exports) {
+},{}],"yqpk":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -19379,7 +19379,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/illuminance.js":[function(require,module,exports) {
+},{}],"gjwW":[function(require,module,exports) {
 var metric,
 imperial;
 
@@ -19418,7 +19418,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/frequency.js":[function(require,module,exports) {
+},{}],"qRLX":[function(require,module,exports) {
 var frequency;
 
 frequency = {
@@ -19498,7 +19498,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/angle.js":[function(require,module,exports) {
+},{}],"zo6V":[function(require,module,exports) {
 var angle;
 
 angle = {
@@ -19549,7 +19549,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/index.js":[function(require,module,exports) {
+},{}],"K5Mp":[function(require,module,exports) {
 var convert
   , keys = require('lodash.keys')
   , each = require('lodash.foreach')
@@ -19855,7 +19855,7 @@ convert = function (value) {
 
 module.exports = convert;
 
-},{"lodash.keys":"node_modules/lodash.keys/index.js","lodash.foreach":"node_modules/lodash.foreach/index.js","./definitions/length":"node_modules/convert-units/lib/definitions/length.js","./definitions/area":"node_modules/convert-units/lib/definitions/area.js","./definitions/mass":"node_modules/convert-units/lib/definitions/mass.js","./definitions/volume":"node_modules/convert-units/lib/definitions/volume.js","./definitions/each":"node_modules/convert-units/lib/definitions/each.js","./definitions/temperature":"node_modules/convert-units/lib/definitions/temperature.js","./definitions/time":"node_modules/convert-units/lib/definitions/time.js","./definitions/digital":"node_modules/convert-units/lib/definitions/digital.js","./definitions/partsPer":"node_modules/convert-units/lib/definitions/partsPer.js","./definitions/speed":"node_modules/convert-units/lib/definitions/speed.js","./definitions/pace":"node_modules/convert-units/lib/definitions/pace.js","./definitions/pressure":"node_modules/convert-units/lib/definitions/pressure.js","./definitions/current":"node_modules/convert-units/lib/definitions/current.js","./definitions/voltage":"node_modules/convert-units/lib/definitions/voltage.js","./definitions/power":"node_modules/convert-units/lib/definitions/power.js","./definitions/reactivePower":"node_modules/convert-units/lib/definitions/reactivePower.js","./definitions/apparentPower":"node_modules/convert-units/lib/definitions/apparentPower.js","./definitions/energy":"node_modules/convert-units/lib/definitions/energy.js","./definitions/reactiveEnergy":"node_modules/convert-units/lib/definitions/reactiveEnergy.js","./definitions/volumeFlowRate":"node_modules/convert-units/lib/definitions/volumeFlowRate.js","./definitions/illuminance":"node_modules/convert-units/lib/definitions/illuminance.js","./definitions/frequency":"node_modules/convert-units/lib/definitions/frequency.js","./definitions/angle":"node_modules/convert-units/lib/definitions/angle.js"}],"assets/js/app.js":[function(require,module,exports) {
+},{"lodash.keys":"LvIh","lodash.foreach":"KHBi","./definitions/length":"pd3d","./definitions/area":"HOEa","./definitions/mass":"PLJ8","./definitions/volume":"smp0","./definitions/each":"wQDr","./definitions/temperature":"ESHn","./definitions/time":"SGR5","./definitions/digital":"bxlf","./definitions/partsPer":"yVy1","./definitions/speed":"JPpx","./definitions/pace":"VhYO","./definitions/pressure":"dzZ2","./definitions/current":"yIye","./definitions/voltage":"Ycrg","./definitions/power":"nElb","./definitions/reactivePower":"jcfx","./definitions/apparentPower":"zmOF","./definitions/energy":"rJDc","./definitions/reactiveEnergy":"a6Bq","./definitions/volumeFlowRate":"yqpk","./definitions/illuminance":"gjwW","./definitions/frequency":"qRLX","./definitions/angle":"zo6V"}],"i5Wi":[function(require,module,exports) {
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.1";
+var appVersion = "3.3";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -20739,7 +20739,7 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
   (0, _jquery.default)('#background-wave > mask').attr('width', (0, _jquery.default)(window).width()).attr('height', (0, _jquery.default)(window).height());
   (0, _jquery.default)('#background-wave > mask > g > rect').attr('width', (0, _jquery.default)(window).width()).attr('height', (0, _jquery.default)(window).height()); // Call a weather display update
 
-  weatherUpdate(siteGeoLocation, siteName, unitSet); // Begin the transition to the final state
+  weatherUpdate(siteGeoLocation, siteName, unitSet, formatChoices[state].stroke_color); // Begin the transition to the final state
 
   gsap.timeline().delay(.25).call(createAnswer, [state, currentFlowValue]).set('.border-content', {
     zIndex: 100
@@ -20767,7 +20767,7 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     background: formatChoices[state].background_color
   }).set('.settings-text', {
     color: formatChoices[state].text_color
-  }).set('svg > .svg-stroke-style', {
+  }).set('svg .svg-stroke-style', {
     stroke: formatChoices[state].stroke_color
   }).set('svg .svg-fill-style', {
     fill: formatChoices[state].stroke_color
@@ -20983,7 +20983,7 @@ function writeCookie(name, data, hoursTilExpire) {
 
 
 function writeCookieUnix(name, data, unixExpire) {
-  document.cookie = name + "=" + data + ";" + "expires=" + unixExpire.toGMTString() + ";";
+  document.cookie = name + "=" + data + ";" + "expires=" + new Date(unixExpire).toGMTString() + ";";
 } // This function returns the data in a cookie of a specified name
 
 
@@ -21017,6 +21017,105 @@ function checkCookie(name) {
     if (cookieCheck !== "" && cookieCheck !== null) {
       return true;
     }
+  }
+} // This function writes data to local storage
+// Expire time is an array which contains an operation cue and a value given the operation
+
+
+function writeLocalStorage(name, data, expireTime, category) {
+  let expiringEpoch = 0;
+
+  if (expireTime[0] == 'epoch') {
+    // Expire time provided as an exact epoch time
+    expiringEpoch = expireTime[1];
+  }
+
+  if (expireTime[0] == 'hourstil') {
+    // Expire time provided as hours until
+    let date = new Date();
+    let exp = date.setTime(+date + expireTime[1] * 3600000);
+    expiringEpoch = Math.floor(exp / 1000);
+  }
+
+  if (expireTime[0] == 'eod') {
+    // Expire time set to End of current day
+    let midnight = new Date();
+    midnight.setHours(23, 59, 59, 0);
+    expiringEpoch = midnight.getTime() / 1000;
+  }
+
+  category = category || 'Default';
+  const item = {
+    value: data,
+    category: category,
+    expiry: expiringEpoch
+  };
+  localStorage.setItem(name, JSON.stringify(item));
+} // This function reads data from local storage and returns the data and expiry in an object
+
+
+function readLocalStorage(name) {
+  let fetchedItem = JSON.parse(localStorage.getItem(name));
+  const item = {
+    'value': fetchedItem.value,
+    'category': fetchedItem.category,
+    'expiry': fetchedItem.expiry
+  };
+  return item;
+} // This function checks for an item in local storage, returns a bool value if the item exists or not
+
+
+function checkLocalStorage(name) {
+  if (localStorage.getItem(name) === null) {
+    return false;
+  } else {
+    return true;
+  }
+} // This function removes an item from local storage
+
+
+function removeItemLocalStorage(name) {
+  localStorage.removeItem(name);
+} // This function removes items from local storage that have expired
+
+
+function expireLocalStorage() {
+  let search = [],
+      keys = Object.keys(localStorage),
+      i = 0,
+      key;
+
+  for (; key = keys[i]; i++) {
+    let item = JSON.parse(localStorage.getItem(key));
+    let currentTime = new Date();
+    currentTime = Math.floor(currentTime.getTime() / 1000);
+
+    if (item.expiry <= currentTime) {
+      removeItemLocalStorage(key);
+    }
+  }
+} // This function looks for items in local storage that match a category tag
+
+
+function localStorageCategorySearch(category) {
+  let search = [],
+      keys = Object.keys(localStorage),
+      i = 0,
+      key;
+
+  for (; key = keys[i]; i++) {
+    let item = JSON.parse(localStorage.getItem(key));
+
+    if (item.category == category) {
+      search.push(key);
+    }
+  } // If items are found return their key array, else return false
+
+
+  if (search.length > 0) {
+    return search;
+  } else {
+    return false;
   }
 } // This function draws the animated river
 
@@ -21192,6 +21291,9 @@ function togglePerformance() {
 
 
 (0, _jquery.default)(document).ready(function () {
+  // Check local storage and expire any items that are old
+  expireLocalStorage(); // Check settings cookies
+
   var settingsPerformanceCookiePresent = checkCookie('canitube_Settings_Performance');
   var settingsDisplayCookiePresent = checkCookie('canitube_Settings_Display'); // If there are no settings cookies, create cookies for the default settings
 
@@ -21562,103 +21664,103 @@ function refreshTimer() {
 
 async function weatherUpdate(siteLocation, siteName, unitSet) {
   // Find all the cookie categories currently present
-  let cookieCategories = document.cookie.split("; ").map(item => item.split("_")[2]); // Test if there are any Weather cookies
+  let localStorageItemSearch = localStorageCategorySearch('Weather'); // Test if there are any Weather cookies
 
-  if (cookieCategories.indexOf('Weather') == -1) {
-    console.log('There are no weather cookies!'); // Set the weather API cookie to 0 calls and expire in 24 hours
+  if (localStorageItemSearch == false) {
+    console.log('There are no weather items!'); // Set the weather API item to 0 calls and expire in 24 hours
 
-    writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24); // Also write a cookie that contains the cookie expire date
+    writeLocalStorage('canitube_' + siteName + '_API Calls', 0, ['hourstil', 24], 'Weather'); // Also write a local storage item that contains the item expire date
 
     let expDate = new Date();
     expDate = expDate.setTime(+expDate + 24 * 3600000);
-    writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24); // Standard cookie call
+    writeLocalStorage('canitube_' + siteName + '_API Calls Expire', expDate, ['hourstil', 24], 'Weather'); // Standard API call
 
     let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
 
-    let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-    writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+    let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+    writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
   } else {
-    console.log('There are weather cookies!'); // Test if the API call cookie is present
+    console.log('There are weather items!'); // Test if the API call item is present
 
-    let cookieDataType = document.cookie.split("; ").map(item => item.split("_")[2].split("=")[0]);
+    let apiItem = checkLocalStorage('canitube_' + siteName + '_API Calls');
 
-    if (cookieDataType.indexOf('API Calls') == -1) {
-      console.log('There is no API calls cookie!'); // Set the weather API cookie to 0 calls and expire in 24 hours
+    if (apiItem == false) {
+      console.log('There is no API calls item!'); // Set the weather API item to 0 calls and expire in 24 hours
 
-      writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24); // Also write a cookie that contains the cookie expire date
+      writeLocalStorage('canitube_' + siteName + '_API Calls', 0, ['hourstil', 24], 'Weather'); // Also write a local storage item that contains the item expire date
 
       let expDate = new Date();
       expDate = expDate.setTime(+expDate + 24 * 3600000);
-      writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24); // Standard cookie call
+      writeLocalStorage('canitube_' + siteName + '_API Calls Expire', expDate, ['hourstil', 24], 'Weather'); // Standard API call
 
       let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
 
-      let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-      writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+      let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+      writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
     } else {
       // If the API calls value is less than 3
-      console.log('There is an API calls cookie! Its value is: ' + getCookie('canitube_' + siteName + '_Weather_API Calls'));
-      let cookieWeatherAPICalls = getCookie('canitube_' + siteName + '_Weather_API Calls');
+      console.log('There is an API calls item! Its value is: ' + readLocalStorage('canitube_' + siteName + '_API Calls').value);
+      let itemWeatherAPICalls = readLocalStorage('canitube_' + siteName + '_API Calls').value;
 
-      if (cookieWeatherAPICalls < 3) {
+      if (itemWeatherAPICalls < 3) {
         console.log('There are less than 3 API calls!'); // Check if new weather data is needed
 
-        let hourlyWeather = checkCookie('canitube_' + siteName + '_Weather_Hourly Weather');
-        let hourlyTemperature = checkCookie('canitube_' + siteName + '_Weather_Hourly Temperature');
-        let hourlyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed');
-        let hourlyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover');
-        let dailyWeather = checkCookie('canitube_' + siteName + '_Weather_Daily Weather');
-        let dailyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Daily Wind Speed');
-        let dailyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover');
+        let hourlyWeather = checkLocalStorage('canitube_' + siteName + '_Hourly Weather');
+        let hourlyTemperature = checkLocalStorage('canitube_' + siteName + '_Hourly Temperature');
+        let hourlyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Hourly Wind Speed');
+        let hourlyCloudCover = checkLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover');
+        let dailyWeather = checkLocalStorage('canitube_' + siteName + '_Daily Weather');
+        let dailyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Daily Wind Speed');
+        let dailyCloudCover = checkLocalStorage('canitube_' + siteName + '_Daily Cloud Cover');
 
         if (hourlyWeather * hourlyTemperature * hourlyWindSpeed * hourlyCloudCover * dailyWeather * dailyWindSpeed * dailyCloudCover == 0) {
-          console.log('A hourly or daily weather cookie is missing!'); // At least 1 of the needed cookies is missing, run standard cookie call
-          // Standard cookie call
+          console.log('A hourly or daily weather item is missing!'); // At least 1 of the needed items is missing, run standard item call
+          // Standard API call
 
           let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
 
-          let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
-          writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+          let apiCallsExpDate = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').expiry);
+          writeLocalStorage('canitube_' + siteName + '_API Calls', apiCallsTotal, ['epoch', apiCallsExpDate], 'Weather');
         } else {
-          console.log('All hourly and daily cookies are here!'); // All of the needed cookies are present, check if the current cookies are present
+          console.log('All hourly and daily item are here!'); // All of the needed items are present, check if the current item are present
 
-          let currentWeather = checkCookie('canitube_' + siteName + '_Weather_Current Weather');
-          let currentWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
-          let currentCloudCover = checkCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
-          let currentTemperature = checkCookie('canitube_' + siteName + '_Weather_Current Temperature');
+          let currentWeather = checkLocalStorage('canitube_' + siteName + '_Current Weather');
+          let currentWindSpeed = checkLocalStorage('canitube_' + siteName + '_Current Wind Speed');
+          let currentCloudCover = checkLocalStorage('canitube_' + siteName + '_Current Cloud Cover');
+          let currentTemperature = checkLocalStorage('canitube_' + siteName + '_Current Temperature');
 
           if (currentWeather * currentWindSpeed * currentCloudCover * currentTemperature !== 1) {
-            console.log('A current cookie needs to be updated!'); // The current cookies are not present, perform operations to update current values
+            console.log('A current item needs to be updated!'); // The current items are not present, perform operations to update current values
             // Determine the current time as a unix timestamp and read the hourly weather values for the current values at the current hour unix timestring
 
-            function getFirstCookie(data) {
+            function getFirstTime(data) {
               const times = Object.keys(data);
               const now = new Date().getTime();
-              const [firstCookie] = times.filter(time => now < time * 1000);
-              return firstCookie;
+              const [firstTime] = times.filter(time => now < time * 1000);
+              return firstTime;
             } // Store the current closest time key
 
 
-            let timeKey = getFirstCookie(JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'))); // Use the time key to grab the value for all of the current value items from hourly items
+            let timeKey = getFirstTime(JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value)); // Use the time key to grab the value for all of the current value items from hourly items
 
-            let currentTemperatureJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Temperature'));
-            let currentWeatherJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
-            let currentWindSpeedJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
-            let currentCloudCoverJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover'));
-            let cookieCurrentTemperature = currentTemperatureJSON[timeKey];
-            let cookieCurrentWeather = currentWeatherJSON[timeKey];
-            let cookieCurrentWindSpeed = currentWindSpeedJSON[timeKey];
-            let cookieCurrentCloudCover = currentCloudCoverJSON[timeKey]; // Store these new current values
+            let currentTemperatureJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Temperature').value);
+            let currentWeatherJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value);
+            let currentWindSpeedJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
+            let currentCloudCoverJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value);
+            let itemCurrentTemperature = currentTemperatureJSON[timeKey];
+            let itemCurrentWeather = currentWeatherJSON[timeKey];
+            let itemCurrentWindSpeed = currentWindSpeedJSON[timeKey];
+            let itemCurrentCloudCover = currentCloudCoverJSON[timeKey]; // Store these new current values
 
-            let cookiePrefix = 'canitube';
-            let cookieCategory = 'Weather';
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', cookieCurrentTemperature, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', cookieCurrentWeather, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', cookieCurrentWindSpeed, 1);
-            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', cookieCurrentCloudCover, 1); // Check for sun values
+            let appPrefix = 'canitube';
+            let itemCategory = 'Weather';
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Temperature', itemCurrentTemperature, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Weather', itemCurrentWeather, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Wind Speed', itemCurrentWindSpeed, ['hourstil', 1], 'Weather');
+            writeLocalStorage(appPrefix + '_' + siteName + '_Current Cloud Cover', itemCurrentCloudCover, ['hourstil', 1], 'Weather'); // Check for sun values
 
-            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
-            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+            let sunriseCheck = checkLocalStorage('canitube_' + siteName + '_Sunrise');
+            let sunsetCheck = checkLocalStorage('canitube_' + siteName + '_Sunset');
 
             if (sunriseCheck * sunsetCheck !== 1) {
               console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
@@ -21671,14 +21773,14 @@ async function weatherUpdate(siteLocation, siteName, unitSet) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
-              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+              writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0));
+              writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0));
             }
           } else {
             console.log('All current cookies are here!'); // Check if the sun cookies are present
 
-            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
-            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+            let sunriseCheck = checkCookie('canitube_' + siteName + '_Sunrise');
+            let sunsetCheck = checkCookie('canitube_' + siteName + '_Sunset');
 
             if (sunriseCheck * sunsetCheck !== 1) {
               console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
@@ -21691,15 +21793,15 @@ async function weatherUpdate(siteLocation, siteName, unitSet) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
-              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+              writeCookie('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
+              writeCookie('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
             }
           }
         }
       } else {
         // For now log an error message in the console
         // CODE HERE //
-        console.log('Total API Calls: ' + cookieWeatherAPICalls + '. Not doing anything!'); // Even if there are 3 api calls, still check updates on current temperature and sun, and push error message to display.
+        console.log('Total API Calls: ' + itemWeatherAPICalls + '. Not doing anything!'); // Even if there are 3 api calls, still check updates on current temperature and sun, and push error message to display.
         // Also add yikes message to outside of function if api calls exist but no weather data is present
       }
     }
@@ -21719,13 +21821,13 @@ function weatherFetch(latCoord, longCoord, siteName) {
       success: function (json) {
         console.log("Weather Data Retreived!"); // Here, store the data as cookies to an app-ready format
 
-        let cookiePrefix = 'canitube';
+        let appPrefix = 'canitube';
         let cookieCategory = 'Weather'; // 1 Hour Expire
 
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', json.current.feels_like, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', json.current.weather[0].id, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', json.current.wind_speed, 1);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', json.current.clouds, 1); // 8 Hour Expire
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Temperature', json.current.feels_like, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Weather', json.current.weather[0].id, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Wind Speed', json.current.wind_speed, ['hourstil', 1], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Current Cloud Cover', json.current.clouds, ['hourstil', 1], 'Weather'); // 8 Hour Expire
         // Hourly Data
 
         let hourlyWeather = {};
@@ -21740,10 +21842,10 @@ function weatherFetch(latCoord, longCoord, siteName) {
           hourlyTemperature[json.hourly[i].dt] = json.hourly[i].feels_like;
         }
 
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Weather', JSON.stringify(hourlyWeather), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Wind Speed', JSON.stringify(hourlyWindSpeed), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Cloud Cover', JSON.stringify(hourlyCloudCover), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Temperature', JSON.stringify(hourlyTemperature), 8); // Daily Data
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Weather', JSON.stringify(hourlyWeather), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Wind Speed', JSON.stringify(hourlyWindSpeed), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Cloud Cover', JSON.stringify(hourlyCloudCover), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Hourly Temperature', JSON.stringify(hourlyTemperature), ['hourstil', 8], 'Weather'); // Daily Data
 
         let dailyWeather = {};
         let dailyWindSpeed = {};
@@ -21755,14 +21857,14 @@ function weatherFetch(latCoord, longCoord, siteName) {
           dailyCloudCover[json.daily[i].dt] = json.daily[i].clouds;
         }
 
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Weather', JSON.stringify(dailyWeather), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Wind Speed', JSON.stringify(dailyWindSpeed), 8);
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Cloud Cover', JSON.stringify(dailyCloudCover), 8); // End Of Day Expire
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Weather', JSON.stringify(dailyWeather), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Wind Speed', JSON.stringify(dailyWindSpeed), ['hourstil', 8], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Daily Cloud Cover', JSON.stringify(dailyCloudCover), ['hourstil', 8], 'Weather'); // End Of Day Expire
 
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunrise', json.current.sunrise, hoursUntilMidnight());
-        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunset', json.current.sunset, hoursUntilMidnight()); // Return the number of total API calls if the data has been retreived
+        writeLocalStorage(appPrefix + '_' + siteName + '_Sunrise', json.current.sunrise, ['eod'], 'Weather');
+        writeLocalStorage(appPrefix + '_' + siteName + '_Sunset', json.current.sunset, ['eod'], 'Weather'); // Return the number of total API calls if the data has been retreived
 
-        let apiCalls = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls'));
+        let apiCalls = parseInt(readLocalStorage('canitube_' + siteName + '_API Calls').value);
         apiCalls = apiCalls + 1;
         resolve(apiCalls);
       },
@@ -21773,16 +21875,6 @@ function weatherFetch(latCoord, longCoord, siteName) {
       }
     });
   });
-} //  This function gives the amount of hours until midnight
-
-
-function hoursUntilMidnight() {
-  var midnight = new Date();
-  midnight.setHours(24);
-  midnight.setMinutes(0);
-  midnight.setSeconds(0);
-  midnight.setMilliseconds(0);
-  return Math.ceil((midnight.getTime() - new Date().getTime()) / 1000 / 60 / 60);
 } // This function populates weather data into the weather display
 
 
@@ -21815,10 +21907,18 @@ function weatherDisplayPopulate(siteName, unitSet) {
     unitsTo.temperature = 'C';
     unitsTo.volume_flow_rate = 'm3/s';
   } // Update the current local temperatures
+  // Check if water temperature exists for this site
 
 
-  let currentWaterTemperature = getCookie('canitube_' + siteName + '_Water Temperature');
-  let currentAirTemperature = getCookie('canitube_' + siteName + '_Weather_ Current Temperature'); // Convert the current measurements into their appropriate units
+  let currentWaterTemperature = "";
+
+  if (checkLocalStorage('canitube_' + siteName + '_Water Temperature') == true) {
+    currentWaterTemperature = readLocalStorage('canitube_' + siteName + '_Water Temperature').value;
+  } else {
+    currentWaterTemperature = "null";
+  }
+
+  let currentAirTemperature = readLocalStorage('canitube_' + siteName + '_Current Temperature').value; // Convert the current measurements into their appropriate units
   // Default Water Temp measurement is Celsius
   // Default Air  Temp measurement is in Kelvin
   // If current water temp is 'null' then have the temperature be '-'
@@ -21826,25 +21926,25 @@ function weatherDisplayPopulate(siteName, unitSet) {
   if (currentWaterTemperature == "null") {
     currentWaterTemperature = "-";
   } else {
-    currentWaterTemperature = (0, _convertUnits.default)(parseFloat(currentWaterTemperature)).from('C').to(unitsTo.temperature);
+    currentWaterTemperature = Math.round((0, _convertUnits.default)(parseFloat(currentWaterTemperature)).from('C').to(unitsTo.temperature));
   }
 
-  currentAirTemperature = (0, _convertUnits.default)(parseFloat(currentAirTemperature)).from('K').to(unitsTo.temperature); // Add the current measurements to their display fields
+  currentAirTemperature = Math.round((0, _convertUnits.default)(parseFloat(currentAirTemperature)).from('K').to(unitsTo.temperature)); // Add the current measurements to their display fields
   // Water Temp
 
   document.querySelector("#water-temp").innerHTML = "Water: " + currentWaterTemperature;
   document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
   document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Air Temp
 
-  document.querySelector("#water-temp").innerHTML = "Air: " + currentAirTemperature;
-  document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
-  document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Calculate the current condition
+  document.querySelector("#air-temp").innerHTML = "Air: " + currentAirTemperature;
+  document.querySelector("#air-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector("#air-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Calculate the current condition
 
-  let currentWeatherCode = getCookie('canitube_' + siteName + '_Weather_Current Weather');
-  let currentWindSpeed = getCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
-  let currentCloudCover = getCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
-  let sunRise = getCookie('canitube_' + siteName + '_Weather_Sunrise');
-  let sunSet = getCookie('canitube_' + siteName + '_Weather_Sunset');
+  let currentWeatherCode = parseInt(readLocalStorage('canitube_' + siteName + '_Current Weather').value);
+  let currentWindSpeed = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Wind Speed').value);
+  let currentCloudCover = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Cloud Cover').value);
+  let sunRise = parseInt(readLocalStorage('canitube_' + siteName + '_Sunrise').value);
+  let sunSet = parseInt(readLocalStorage('canitube_' + siteName + '_Sunset').value);
   let currentCondition = calculateCondition(currentWeatherCode, currentWindSpeed, currentCloudCover, {
     "rise": sunRise,
     "set": sunSet
@@ -21854,9 +21954,9 @@ function weatherDisplayPopulate(siteName, unitSet) {
 
   document.querySelector("#now-icon").insertAdjacentHTML('afterbegin', conditionSVG(currentCondition)); // Calculate the next biggest change in weather
 
-  let hourlyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
-  let hourlyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
-  let hourlyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover')); // Iterate over the hour array until a new condition is found or until the 24hr item is reached
+  let hourlyWeather = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value);
+  let hourlyWindSpeed = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
+  let hourlyCloudCover = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value); // Iterate over the hour array until a new condition is found or until the 24hr item is reached
 
   let laterCondition = {
     "weather": "",
@@ -21881,41 +21981,43 @@ function weatherDisplayPopulate(siteName, unitSet) {
       if (testCondition !== currentCondition) {
         // If the hourly condition is different from the current condition return
         laterCondition.weather = testCondition;
-        laterCondition.time = Object.keys(hourlyWeather)[i];
+        laterCondition.time = _moment.default.unix(parseInt(Object.keys(hourlyWeather)[i])).local().format('hA');
         break;
       }
     }
-  } // Convert later condition time to local time
+  } // Add next condition text
 
-
-  laterCondition.time = (0, _moment.default)().unix(laterCondition.time).format('LT'); // Add next condition text
 
   document.querySelector("#timeline-later").innerHTML = laterCondition.weather + " Likely At " + laterCondition.time; // Add the next condition SVG
 
   document.querySelector("#later-icon").insertAdjacentHTML('afterbegin', conditionSVG(laterCondition.weather)); // Calculate 3 days of forecast
 
-  let dailyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Weather'));
-  let dailyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Wind Speed'));
-  let dailyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover')); // Get the days of the week of the 3 day forecast
+  let dailyWeather = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Weather').value);
+  let dailyWindSpeed = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Wind Speed').value);
+  let dailyCloudCover = JSON.parse(readLocalStorage('canitube_' + siteName + '_Daily Cloud Cover').value); // Get the days of the week of the 3 day forecast
 
   let daysKeyList = Object.keys(dailyWeather);
-  let tomorrowDOW = (0, _moment.default)(daysKeyList[0]).isoWeekday();
-  let twoDayDOW = (0, _moment.default)(daysKeyList[1]).isoWeekday();
-  let threeDayDOW = (0, _moment.default)(daysKeyList[2]).isoWeekday(); // Convert the DOW number to a string
+
+  let tomorrowDOW = _moment.default.unix(parseInt(daysKeyList[1])).isoWeekday();
+
+  let twoDayDOW = _moment.default.unix(parseInt(daysKeyList[2])).isoWeekday();
+
+  let threeDayDOW = _moment.default.unix(parseInt(daysKeyList[3])).isoWeekday(); // Convert the DOW number to a string
+
 
   tomorrowDOW = convertDOW(tomorrowDOW, 'abr');
   twoDayDOW = convertDOW(twoDayDOW, 'abr');
   threeDayDOW = convertDOW(threeDayDOW, 'abr'); // Get the conditions for the 3 day forecast
 
-  let tomorrowCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[0]], dailyWindSpeed[Object.keys(dailyWindSpeed)[0]], dailyCloudCover[Object.keys(dailyCloudCover)[0]], {
+  let tomorrowCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[1]], dailyWindSpeed[Object.keys(dailyWindSpeed)[1]], dailyCloudCover[Object.keys(dailyCloudCover)[1]], {
     "rise": sunRise,
     "set": sunSet
   });
-  let twoDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[1]], dailyWindSpeed[Object.keys(dailyWindSpeed)[1]], dailyCloudCover[Object.keys(dailyCloudCover)[1]], {
+  let twoDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[2]], dailyWindSpeed[Object.keys(dailyWindSpeed)[2]], dailyCloudCover[Object.keys(dailyCloudCover)[2]], {
     "rise": sunRise,
     "set": sunSet
   });
-  let threeDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[2]], dailyWindSpeed[Object.keys(dailyWindSpeed)[2]], dailyCloudCover[Object.keys(dailyCloudCover)[2]], {
+  let threeDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[3]], dailyWindSpeed[Object.keys(dailyWindSpeed)[3]], dailyCloudCover[Object.keys(dailyCloudCover)[3]], {
     "rise": sunRise,
     "set": sunSet
   }); // Add the 3 day forecast DOWs
@@ -22107,6 +22209,14 @@ function conditionSVG(condition) {
 
 
 function convertDOW(dowNum, typeOfString) {
+  if (dowNum > 7) {
+    if (dowNum % 7 == 0) {
+      dowNum = 7;
+    } else {
+      dowNum = dowNum % 7;
+    }
+  }
+
   let dowConverter = {
     "1": {
       "abr": "Mon",
@@ -22137,211 +22247,7 @@ function convertDOW(dowNum, typeOfString) {
       "full": "Sunday"
     }
   };
-  return dowConverter[Object.keys(dowConverter)[dowNum % 7 - 1]][typeOfString];
+  return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
-},{"jquery":"node_modules/jquery/dist/jquery.js","moment":"node_modules/moment/moment.js","convert-units":"node_modules/convert-units/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
-var global = arguments[3];
-var OVERLAY_ID = '__parcel__error__overlay__';
-var OldModule = module.bundle.Module;
-
-function Module(moduleName) {
-  OldModule.call(this, moduleName);
-  this.hot = {
-    data: module.bundle.hotData,
-    _acceptCallbacks: [],
-    _disposeCallbacks: [],
-    accept: function (fn) {
-      this._acceptCallbacks.push(fn || function () {});
-    },
-    dispose: function (fn) {
-      this._disposeCallbacks.push(fn);
-    }
-  };
-  module.bundle.hotData = null;
-}
-
-module.bundle.Module = Module;
-var checkedAssets, assetsToAccept;
-var parent = module.bundle.parent;
-
-if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
-  var hostname = "" || location.hostname;
-  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52555" + '/');
-
-  ws.onmessage = function (event) {
-    checkedAssets = {};
-    assetsToAccept = [];
-    var data = JSON.parse(event.data);
-
-    if (data.type === 'update') {
-      var handled = false;
-      data.assets.forEach(function (asset) {
-        if (!asset.isNew) {
-          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
-
-          if (didAccept) {
-            handled = true;
-          }
-        }
-      }); // Enable HMR for CSS by default.
-
-      handled = handled || data.assets.every(function (asset) {
-        return asset.type === 'css' && asset.generated.js;
-      });
-
-      if (handled) {
-        console.clear();
-        data.assets.forEach(function (asset) {
-          hmrApply(global.parcelRequire, asset);
-        });
-        assetsToAccept.forEach(function (v) {
-          hmrAcceptRun(v[0], v[1]);
-        });
-      } else if (location.reload) {
-        // `location` global exists in a web worker context but lacks `.reload()` function.
-        location.reload();
-      }
-    }
-
-    if (data.type === 'reload') {
-      ws.close();
-
-      ws.onclose = function () {
-        location.reload();
-      };
-    }
-
-    if (data.type === 'error-resolved') {
-      console.log('[parcel] ✨ Error resolved');
-      removeErrorOverlay();
-    }
-
-    if (data.type === 'error') {
-      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
-      removeErrorOverlay();
-      var overlay = createErrorOverlay(data);
-      document.body.appendChild(overlay);
-    }
-  };
-}
-
-function removeErrorOverlay() {
-  var overlay = document.getElementById(OVERLAY_ID);
-
-  if (overlay) {
-    overlay.remove();
-  }
-}
-
-function createErrorOverlay(data) {
-  var overlay = document.createElement('div');
-  overlay.id = OVERLAY_ID; // html encode message and stack trace
-
-  var message = document.createElement('div');
-  var stackTrace = document.createElement('pre');
-  message.innerText = data.error.message;
-  stackTrace.innerText = data.error.stack;
-  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
-  return overlay;
-}
-
-function getParents(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return [];
-  }
-
-  var parents = [];
-  var k, d, dep;
-
-  for (k in modules) {
-    for (d in modules[k][1]) {
-      dep = modules[k][1][d];
-
-      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
-        parents.push(k);
-      }
-    }
-  }
-
-  if (bundle.parent) {
-    parents = parents.concat(getParents(bundle.parent, id));
-  }
-
-  return parents;
-}
-
-function hmrApply(bundle, asset) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (modules[asset.id] || !bundle.parent) {
-    var fn = new Function('require', 'module', 'exports', asset.generated.js);
-    asset.isNew = !modules[asset.id];
-    modules[asset.id] = [fn, asset.deps];
-  } else if (bundle.parent) {
-    hmrApply(bundle.parent, asset);
-  }
-}
-
-function hmrAcceptCheck(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (!modules[id] && bundle.parent) {
-    return hmrAcceptCheck(bundle.parent, id);
-  }
-
-  if (checkedAssets[id]) {
-    return;
-  }
-
-  checkedAssets[id] = true;
-  var cached = bundle.cache[id];
-  assetsToAccept.push([bundle, id]);
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    return true;
-  }
-
-  return getParents(global.parcelRequire, id).some(function (id) {
-    return hmrAcceptCheck(global.parcelRequire, id);
-  });
-}
-
-function hmrAcceptRun(bundle, id) {
-  var cached = bundle.cache[id];
-  bundle.hotData = {};
-
-  if (cached) {
-    cached.hot.data = bundle.hotData;
-  }
-
-  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
-    cached.hot._disposeCallbacks.forEach(function (cb) {
-      cb(bundle.hotData);
-    });
-  }
-
-  delete bundle.cache[id];
-  bundle(id);
-  cached = bundle.cache[id];
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    cached.hot._acceptCallbacks.forEach(function (cb) {
-      cb();
-    });
-
-    return true;
-  }
-}
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","assets/js/app.js"], null)
-//# sourceMappingURL=/app.56908c73.js.map
+},{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
+//# sourceMappingURL=app.455baaf0.js.map
