@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.3";
+var appVersion = "3.31";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -21662,7 +21662,7 @@ function refreshTimer() {
 } // This function updates the weather cookies for the current site
 
 
-async function weatherUpdate(siteLocation, siteName, unitSet) {
+async function weatherUpdate(siteLocation, siteName, unitSet, stateColor) {
   // Find all the cookie categories currently present
   let localStorageItemSearch = localStorageCategorySearch('Weather'); // Test if there are any Weather cookies
 
@@ -21808,7 +21808,7 @@ async function weatherUpdate(siteLocation, siteName, unitSet) {
   } // Populate the Weather Display
 
 
-  weatherDisplayPopulate(siteName, unitSet);
+  weatherDisplayPopulate(siteName, unitSet, stateColor);
 } // This function returns the JSON object with weather data
 
 
@@ -21878,7 +21878,7 @@ function weatherFetch(latCoord, longCoord, siteName) {
 } // This function populates weather data into the weather display
 
 
-function weatherDisplayPopulate(siteName, unitSet) {
+function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
   let unitsTo = {
     "length": "",
     "speed": "",
@@ -22028,7 +22028,14 @@ function weatherDisplayPopulate(siteName, unitSet) {
 
   document.querySelector("#tomorrow-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(tomorrowCondition));
   document.querySelector("#day-two-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(twoDayCondition));
-  document.querySelector("#day-three-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(threeDayCondition));
+  document.querySelector("#day-three-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(threeDayCondition)); // Change stroke color to current state for all SVG stroke icons
+
+  (0, _jquery.default)('.weather-icon > svg > path').each(function () {
+    (0, _jquery.default)(this).attr('stroke', stateStroke);
+  });
+  (0, _jquery.default)('.weather-icon > svg > circle').each(function () {
+    (0, _jquery.default)(this).attr('stroke', stateStroke);
+  });
 } // This function returns the current condition based on input factors (Sun Times is an object that has rise and set keys)
 
 
@@ -22250,4 +22257,4 @@ function convertDOW(dowNum, typeOfString) {
   return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.455baaf0.js.map
+//# sourceMappingURL=app.0cc3bcd4.js.map
