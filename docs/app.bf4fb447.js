@@ -19933,8 +19933,7 @@ var riverInfo = [{
   },
   "site_parameters": {
     "discharge": "00060",
-    "gage_height": "00065",
-    "water_temperature": "00010"
+    "gage_height": "00065"
   },
   "geo_location": {
     "lat": "36.57280708",
@@ -20335,7 +20334,11 @@ function selectItem(itemID) {
 
   var currentSafeRange = riverInfo[selectedRiverIndex].safe_range; // Calculate the look of the height range
 
-  var currentHeightRange = riverInfo[selectedRiverIndex].height_range; // Test if the current flow value is within the safe range
+  var currentHeightRange = riverInfo[selectedRiverIndex].height_range; // Store site information for page formatting (Weather Update)
+
+  let siteLocation = riverInfo[selectedRiverIndex].geo_location;
+  let siteName = riverInfo[selectedRiverIndex].river;
+  let unitSet = "imperial"; // Test if the current flow value is within the safe range
 
   if (realTimeFlowValue > currentSafeRange.min - 1 && realTimeFlowValue < currentSafeRange.max + 1) {
     // Test if the average value is within a percentage of the safe range
@@ -20349,16 +20352,16 @@ function selectItem(itemID) {
     if (realTimeFlowValue > superSafeRange.min - 1 && realTimeFlowValue < superSafeRange.max + 1) {
       // Today is safe
       console.log("Today is safe!");
-      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
+      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
     } else {
       // Today is maybe safe
       console.log("Today is maybe safe?");
-      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
+      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
     }
   } else {
     // Today is not safe
     console.log("Today is not safe!");
-    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange);
+    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
   }
 }); // This function removes elements based on a passed selector
 
@@ -20663,7 +20666,7 @@ function loadingStage() {
 } // This function formats the page based on the determined safety
 
 
-function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange) {
+function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet) {
   // This object contains the information to determine the formatting of each global style
   var formatChoices = {
     'yes': {
@@ -20734,7 +20737,9 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
   (0, _jquery.default)('#icon-i').css('opacity', '0'); // Set the wave mask to the correct size
 
   (0, _jquery.default)('#background-wave > mask').attr('width', (0, _jquery.default)(window).width()).attr('height', (0, _jquery.default)(window).height());
-  (0, _jquery.default)('#background-wave > mask > g > rect').attr('width', (0, _jquery.default)(window).width()).attr('height', (0, _jquery.default)(window).height()); // Begin the transition to the final state
+  (0, _jquery.default)('#background-wave > mask > g > rect').attr('width', (0, _jquery.default)(window).width()).attr('height', (0, _jquery.default)(window).height()); // Call a weather display update
+
+  weatherUpdate(siteGeoLocation, siteName, unitSet); // Begin the transition to the final state
 
   gsap.timeline().delay(.25).call(createAnswer, [state, currentFlowValue]).set('.border-content', {
     zIndex: 100
@@ -21542,6 +21547,587 @@ function refreshTimer() {
     (0, _jquery.default)('#refresh-cookie-countdown').empty().text(refreshText);
     timeLeft -= 1;
   }, 1000);
+} // This function updates the weather cookies for the current site
+
+
+async function weatherUpdate(siteLocation, siteName, unitSet) {
+  // Find all the cookie categories currently present
+  let cookieCategories = document.cookie.split("; ").map(item => item.split("_")[2]); // Test if there are any Weather cookies
+
+  if (cookieCategories.indexOf('Weather') == -1) {
+    console.log('There are no weather cookies!'); // Set the weather API cookie to 0 calls and expire in 24 hours
+
+    writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24); // Also write a cookie that contains the cookie expire date
+
+    let expDate = new Date();
+    expDate = expDate.setTime(+expDate + 24 * 3600000);
+    writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24); // Standard cookie call
+
+    let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
+
+    let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
+    writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+  } else {
+    console.log('There are weather cookies!'); // Test if the API call cookie is present
+
+    let cookieDataType = document.cookie.split("; ").map(item => item.split("_")[2].split("=")[0]);
+
+    if (cookieDataType.indexOf('API Calls') == -1) {
+      console.log('There is no API calls cookie!'); // Set the weather API cookie to 0 calls and expire in 24 hours
+
+      writeCookie('canitube_' + siteName + '_Weather_API Calls', 0, 24); // Also write a cookie that contains the cookie expire date
+
+      let expDate = new Date();
+      expDate = expDate.setTime(+expDate + 24 * 3600000);
+      writeCookie('canitube_' + siteName + '_Weather_API Calls Expire', expDate, 24); // Standard cookie call
+
+      let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
+
+      let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
+      writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+    } else {
+      // If the API calls value is less than 3
+      console.log('There is an API calls cookie! Its value is: ' + getCookie('canitube_' + siteName + '_Weather_API Calls'));
+      let cookieWeatherAPICalls = getCookie('canitube_' + siteName + '_Weather_API Calls');
+
+      if (cookieWeatherAPICalls < 3) {
+        console.log('There are less than 3 API calls!'); // Check if new weather data is needed
+
+        let hourlyWeather = checkCookie('canitube_' + siteName + '_Weather_Hourly Weather');
+        let hourlyTemperature = checkCookie('canitube_' + siteName + '_Weather_Hourly Temperature');
+        let hourlyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed');
+        let hourlyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover');
+        let dailyWeather = checkCookie('canitube_' + siteName + '_Weather_Daily Weather');
+        let dailyWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Daily Wind Speed');
+        let dailyCloudCover = checkCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover');
+
+        if (hourlyWeather * hourlyTemperature * hourlyWindSpeed * hourlyCloudCover * dailyWeather * dailyWindSpeed * dailyCloudCover == 0) {
+          console.log('A hourly or daily weather cookie is missing!'); // At least 1 of the needed cookies is missing, run standard cookie call
+          // Standard cookie call
+
+          let apiCallsTotal = await weatherFetch(parseFloat(siteLocation.lat), parseFloat(siteLocation.long), siteName); // Set the new total of API calls
+
+          let apiCallsExpDate = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls Expire'));
+          writeCookieUnix('canitube_' + siteName + '_Weather_API Calls', apiCallsTotal, apiCallsExpDate);
+        } else {
+          console.log('All hourly and daily cookies are here!'); // All of the needed cookies are present, check if the current cookies are present
+
+          let currentWeather = checkCookie('canitube_' + siteName + '_Weather_Current Weather');
+          let currentWindSpeed = checkCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
+          let currentCloudCover = checkCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
+          let currentTemperature = checkCookie('canitube_' + siteName + '_Weather_Current Temperature');
+
+          if (currentWeather * currentWindSpeed * currentCloudCover * currentTemperature !== 1) {
+            console.log('A current cookie needs to be updated!'); // The current cookies are not present, perform operations to update current values
+            // Determine the current time as a unix timestamp and read the hourly weather values for the current values at the current hour unix timestring
+
+            function getFirstCookie(data) {
+              const times = Object.keys(data);
+              const now = new Date().getTime();
+              const [firstCookie] = times.filter(time => now < time * 1000);
+              return firstCookie;
+            } // Store the current closest time key
+
+
+            let timeKey = getFirstCookie(JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'))); // Use the time key to grab the value for all of the current value items from hourly items
+
+            let currentTemperatureJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Temperature'));
+            let currentWeatherJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
+            let currentWindSpeedJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
+            let currentCloudCoverJSON = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover'));
+            let cookieCurrentTemperature = currentTemperatureJSON[timeKey];
+            let cookieCurrentWeather = currentWeatherJSON[timeKey];
+            let cookieCurrentWindSpeed = currentWindSpeedJSON[timeKey];
+            let cookieCurrentCloudCover = currentCloudCoverJSON[timeKey]; // Store these new current values
+
+            let cookiePrefix = 'canitube';
+            let cookieCategory = 'Weather';
+            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', cookieCurrentTemperature, 1);
+            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', cookieCurrentWeather, 1);
+            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', cookieCurrentWindSpeed, 1);
+            writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', cookieCurrentCloudCover, 1); // Check for sun values
+
+            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
+            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+
+            if (sunriseCheck * sunsetCheck !== 1) {
+              console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
+
+              let sunriseDefaultTime = new Date();
+              sunriseDefaultTime.setHours(5);
+              sunriseDefaultTime.setMinutes(0);
+              sunriseDefaultTime.setSeconds(0);
+              let sunsetDefaultTime = new Date();
+              sunsetDefaultTime.setHours(20);
+              sunsetDefaultTime.setMinutes(0);
+              sunsetDefaultTime.setSeconds(0);
+              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+            }
+          } else {
+            console.log('All current cookies are here!'); // Check if the sun cookies are present
+
+            let sunriseCheck = checkCookie('canitube_' + siteName + '_Weather_Sunrise');
+            let sunsetCheck = checkCookie('canitube_' + siteName + '_Weather_Sunset');
+
+            if (sunriseCheck * sunsetCheck !== 1) {
+              console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
+
+              let sunriseDefaultTime = new Date();
+              sunriseDefaultTime.setHours(5);
+              sunriseDefaultTime.setMinutes(0);
+              sunriseDefaultTime.setSeconds(0);
+              let sunsetDefaultTime = new Date();
+              sunsetDefaultTime.setHours(20);
+              sunsetDefaultTime.setMinutes(0);
+              sunsetDefaultTime.setSeconds(0);
+              writeCookie('canitube_' + siteName + '_Weather_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+              writeCookie('canitube_' + siteName + '_Weather_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), hoursUntilMidnight());
+            }
+          }
+        }
+      } else {
+        // For now log an error message in the console
+        // CODE HERE //
+        console.log('Total API Calls: ' + cookieWeatherAPICalls + '. Not doing anything!'); // Even if there are 3 api calls, still check updates on current temperature and sun, and push error message to display.
+        // Also add yikes message to outside of function if api calls exist but no weather data is present
+      }
+    }
+  } // Populate the Weather Display
+
+
+  weatherDisplayPopulate(siteName, unitSet);
+} // This function returns the JSON object with weather data
+
+
+function weatherFetch(latCoord, longCoord, siteName) {
+  return new Promise((resolve, reject) => {
+    _jquery.default.ajax({
+      url: "https://api.openweathermap.org/data/2.5/onecall?lat=" + latCoord + "&lon=" + longCoord + "&exclude=minutely&appid=c9a47e2743a3a30b52affba80fee17fe",
+      dataType: 'JSON',
+      data: '',
+      success: function (json) {
+        console.log("Weather Data Retreived!"); // Here, store the data as cookies to an app-ready format
+
+        let cookiePrefix = 'canitube';
+        let cookieCategory = 'Weather'; // 1 Hour Expire
+
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Temperature', json.current.feels_like, 1);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Weather', json.current.weather[0].id, 1);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Wind Speed', json.current.wind_speed, 1);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Current Cloud Cover', json.current.clouds, 1); // 8 Hour Expire
+        // Hourly Data
+
+        let hourlyWeather = {};
+        let hourlyWindSpeed = {};
+        let hourlyCloudCover = {};
+        let hourlyTemperature = {};
+
+        for (var i = 0; i < 24; i++) {
+          hourlyWeather[json.hourly[i].dt] = json.hourly[i].weather[0].id;
+          hourlyWindSpeed[json.hourly[i].dt] = json.hourly[i].wind_speed;
+          hourlyCloudCover[json.hourly[i].dt] = json.hourly[i].clouds;
+          hourlyTemperature[json.hourly[i].dt] = json.hourly[i].feels_like;
+        }
+
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Weather', JSON.stringify(hourlyWeather), 8);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Wind Speed', JSON.stringify(hourlyWindSpeed), 8);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Cloud Cover', JSON.stringify(hourlyCloudCover), 8);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Hourly Temperature', JSON.stringify(hourlyTemperature), 8); // Daily Data
+
+        let dailyWeather = {};
+        let dailyWindSpeed = {};
+        let dailyCloudCover = {};
+
+        for (var i = 0; i < 4; i++) {
+          dailyWeather[json.daily[i].dt] = json.daily[i].weather[0].id;
+          dailyWindSpeed[json.daily[i].dt] = json.daily[i].wind_speed;
+          dailyCloudCover[json.daily[i].dt] = json.daily[i].clouds;
+        }
+
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Weather', JSON.stringify(dailyWeather), 8);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Wind Speed', JSON.stringify(dailyWindSpeed), 8);
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Daily Cloud Cover', JSON.stringify(dailyCloudCover), 8); // End Of Day Expire
+
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunrise', json.current.sunrise, hoursUntilMidnight());
+        writeCookie(cookiePrefix + '_' + siteName + '_' + cookieCategory + '_Sunset', json.current.sunset, hoursUntilMidnight()); // Return the number of total API calls if the data has been retreived
+
+        let apiCalls = parseInt(getCookie('canitube_' + siteName + '_Weather_API Calls'));
+        apiCalls = apiCalls + 1;
+        resolve(apiCalls);
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log("Error: AJAX request failed...");
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  });
+} //  This function gives the amount of hours until midnight
+
+
+function hoursUntilMidnight() {
+  var midnight = new Date();
+  midnight.setHours(24);
+  midnight.setMinutes(0);
+  midnight.setSeconds(0);
+  midnight.setMilliseconds(0);
+  return Math.ceil((midnight.getTime() - new Date().getTime()) / 1000 / 60 / 60);
+} // This function populates weather data into the weather display
+
+
+function weatherDisplayPopulate(siteName, unitSet) {
+  let unitsTo = {
+    "length": "",
+    "speed": "",
+    "temperature": "",
+    "volume_flow_rate": ""
+  };
+
+  if (unitSet == 'imperial') {
+    // Imperial
+    // Speed: mile/hour
+    // Length: feet
+    // Volume Flow Rate: cubic feet/second
+    // Temperature: Fahrenheit
+    unitsTo.length = 'ft';
+    unitsTo.speed = 'm/h';
+    unitsTo.temperature = 'F';
+    unitsTo.volume_flow_rate = 'ft3/s';
+  } else {
+    // Metric
+    // Speed: metre/second
+    // Length: meter
+    // Volume Flow Rate: cubic meter/second
+    // Temperature: Celsius
+    unitsTo.length = 'm';
+    unitsTo.speed = 'm/s';
+    unitsTo.temperature = 'C';
+    unitsTo.volume_flow_rate = 'm3/s';
+  } // Update the current local temperatures
+
+
+  let currentWaterTemperature = getCookie('canitube_' + siteName + '_Water Temperature');
+  let currentAirTemperature = getCookie('canitube_' + siteName + '_Weather_ Current Temperature'); // Convert the current measurements into their appropriate units
+  // Default Water Temp measurement is Celsius
+  // Default Air  Temp measurement is in Kelvin
+  // If current water temp is 'null' then have the temperature be '-'
+
+  if (currentWaterTemperature == "null") {
+    currentWaterTemperature = "-";
+  } else {
+    currentWaterTemperature = (0, _convertUnits.default)(parseFloat(currentWaterTemperature)).from('C').to(unitsTo.temperature);
+  }
+
+  currentAirTemperature = (0, _convertUnits.default)(parseFloat(currentAirTemperature)).from('K').to(unitsTo.temperature); // Add the current measurements to their display fields
+  // Water Temp
+
+  document.querySelector("#water-temp").innerHTML = "Water: " + currentWaterTemperature;
+  document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Air Temp
+
+  document.querySelector("#water-temp").innerHTML = "Air: " + currentAirTemperature;
+  document.querySelector("#water-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector("#water-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Calculate the current condition
+
+  let currentWeatherCode = getCookie('canitube_' + siteName + '_Weather_Current Weather');
+  let currentWindSpeed = getCookie('canitube_' + siteName + '_Weather_Current Wind Speed');
+  let currentCloudCover = getCookie('canitube_' + siteName + '_Weather_Current Cloud Cover');
+  let sunRise = getCookie('canitube_' + siteName + '_Weather_Sunrise');
+  let sunSet = getCookie('canitube_' + siteName + '_Weather_Sunset');
+  let currentCondition = calculateCondition(currentWeatherCode, currentWindSpeed, currentCloudCover, {
+    "rise": sunRise,
+    "set": sunSet
+  }); // Add current condition text
+
+  document.querySelector("#timeline-now").innerHTML = currentCondition + " Now"; // Add the current condition SVG
+
+  document.querySelector("#now-icon").insertAdjacentHTML('afterbegin', conditionSVG(currentCondition)); // Calculate the next biggest change in weather
+
+  let hourlyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Weather'));
+  let hourlyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Wind Speed'));
+  let hourlyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Hourly Cloud Cover')); // Iterate over the hour array until a new condition is found or until the 24hr item is reached
+
+  let laterCondition = {
+    "weather": "",
+    "time": ""
+  };
+
+  for (var i = 0; i < 24; i++) {
+    // If the end of the object is reached, set the last condition
+    if (i == 23) {
+      laterCondition.weather = calculateCondition(hourlyWeather[Object.keys(hourlyWeather)[i]], hourlyWindSpeed[Object.keys(hourlyWindSpeed)[i]], hourlyCloudCover[Object.keys(hourlyCloudCover)[i]], {
+        "rise": sunRise,
+        "set": sunSet
+      });
+      laterCondition.time = Object.keys(hourlyWeather)[i];
+    } else {
+      // Test if the hour condition is different from the current condition
+      let testCondition = calculateCondition(hourlyWeather[Object.keys(hourlyWeather)[i]], hourlyWindSpeed[Object.keys(hourlyWindSpeed)[i]], hourlyCloudCover[Object.keys(hourlyCloudCover)[i]], {
+        "rise": sunRise,
+        "set": sunSet
+      });
+
+      if (testCondition !== currentCondition) {
+        // If the hourly condition is different from the current condition return
+        laterCondition.weather = testCondition;
+        laterCondition.time = Object.keys(hourlyWeather)[i];
+        break;
+      }
+    }
+  } // Convert later condition time to local time
+
+
+  laterCondition.time = (0, _moment.default)().unix(laterCondition.time).format('LT'); // Add next condition text
+
+  document.querySelector("#timeline-later").innerHTML = laterCondition.weather + " Likely At " + laterCondition.time; // Add the next condition SVG
+
+  document.querySelector("#later-icon").insertAdjacentHTML('afterbegin', conditionSVG(laterCondition.weather)); // Calculate 3 days of forecast
+
+  let dailyWeather = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Weather'));
+  let dailyWindSpeed = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Wind Speed'));
+  let dailyCloudCover = JSON.parse(getCookie('canitube_' + siteName + '_Weather_Daily Cloud Cover')); // Get the days of the week of the 3 day forecast
+
+  let daysKeyList = Object.keys(dailyWeather);
+  let tomorrowDOW = (0, _moment.default)(daysKeyList[0]).isoWeekday();
+  let twoDayDOW = (0, _moment.default)(daysKeyList[1]).isoWeekday();
+  let threeDayDOW = (0, _moment.default)(daysKeyList[2]).isoWeekday(); // Convert the DOW number to a string
+
+  tomorrowDOW = convertDOW(tomorrowDOW, 'abr');
+  twoDayDOW = convertDOW(twoDayDOW, 'abr');
+  threeDayDOW = convertDOW(threeDayDOW, 'abr'); // Get the conditions for the 3 day forecast
+
+  let tomorrowCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[0]], dailyWindSpeed[Object.keys(dailyWindSpeed)[0]], dailyCloudCover[Object.keys(dailyCloudCover)[0]], {
+    "rise": sunRise,
+    "set": sunSet
+  });
+  let twoDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[1]], dailyWindSpeed[Object.keys(dailyWindSpeed)[1]], dailyCloudCover[Object.keys(dailyCloudCover)[1]], {
+    "rise": sunRise,
+    "set": sunSet
+  });
+  let threeDayCondition = calculateCondition(dailyWeather[Object.keys(dailyWeather)[2]], dailyWindSpeed[Object.keys(dailyWindSpeed)[2]], dailyCloudCover[Object.keys(dailyCloudCover)[2]], {
+    "rise": sunRise,
+    "set": sunSet
+  }); // Add the 3 day forecast DOWs
+
+  document.querySelector("#tomorrow-forecast > .forecast-text").innerHTML = tomorrowDOW;
+  document.querySelector("#day-two-forecast > .forecast-text").innerHTML = twoDayDOW;
+  document.querySelector("#day-three-forecast > .forecast-text").innerHTML = threeDayDOW; // Add the 3 day forecast condition SVG
+
+  document.querySelector("#tomorrow-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(tomorrowCondition));
+  document.querySelector("#day-two-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(twoDayCondition));
+  document.querySelector("#day-three-forecast > .weather-icon").insertAdjacentHTML('afterbegin', conditionSVG(threeDayCondition));
+} // This function returns the current condition based on input factors (Sun Times is an object that has rise and set keys)
+
+
+function calculateCondition(weatherCode, windSpeed, cloudCover, sunTimes) {
+  // Calculate if its currently day or night
+  let currentTime = new Date();
+  currentTime = Math.floor(currentTime.getTime() / 1000);
+
+  if (currentTime >= sunTimes.rise && currentTime < sunTimes.set) {
+    var dayTime = 'Day';
+  } else {
+    var dayTime = 'Night';
+  } // First narrow possibilities of conditions via weather code
+
+
+  if (weatherCode >= 200 && weatherCode <= 299) {
+    // Thunder type
+    if (weatherCode !== 210 && weatherCode !== 211 && weatherCode !== 212 && weatherCode !== 221) {
+      // Thunderstorm with rain
+      return "Rainy Thunderstorm";
+    } else {
+      // Thunderstorm no rain
+      return "Thunderstorm";
+    }
+  }
+
+  if (weatherCode >= 700 && weatherCode <= 799) {
+    // Atmospheric
+    if (weatherCode == 781) {
+      // Tornado
+      return "Tornado";
+    }
+
+    if (weatherCode >= 701 && weatherCode <= 710) {
+      // Mist
+      return "Mist";
+    }
+
+    if (weatherCode >= 711 && weatherCode <= 720) {
+      // Smoke
+      return "Smoke";
+    }
+
+    if (weatherCode >= 721 && weatherCode <= 730) {
+      // Haze
+      return "Haze";
+    }
+
+    if (weatherCode >= 731 && weatherCode <= 740) {
+      // Dust
+      return "Dust";
+    }
+
+    if (weatherCode >= 741 && weatherCode <= 750) {
+      // Fog
+      return "Fog";
+    }
+
+    if (weatherCode >= 751 && weatherCode <= 760) {
+      // Sand
+      return "Sand";
+    }
+
+    if (weatherCode == 761) {
+      // Dust
+      return "Dust";
+    }
+
+    if (weatherCode >= 762 && weatherCode <= 770) {
+      // Ash
+      return "Ash";
+    }
+
+    if (weatherCode >= 771 && weatherCode <= 780) {
+      // Squall
+      return "Squall";
+    }
+  }
+
+  if (weatherCode == 800) {
+    // Clear
+    if (dayTime == 'Night') {
+      // Clear Night
+      return "Clear Night";
+    } else {
+      // Clear Day
+      if (windSpeed >= 11.176) {
+        // Clear Day
+        return "Clear Day";
+      } else {
+        // Windy Clear Day
+        return "Windy Clear Day";
+      }
+    }
+  }
+
+  if (weatherCode >= 801 && weatherCode <= 850) {
+    // Clouds
+    if (weatherCode == 801) {
+      // Few Clouds
+      return "Few Clouds";
+    } else {
+      // Cloudy
+      if (windSpeed >= 11.176) {
+        // Cloudy Day
+        return "Cloudy";
+      } else {
+        // Windy Cloudy Day
+        return "Windy Clouds";
+      }
+    }
+  }
+
+  if (weatherCode >= 300 && weatherCode <= 350) {
+    // Drizzle
+    if (cloudCover > 25) {
+      // Partly Sunny Drizzle
+      return "Partly Sunny Drizzle";
+    } else {
+      // Drizzle
+      return "Drizzle";
+    }
+  }
+
+  if (weatherCode >= 600 && weatherCode <= 650) {
+    // Snow
+    if (cloudCover > 25) {
+      // Partly Sunny Snow
+      return "Partly Sunny Snow";
+    } else {
+      // Snow
+      return "Snow";
+    }
+  }
+
+  if (weatherCode >= 500 && weatherCode <= 550) {
+    // Rain
+    if (cloudCover > 25) {
+      // Partly Sunny Rain
+      return "Partly Sunny Rain";
+    } else {
+      // Rain
+      return "Rain";
+    }
+  }
+} // This function returns the SVG Code for each type of weather condition
+
+
+function conditionSVG(condition) {
+  let svgItems = {
+    "Rainy Thunderstorm": '<svg data-name="Rainy Thunderstorm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M54.5 50.5a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22M20.15 46.24l15.7 15.7M44.15 46.24l15.7 15.7" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M43.85 61.94L36 54.09h8l-7.85-7.85" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Thunderstorm": '<svg data-name="Thunderstorm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M46.3 50.5h8.2a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22h12.93" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M43.85 61.94L36 54.09h8l-7.85-7.85" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Tornado": '<svg data-name="Tornado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M53.12 12h-33.2a4 4 0 000 8h38.44a4 4 0 010 8H35.43a4 4 0 000 8H48a4 4 0 010 8H27.35a4 4 0 100 8h8.15a4 4 0 010 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Mist": '<svg data-name="Mist" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Smoke": '<svg data-name="Smoke" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Haze": '<svg data-name="Haze" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Dust": '<svg data-name="Dust" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Fog": '<svg data-name="Fog" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Sand": '<svg data-name="Sand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Dust": '<svg data-name="Dust" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Ash": '<svg data-name="Ash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Squall": '<svg data-name="Squall" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Clear Night": '<svg data-name="Clear Night" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M46.65 50.5a14.5 14.5 0 010-29 14.21 14.21 0 012.63.25 19.5 19.5 0 100 28.5 14.21 14.21 0 01-2.63.25z" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Clear Day": '<svg data-name="Clear Day" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><circle cx="36" cy="36" r="17.85" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M36 4.95v8.1M36 67.05v-8.1M67.05 36h-8.1M4.95 36h8.1M56.2 15.8l-3.97 3.97M15.8 56.2l3.97-3.97M56.2 56.2l-3.97-3.97M15.8 15.8l3.97 3.97" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Windy Clear Day": '<svg data-name="Windy Clear Day" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M31.48 8.72v6.92M31.48 61.77v-6.92M58 35.24h-6.92M4.95 35.24h6.92M48.73 17.99l-3.39 3.39M14.22 52.5l3.39-3.39M14.22 17.99l3.39 3.39" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M50.5 50.5h13a4 4 0 010 8" stroke-dasharray="1 2 1000" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M29.5 47.5h19a5 5 0 000-10" stroke-dasharray="2 4 1000" fill="none" stroke="#000" stroke-miterlimit="10"/><path d="M56.5 47.5h5a3 3 0 000-6" stroke-dasharray="1 2 1000" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M42.5 64.5a7 7 0 000-14h-11a15.24 15.24 0 1113.64-8.44" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Few Clouds": '<svg data-name="Few Clouds" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M15.75 33.28a12.5 12.5 0 0119.44-15.2M26.69 5.5v5.67M4.95 27.24h5.67M40.82 13.1l-2.78 2.78M12.55 13.1l2.78 2.78" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M57.59 35.59a18 18 0 00-35.54-4h-.46a11 11 0 000 22h36a9 9 0 000-18z" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Cloudy": '<svg data-name="Cloudy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M54.5 32.5a18 18 0 00-35.54-4h-.46a11 11 0 000 22h36a9 9 0 000-18z" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Windy Clouds": '<svg data-name="Windy Clouds" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M63 38.55a9 9 0 00-8.51-6 18 18 0 00-35.54-4h-.46a11 11 0 000 22h24a7 7 0 010 14" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M50.5 50.5h13a4 4 0 010 8" stroke-dasharray="1 2 1000" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M29.5 47.5h19a5 5 0 000-10" stroke-dasharray="2 4 1000" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M56.5 47.5h5a3 3 0 000-6" stroke-dasharray="1 2 1000" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Partly Sunny Drizzle": '<svg data-name="Partly Sunny Drizzle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M39.59 46.08v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M39.59 51.72v12.74" stroke-dasharray="3.64 3.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M39.59 66.28v2M47.59 46.08v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M47.59 52.72v6.96" stroke-dasharray="4.64 4.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M47.59 62v2M55.59 46.08v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M55.59 51.19v4.66" stroke-dasharray="3.11 3.11" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M55.59 57.4v2M31.59 46.08v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M31.59 52.72v6.96" stroke-dasharray="4.64 4.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M31.59 62v2M23.59 46.08v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M23.59 51.19v4.66" stroke-dasharray="3.11 3.11" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M23.59 57.4v2M15.75 33.28a12.5 12.5 0 0119.44-15.2M26.69 5.5v5.67M4.95 27.24h5.67M40.82 13.1l-2.78 2.78M12.55 13.1l2.78 2.78" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M57.59 53.59a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Drizzle": '<svg data-name="Drizzle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M54.5 50.5a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22M36.5 42.99v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M36.5 48.63v12.74" stroke-dasharray="3.64 3.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M36.5 63.19v2M44.5 42.99v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M44.5 49.63v6.96" stroke-dasharray="4.64 4.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M44.5 58.91v2M52.5 42.99v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M52.5 48.1v4.66" stroke-dasharray="3.11 3.11" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M52.5 54.31v2M28.5 42.99v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M28.5 49.63v6.96" stroke-dasharray="4.64 4.64" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M28.5 58.91v2M20.5 42.99v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M20.5 48.1v4.66" stroke-dasharray="3.11 3.11" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M20.5 54.31v2" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Partly Sunny Snow": '<svg data-name="Partly Sunny Snow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M57.59 53.59a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22M15.75 33.28a12.5 12.5 0 0119.44-15.2M26.69 5.5v5.67M4.95 27.24h5.67M40.82 13.1l-2.78 2.78M12.55 13.1l2.78 2.78" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path class="cls-2" d="M22.53 53.48l2.12 2.12M22.53 46.48l2.12 2.12M22.53 55.6l2.12-2.12M22.53 48.6l2.12-2.12M54.53 53.48l2.12 2.12M54.53 46.48l2.12 2.12M54.53 55.6l2.12-2.12M54.53 48.6l2.12-2.12M30.53 56.48l2.12 2.12M30.53 49.48l2.12 2.12M30.53 58.6l2.12-2.12M30.53 63.48l2.12 2.12M30.53 65.6l2.12-2.12M30.53 51.6l2.12-2.12M46.53 56.48l2.12 2.12M46.53 49.48l2.12 2.12M46.53 58.6l2.12-2.12M46.53 63.48l2.12 2.12M46.53 65.6l2.12-2.12M46.53 51.6l2.12-2.12M38.53 53.48l2.12 2.12M38.53 46.48l2.12 2.12M38.53 55.6l2.12-2.12M38.53 60.48l2.12 2.12M38.53 62.6l2.12-2.12M38.53 67.48l2.12 2.12M38.53 69.6l2.12-2.12M38.53 48.6l2.12-2.12" stroke-dasharray="3 4" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Snow": '<svg data-name="Snow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M54.5 50.5a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/><path d="M19.44 50.43l2.12 2.12M19.44 43.43l2.12 2.12M19.44 52.55l2.12-2.12M19.44 45.55l2.12-2.12M51.44 50.43l2.12 2.12M51.44 43.43l2.12 2.12M51.44 52.55l2.12-2.12M51.44 45.55l2.12-2.12M27.44 53.43l2.12 2.12M27.44 46.43l2.12 2.12M27.44 55.55l2.12-2.12M27.44 60.43l2.12 2.12M27.44 62.55l2.12-2.12M27.44 48.55l2.12-2.12M43.44 53.43l2.12 2.12M43.44 46.43l2.12 2.12M43.44 55.55l2.12-2.12M43.44 60.43l2.12 2.12M43.44 62.55l2.12-2.12M43.44 48.55l2.12-2.12M35.44 50.43l2.12 2.12M35.44 43.43l2.12 2.12M35.44 52.55l2.12-2.12M35.44 57.43l2.12 2.12M35.44 59.55l2.12-2.12M35.44 64.43l2.12 2.12M35.44 66.55l2.12-2.12M35.44 45.55l2.12-2.12" stroke-dasharray="3 4" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Partly Sunny Rain": '<svg data-name="Partly Sunny Rain" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M57.59 53.59a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22M15.75 33.28a12.5 12.5 0 0119.44-15.2M26.69 5.5v5.67M4.95 27.24h5.67M40.82 13.1l-2.78 2.78M12.55 13.1l2.78 2.78M35.62 49.21l15.7 15.7M23.62 49.21l15.7 15.7M47.62 49.21l15.7 15.7" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
+    "Rain": '<svg data-name="Rain" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M54.5 50.5a9 9 0 000-18 18 18 0 00-35.54-4h-.46a11 11 0 000 22M32.15 46.24l15.7 15.7M20.15 46.24l15.7 15.7M44.15 46.24l15.7 15.7" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>'
+  };
+  return svgItems[condition];
+} // This function returns a day of week string based on an input number (Uses ISO week standard, 1 = Monday 7 = Sunday)
+
+
+function convertDOW(dowNum, typeOfString) {
+  let dowConverter = {
+    "1": {
+      "abr": "Mon",
+      "full": "Monday"
+    },
+    "2": {
+      "abr": "Tue",
+      "full": "Tuesday"
+    },
+    "3": {
+      "abr": "Wed",
+      "full": "Wednesday"
+    },
+    "4": {
+      "abr": "Thu",
+      "full": "Thursday"
+    },
+    "5": {
+      "abr": "Fri",
+      "full": "Friday"
+    },
+    "6": {
+      "abr": "Sat",
+      "full": "Saturday"
+    },
+    "7": {
+      "abr": "Sun",
+      "full": "Sunday"
+    }
+  };
+  return dowConverter[Object.keys(dowConverter)[dowNum % 7 - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.3cb3f690.js.map
+//# sourceMappingURL=app.bf4fb447.js.map

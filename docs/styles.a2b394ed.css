@@ -912,13 +912,13 @@ a:hover{
 	clip-path: polygon(-5px -5px, 10px -5px, 10px 16px, 142px 16px, 142px -5px, 105% -5px, 105% 105%, -5px 105%);
 }
 
-.cookie-group, .cookie-major-group {
+.cookie-group {
 	margin-bottom: 8px;
 	z-index: 1050;
 	text-align: left;
 }
 
-.cookie-group > label > input[type="checkbox"], .cookie-major-group > label > input[type="checkbox"] {
+.cookie-group > label > input[type="checkbox"] {
 	display: none;
 }
 
@@ -1133,5 +1133,208 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	clear: both;
 }
 
+/* Weather Display */
 
-/*# sourceMappingURL=styles.9211d276.css.map */
+.degree {
+	text-transform: lowercase;
+	font-size: 9px;
+	vertical-align: 6px;
+}
+
+.information-display {
+  position: relative;
+  width: 450px; /* Temp */
+  height: 450px; /* Temp */
+}
+
+.information-display::after {
+  position: absolute;
+  display: block;
+  content: '';
+	top: 0px;
+	left: 0px;
+  width: 100%;
+  height: 100%;
+  border: 1px #eac435 solid;
+  clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 186px 10px, 186px -5px, 105% -5px, 105% 105%, -5px 105%);
+}
+
+#current-conditions-content::before {
+  position: absolute;
+  display: block;
+	color: #eac435;
+  content: 'Current Conditions';
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+  top: 0px;
+  left: 24px;
+  letter-spacing: .5px;
+	transform: translate(0%, -45%);
+}
+
+.weather-subtitle {
+	position: absolute;
+	top: 24px;
+	left: 24px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	white-space: nowrap;
+	font-size: 14px;
+	letter-spacing: .75px;
+}
+
+.display-subsection {
+	position: absolute;
+	left: 0px;
+	width: 100%;
+}
+
+#current-weather {
+	top: 0px;
+	height: 60%;
+}
+
+.weather-subtitle > div {
+	margin-right: 12px;
+}
+
+#weather-today {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	padding: 24px;
+	padding-top: 48px;
+	padding-bottom: 48px;
+	box-sizing: border-box;
+}
+
+#weather-today > .container {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+#weather-today-icons {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+.weather-icon {
+	width: 108px;
+	height: 108px;
+	margin: 16px;
+}
+
+#now-icon {
+	margin-left: 8px;
+}
+
+#later-icon {
+	margin-right: 8px;
+}
+
+#weather-timeline {
+	font-size: 14px;
+	letter-spacing: .75px;
+}
+
+#weather-timeline > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	white-space: nowrap;
+}
+
+#timeline-now {
+	margin-right: 8px;
+}
+
+#timeline-later {
+	margin-left: 8px;
+}
+
+.weather-timeline-line {
+	position: relative;
+	width: 100%;
+}
+
+.line-rule {
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	width: 100%;
+	height: 1px;
+	background-color: #eac435;
+	transform: translate(0%, -50%);
+}
+
+#weather-forecast {
+	bottom: 0;
+	height: 40%;
+}
+
+#weather-forecast::before {
+  position: absolute;
+  display: block;
+	color: #eac435;
+  content: '3-Day Forecast';
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+  top: 0px;
+  left: 24px;
+  letter-spacing: .5px;
+	transform: translate(0%, -45%);
+}
+
+#weather-forecast::after {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	display: block;
+	content: '';
+	border: 1px #eac435 solid;
+	clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 146px 10px, 146px -5px, 105% -5px, 105% 105%, -5px 105%)
+}
+
+#weather-forecast > .container {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr;
+}
+
+.forecast-item {
+	position: relative;
+	height: 100%;
+	width: 1fr;
+	border: 1px #eac435 solid;
+	border-style: none none none solid;
+	box-sizing: content-box;
+}
+
+.forecast-item > .weather-icon {
+	position: absolute;
+	top: 33%;
+	left: 35%;
+	transform: translate(-50%, -50%);
+	width: 81px;
+	height: 81px;
+}
+
+.forecast-text {
+	position: absolute;
+	bottom: 15%;
+	left: 35%;
+	transform: translate(-50%, -50%);
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+
+/*# sourceMappingURL=styles.a2b394ed.css.map */
