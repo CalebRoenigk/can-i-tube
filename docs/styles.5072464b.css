@@ -241,7 +241,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url('../img/selector-arrow.svg');
+	background-image: url('/selector-arrow.2c6915c0.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -257,7 +257,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url('../img/selector-arrow.svg');
+	background-image: url('/selector-arrow.2c6915c0.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -273,7 +273,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url('../img/selector-arrow.svg');
+	background-image: url('/selector-arrow.2c6915c0.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -988,7 +988,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('../img/child-line.svg');
+	background-image: url('/child-line.2fc40ccd.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1002,7 +1002,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('../img/child-line-terminate.svg');
+	background-image: url('/child-line-terminate.d9403a4a.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1123,7 +1123,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 #cookie-policy-close-button {
 	width: 16px;
 	height: 16px;
-	background-image: url('../img/close-button.svg');
+	background-image: url('/close-button.29a92665.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -1354,3 +1354,6 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	font-size: 14px;
 	letter-spacing: 1px;
 }
+
+
+/*# sourceMappingURL=/styles.5072464b.css.map */
