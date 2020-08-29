@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.31";
+var appVersion = "3.4";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -20157,7 +20157,17 @@ var riverInfo = [{
     "lat": "38.6462305",
     "long": "-78.5347329"
   }
-}]; // This function returns a state abbrivation
+}]; // Places info formatted as such
+// 'river_name': [
+//   {
+//     "business_name": name,
+//     "business_maps_link": link,
+//     "business_rating": 0-5,
+//     "business_contact": phone
+//   },
+//   etc...
+// ]
+// This function returns a state abbrivation
 
 function abbrState(input, to) {
   var states = [['Arizona', 'AZ'], ['Alabama', 'AL'], ['Alaska', 'AK'], ['Arkansas', 'AR'], ['California', 'CA'], ['Colorado', 'CO'], ['Connecticut', 'CT'], ['Delaware', 'DE'], ['Florida', 'FL'], ['Georgia', 'GA'], ['Hawaii', 'HI'], ['Idaho', 'ID'], ['Illinois', 'IL'], ['Indiana', 'IN'], ['Iowa', 'IA'], ['Kansas', 'KS'], ['Kentucky', 'KY'], ['Louisiana', 'LA'], ['Maine', 'ME'], ['Maryland', 'MD'], ['Massachusetts', 'MA'], ['Michigan', 'MI'], ['Minnesota', 'MN'], ['Mississippi', 'MS'], ['Missouri', 'MO'], ['Montana', 'MT'], ['Nebraska', 'NE'], ['Nevada', 'NV'], ['New Hampshire', 'NH'], ['New Jersey', 'NJ'], ['New Mexico', 'NM'], ['New York', 'NY'], ['North Carolina', 'NC'], ['North Dakota', 'ND'], ['Ohio', 'OH'], ['Oklahoma', 'OK'], ['Oregon', 'OR'], ['Pennsylvania', 'PA'], ['Rhode Island', 'RI'], ['South Carolina', 'SC'], ['South Dakota', 'SD'], ['Tennessee', 'TN'], ['Texas', 'TX'], ['Utah', 'UT'], ['Vermont', 'VT'], ['Virginia', 'VA'], ['Washington', 'WA'], ['West Virginia', 'WV'], ['Wisconsin', 'WI'], ['Wyoming', 'WY']];
@@ -21773,14 +21783,14 @@ async function weatherUpdate(siteLocation, siteName, unitSet, stateColor) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0));
-              writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0));
+              writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), ['eod']);
+              writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), ['eod']);
             }
           } else {
-            console.log('All current cookies are here!'); // Check if the sun cookies are present
+            console.log('All current items are here!'); // Check if the sun items are present
 
-            let sunriseCheck = checkCookie('canitube_' + siteName + '_Sunrise');
-            let sunsetCheck = checkCookie('canitube_' + siteName + '_Sunset');
+            let sunriseCheck = checkLocalStorage('canitube_' + siteName + '_Sunrise');
+            let sunsetCheck = checkLocalStorage('canitube_' + siteName + '_Sunset');
 
             if (sunriseCheck * sunsetCheck !== 1) {
               console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
@@ -21793,8 +21803,8 @@ async function weatherUpdate(siteLocation, siteName, unitSet, stateColor) {
               sunsetDefaultTime.setHours(20);
               sunsetDefaultTime.setMinutes(0);
               sunsetDefaultTime.setSeconds(0);
-              writeCookie('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
-              writeCookie('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
+              writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
+              writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), ['epoch', sunriseDefaultTime], 'Weather');
             }
           }
         }
@@ -21940,6 +21950,31 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
   document.querySelector("#air-temp").insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
   document.querySelector("#air-temp").insertAdjacentText('beforeend', unitsTo.temperature); // Calculate the current condition
 
+  let conditionTranslations = {
+    "Rainy Thunderstorm": "Rainy Thunderstorm",
+    "Thunderstorm": "Thunderstorm",
+    "Tornado": "Tornado",
+    "Mist": "Mist",
+    "Smoke": "Smoke",
+    "Haze": "Haze",
+    "Dust": "Dust",
+    "Fog": "Fog",
+    "Sand": "Sand",
+    "Ash": "Ash",
+    "Squall": "Squall",
+    "Clear Night": "Clear",
+    "Clear Day": "Clear",
+    "Windy Clear Day": "Windy",
+    "Few Clouds": "Partly Cloudy",
+    "Cloudy": "Cloudy",
+    "Windy Clouds": "Windy",
+    "Partly Sunny Drizzle": "Sunny Drizzle",
+    "Drizzle": "Drizzle",
+    "Partly Sunny Snow": "Sunny Snow",
+    "Snow": "Snow",
+    "Partly Sunny Rain": "Sunny Rain",
+    "Rain": "Rain"
+  };
   let currentWeatherCode = parseInt(readLocalStorage('canitube_' + siteName + '_Current Weather').value);
   let currentWindSpeed = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Wind Speed').value);
   let currentCloudCover = parseFloat(readLocalStorage('canitube_' + siteName + '_Current Cloud Cover').value);
@@ -21950,7 +21985,7 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
     "set": sunSet
   }); // Add current condition text
 
-  document.querySelector("#timeline-now").innerHTML = currentCondition + " Now"; // Add the current condition SVG
+  document.querySelector("#timeline-now").innerHTML = conditionTranslations[currentCondition] + " Now"; // Add the current condition SVG
 
   document.querySelector("#now-icon").insertAdjacentHTML('afterbegin', conditionSVG(currentCondition)); // Calculate the next biggest change in weather
 
@@ -21958,6 +21993,31 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
   let hourlyWindSpeed = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
   let hourlyCloudCover = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value); // Iterate over the hour array until a new condition is found or until the 24hr item is reached
 
+  let conditionPairs = {
+    "Rainy Thunderstorm": ["Thunderstorm", "Rain"],
+    "Thunderstorm": ["Rainy Thunderstorm"],
+    "Tornado": [],
+    "Mist": ["Smoke", "Haze", "Dust", "Fog", "Sand", "Ash", "Squall"],
+    "Smoke": ["Mist", "Haze", "Dust", "Fog", "Sand", "Ash", "Squall"],
+    "Haze": ["Mist", "Smoke", "Dust", "Fog", "Sand", "Ash", "Squall"],
+    "Dust": ["Mist", "Haze", "Smoke", "Fog", "Sand", "Ash", "Squall"],
+    "Fog": ["Mist", "Haze", "Smoke", "Dust", "Sand", "Ash", "Squall"],
+    "Sand": ["Mist", "Haze", "Smoke", "Dust", "Fog", "Ash", "Squall"],
+    "Ash": ["Mist", "Haze", "Smoke", "Dust", "Fog", "Sand", "Squall"],
+    "Squall": ["Mist", "Haze", "Smoke", "Dust", "Fog", "Sand", "Ash"],
+    "Clear Night": ["Clear Day"],
+    "Clear Day": ["Clear Night", "Windy Clear Day", "Few Clouds"],
+    "Windy Clear Day": ["Clear Day", "Clear Night", "Few Clouds", "Windy Clouds"],
+    "Few Clouds": ["Clear Night", "Clear Day", "Cloudy"],
+    "Cloudy": ["Few Clouds", "Windy Clouds"],
+    "Windy Clouds": ["Clear Night", "Clear Day", "Windy Clear Day", "Clouds"],
+    "Partly Sunny Drizzle": ["Cloudy", "Drizzle", "Partly Sunny Rain"],
+    "Drizzle": ["Cloudy", "Partly Sunny Drizzle"],
+    "Partly Sunny Snow": ["Few Clouds", "Cloudy", "Snow"],
+    "Snow": ["Cloudy", "Partly Sunny Snow"],
+    "Partly Sunny Rain": ["Few Clouds", "Cloudy", "Partly Sunny Drizzle", "Rain"],
+    "Rain": ["Rainy Thunderstorm", "Cloudy", "Windy Clouds", "Drizzle", "Partly Sunny Rain"]
+  };
   let laterCondition = {
     "weather": "",
     "time": ""
@@ -21979,16 +22039,18 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
       });
 
       if (testCondition !== currentCondition) {
-        // If the hourly condition is different from the current condition return
-        laterCondition.weather = testCondition;
-        laterCondition.time = _moment.default.unix(parseInt(Object.keys(hourlyWeather)[i])).local().format('hA');
-        break;
+        // If the hourly condition is different from the current condition and it doesn't match any of the adjcent conditions return
+        if (conditionPairs[currentCondition].indexOf(testCondition) == -1) {
+          laterCondition.weather = testCondition;
+          laterCondition.time = _moment.default.unix(parseInt(Object.keys(hourlyWeather)[i])).local().format('hA');
+          break;
+        }
       }
     }
   } // Add next condition text
 
 
-  document.querySelector("#timeline-later").innerHTML = laterCondition.weather + " Likely At " + laterCondition.time; // Add the next condition SVG
+  document.querySelector("#timeline-later").innerHTML = conditionTranslations[laterCondition.weather] + " Likely At " + laterCondition.time; // Add the next condition SVG
 
   document.querySelector("#later-icon").insertAdjacentHTML('afterbegin', conditionSVG(laterCondition.weather)); // Calculate 3 days of forecast
 
@@ -22195,7 +22257,6 @@ function conditionSVG(condition) {
     "Dust": '<svg data-name="Dust" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
     "Fog": '<svg data-name="Fog" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
     "Sand": '<svg data-name="Sand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
-    "Dust": '<svg data-name="Dust" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
     "Ash": '<svg data-name="Ash" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
     "Squall": '<svg data-name="Squall" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M8 50c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 38c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 26c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8M8 14c5.6 0 5.6 8 11.2 8s5.6-8 11.2-8 5.6 8 11.19 8 5.6-8 11.21-8 5.6 8 11.2 8" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
     "Clear Night": '<svg data-name="Clear Night" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M46.65 50.5a14.5 14.5 0 010-29 14.21 14.21 0 012.63.25 19.5 19.5 0 100 28.5 14.21 14.21 0 01-2.63.25z" fill="none" stroke-miterlimit="10" class="svg-stroke-style"/></svg>',
@@ -22257,4 +22318,4 @@ function convertDOW(dowNum, typeOfString) {
   return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.0cc3bcd4.js.map
+//# sourceMappingURL=app.3da90fd6.js.map
