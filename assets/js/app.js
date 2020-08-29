@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.5";
+var appVersion = "3.51";
 
 var riverInfo = [
   {
@@ -1354,7 +1354,7 @@ function togglePerformance() {
     $('#performance-svg').attr('data-performance', 'smooth');
     $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
-    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+    gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: .5})
   }
 }
 
@@ -1433,7 +1433,7 @@ $(document).ready(function() {
       $('#performance-svg').attr('data-performance', 'smooth');
       $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
       gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
-      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 1})
+      gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: .5})
     }
     console.log('finish display code here!')
   }
