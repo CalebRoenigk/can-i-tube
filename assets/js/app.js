@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.44";
+var appVersion = "3.5";
 
 var riverInfo = [
   {
@@ -453,7 +453,7 @@ $('.selected-river').click(function() {
     // Open the menu
     var dropdownWidth = $('#dropdown-wrapper').width();
     $('#dropdown-wrapper').attr('data-open', 'true');
-    $('#dropdown-wrapper').css('height', '').css('width', (openWidth + 3) + 'ch'); // AAA
+    $('#dropdown-wrapper').css('height', '').css('width', (openWidth + 3) + 'ch');
     $('body').css('background-color', '#C4C4C4');
     $('.selected-river').css('background-color', '').css('width', (openWidth + 3) + 'ch');
   } else {
@@ -498,6 +498,14 @@ $('.cta-wrapper').click(async function() {
   var selectedRiverIndex = parseInt($('.selected-river').attr('data-index'));
   var siteCode = riverInfo[selectedRiverIndex].siteID;
   var selectedRiver = riverInfo[selectedRiverIndex].river;
+  // Grab the site parameters
+  let currentParametersObject = riverInfo[selectedRiverIndex].site_parameters;
+  var siteParameterNames = Object.keys(currentParametersObject);
+  var siteParameters = [];
+  for(var i=0; i < siteParameterNames.length; i++) {
+    siteParameters.push(currentParametersObject[siteParameterNames[i]])
+  }
+
   // Name of the real-time cookie for the current site
   var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata";
   // Name of the real-time height cookie
@@ -534,10 +542,57 @@ $('.cta-wrapper').click(async function() {
 
   // Start the call to the USGS after animating to the loading phase
   loadingStage();
-  var realTimeFlowValue = await fetchRealTimeData(siteCode, currentSiteCookieName);
 
-  // Grab the real-time height data
-  var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCookieName);
+  // Check if data already exists in local storage
+  let dataExistsInLocalStorage = true;
+  for(var i=0; i < siteParameterNames.length; i++) {
+    // For each parameter, check if they exist in local storage
+    let parameterName = siteParameterNames[i].split('_').map(item => item.charAt(0).toUpperCase() + item.slice(1)).join(' ');
+    let currentItemName = 'canitube_' + selectedRiver + '_Current ' + parameterName;
+    if(checkLocalStorage(currentItemName) == false && dataExistsInLocalStorage == true) {
+      dataExistsInLocalStorage = false;
+    }
+  }
+  // If dataExistsInLocalStorage is no longer true the data needs to be requested from USGS
+  if(dataExistsInLocalStorage == false) {
+    // Ring up the bois over at USGS for some spicy data
+    var siteValues = await fetchRealTimeData(siteCode, siteParameters);
+    // Store returned site data in local storage
+    for(var i=0; i < siteParameterNames.length; i++) {
+      // For each parameter value, store an item in local storage
+      // "discharge": "00060",
+      // "gage_height": "00065",
+      // "water_temperature": "00010"
+      let parameterName = siteParameterNames[i].split('_').map(item => item.charAt(0).toUpperCase() + item.slice(1)).join(' ');
+      let currentItemName = 'canitube_' + selectedRiver + '_Current ' + parameterName;
+      writeLocalStorage(currentItemName, siteValues[siteParameters[i]], ['hourstil', 1], 'River')
+    }
+    // Link up site values read to the functions below
+  } else {
+    // Load up the site data that is already in local storage
+    console.log("Data Already Present in Local Storage!");
+    var siteValues = {};
+    for(var i=0; i < siteParameterNames.length; i++) {
+      // For each parameter value, store an item in local storage
+      // "discharge": "00060",
+      // "gage_height": "00065",
+      // "water_temperature": "00010"
+      let parameterName = siteParameterNames[i].split('_').map(item => item.charAt(0).toUpperCase() + item.slice(1)).join(' ');
+      let currentItemName = 'canitube_' + selectedRiver + '_Current ' + parameterName;
+      siteValues[siteParameters[i]] = readLocalStorage(currentItemName).value;
+    }
+  }
+
+  // Set the value varibles to the returned data
+  var realTimeFlowValue = siteValues["00060"];
+  var realTimeHeightValue = siteValues["00065"];
+  // Most sites don't have water temp values, and for those that don't 'null' is passed so the current condition display knows to style the water temp reading
+  var realTimeWaterTemp = siteValues["00010"] || 'null';
+
+  // If the realTimeWaterTemp is 'null' this value has not been stored in Local Storage yet
+  if(realTimeWaterTemp == 'null') {
+    writeLocalStorage('canitube_' + selectedRiver + '_Current Water Temperature', realTimeWaterTemp, ['hourstil', 1], 'River');
+  }
 
   // Finish the load-bar
   $('#fill-title').removeClass('load-bar').addClass('load-bar-finish');
@@ -754,25 +809,20 @@ function getRandomInt(min, max) {
 }
 
 // This function fetches the current data
-function fetchRealTimeData(site, cookieName) {
-var dataCookiePresent = checkCookie(cookieName);
-
-if(dataCookiePresent == false) {
+function fetchRealTimeData(site, parameters) {
+  console.log("Fetching parameters: " + parameters + " from USGS for site: " + site);
   return new Promise((resolve, reject) => {
     $.ajax({
-      url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=00060&siteStatus=active",
+      url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=" + parameters.join(",") + "&siteStatus=active",
       dataType: 'JSON',
       data: '',
       success: function(json){
-        console.log("Real-Time Data Retreived!");
-        // Here, convert the data to the app-ready format
-        var appReadyData = parseRealTimeJSON(json);
-        // Store the app-ready data in a cookie that expires in 1 hour
-        // Write the cookie with the app-ready data
-        writeCookie(cookieName, appReadyData, 1);
+        console.log("Data Retreived from site!");
+        // Store the returned data in an object
+        let dataObject = parseRealTimeData(json, parameters);
 
-        // Return the app-ready data
-        resolve(parseInt(appReadyData));
+        // Return the data object
+        resolve(dataObject);
        },
       error : function(XMLHttpRequest, textStatus, errorThrown) {
          console.log("Error: AJAX request failed...");
@@ -781,61 +831,29 @@ if(dataCookiePresent == false) {
       }
     });
   })
-} else {
-  // Note the non-expired data
-  console.log("Data Already Present!");
-  // Here, convert the data to the app-ready format
-  var appReadyData = getCookie(cookieName);
-
-  // Return the app-ready data
-  return parseInt(appReadyData);
-}
 }
 
-// This function parses the real-time data json and returns app-ready data
-function parseRealTimeJSON(data) {
-var dataFlow = data.value.timeSeries[0].values[0].value[0].value;
-//var dataDataTime = data.value.timeSeries[0].values[0].value[0].dateTime;
-return dataFlow;
-}
+// This function reads the USGS JSON data and returns an object with the required values
+function parseRealTimeData(data, parameterCodes) {
+  let timeSeries = data.value.timeSeries;
+  // Sort the codes alphabetically so that the lowest code comes first
+  parameterCodes = parameterCodes.sort();
+  // Iterate over each parameter code
+  let returnData = {};
+  for(var i=0; i < parameterCodes.length; i++) {
+    // The time series array contains objects with each parameter code, each code is returned in numerical order, lowest codes always come first
+    // Test that the current parameter matches the current code, if it doesn't, log this to the console
+    if(timeSeries[i].variable.variableCode[0].value !== parameterCodes[i]) {
+      console.log("Selection(timeSeries[i].variable.variableCode[0].value): " + timeSeries[i].variable.variableCode[0].value + " does not match the current parameter: " + parameterCodes[i]);
+    }
 
-// This function fetches the current data
-function fetchHeightData(site, cookieName) {
-var dataCookiePresent = checkCookie(cookieName);
+    // Grab the current value
+    let currentValue = timeSeries[i].values[0].value[0].value;
+    let currentKey = parameterCodes[i];
 
-if(dataCookiePresent == false) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=00065&siteStatus=active",
-      dataType: 'JSON',
-      data: '',
-      success: function(json){
-        console.log("Height Data Retreived!");
-        // Here, convert the data to the app-ready format
-        var appReadyData = parseRealTimeJSON(json);
-        // Store the app-ready data in a cookie that expires in 1 hour
-        // Write the cookie with the app-ready data
-        writeCookie(cookieName, appReadyData, 1);
-
-        // Return the app-ready data
-        resolve(parseInt(appReadyData));
-       },
-      error : function(XMLHttpRequest, textStatus, errorThrown) {
-         console.log("Error: AJAX request failed...");
-         console.log(textStatus);
-         console.log(errorThrown);
-      }
-    });
-  })
-} else {
-  // Note the non-expired data
-  console.log("Data Already Present!");
-  // Here, convert the data to the app-ready format
-  var appReadyData = getCookie(cookieName);
-
-  // Return the app-ready data
-  return parseInt(appReadyData);
-}
+    returnData[currentKey.toString()] = currentValue;
+  }
+  return returnData;
 }
 
 // This function transitions from the set-up selection stage to the loading stage
@@ -2047,7 +2065,7 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
   // Check if water temperature exists for this site
   let currentWaterTemperature = "";
   if(checkLocalStorage('canitube_' + siteName + '_Water Temperature') == true) {
-    currentWaterTemperature = readLocalStorage('canitube_' + siteName + '_Water Temperature').value;
+    currentWaterTemperature = readLocalStorage('canitube_' + siteName + '_Current Water Temperature').value;
   } else {
     currentWaterTemperature = "null";
   }
