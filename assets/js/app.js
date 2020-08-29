@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.42";
+var appVersion = "3.44";
 
 var riverInfo = [
   {
@@ -427,15 +427,35 @@ function generateSelectionMenu() {
   })
 }
 
+// This function determines the max dropdown width and stores it in a data attribute on the dropdown wrapper. This width is measured in 'ch' and is determined by the longest river name
+function maxDropdownWidth() {
+  // Create an array of all river names
+  let riverNameArray = [];
+  for(var i=0; i < riverInfo.length; i++) {
+    riverNameArray.push(riverInfo[i].river);
+  }
+
+  // Iterate through the river name array to find the longest name
+  let maxLength = 0;
+  for(var i=0; i < riverNameArray.length; i++) {
+    if(riverNameArray[i].length > maxLength) {
+      maxLength = riverNameArray[i].length;
+    }
+  }
+
+  document.querySelector("#dropdown-wrapper").setAttribute("data-max-length", maxLength);
+}
+
 // This function expands and collapses the dropdown menu when it is clicked on
 $('.selected-river').click(function() {
+  let openWidth = parseInt(document.querySelector("#dropdown-wrapper").getAttribute("data-max-length"));
   if($('#dropdown-wrapper').attr('data-open') == 'false') {
     // Open the menu
     var dropdownWidth = $('#dropdown-wrapper').width();
     $('#dropdown-wrapper').attr('data-open', 'true');
-    $('#dropdown-wrapper').css('height', '').css('width', '20ch');
+    $('#dropdown-wrapper').css('height', '').css('width', (openWidth + 3) + 'ch'); // AAA
     $('body').css('background-color', '#C4C4C4');
-    $('.selected-river').css('background-color', '').css('width', '20ch');
+    $('.selected-river').css('background-color', '').css('width', (openWidth + 3) + 'ch');
   } else {
     // Close the menu
     $('#dropdown-wrapper').attr('data-open', 'false');
@@ -471,117 +491,95 @@ function selectItem(itemID) {
   $('.cta-mask > .container').css('transform', 'translateY(0%)');
 }
 
-// When the document is ready
-$(document).ready(function() {
-  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
-  if(getCookie('canitube_User_Cookie Policy') == 'accepted') {
-    $('#cookie-policy-banner').remove();
-  } else {
-    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000);
-    // Add event listener to cookie-policy close button
-    document.getElementById('cookie-policy-close-button').addEventListener("click", function() {
-      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
-      gsap.to('#cookie-policy-banner', {duration: .375, ease: 'power2.inOut', y: '-150%'})
-      $('#cookie-policy-banner').remove();
-    })
-  }
-  generateSelectionMenu();
-
-  // Set the central content transform to half the width and height of its loaded width and height
-  var contentWidth = $('.central-content').width();
-  var contentHeight = $('.central-content').height();
-  $('.central-content').css('transform', 'translate(' + (-contentWidth/2) + 'px, ' + (-contentHeight/2) + 'px)');
-
-  // Store the width and height values on the object
-  $('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight);
-});
-
 // Dectect when the user clicks Check Now and run the transition sequence
 $('.cta-wrapper').click(async function() {
-// First prepare the scene to transition
-// Grab the site data
-var selectedRiverIndex = parseInt($('.selected-river').attr('data-index'));
-var siteCode = riverInfo[selectedRiverIndex].siteID;
-var selectedRiver = riverInfo[selectedRiverIndex].river;
-// Name of the real-time cookie for the current site
-var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata";
-// Name of the real-time height cookie
-var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight";
+  // Prepare the scene to transition
+  // Grab the site data
+  var selectedRiverIndex = parseInt($('.selected-river').attr('data-index'));
+  var siteCode = riverInfo[selectedRiverIndex].siteID;
+  var selectedRiver = riverInfo[selectedRiverIndex].river;
+  // Name of the real-time cookie for the current site
+  var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata";
+  // Name of the real-time height cookie
+  var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight";
 
-// Delete the item list
-$('.item-list').remove();
+  // Save the currently selected river in the previous river selection cookie
+  writeCookie('canitube_User_Previous Selection', selectedRiver, 48);
 
-// Create the fake loading bar keyframes
-var loadTime = 4000;
-generateLoadFrames(loadTime);
+  // Delete the item list
+  $('.item-list').remove();
 
-// Position the Subtitles
-$('#left-subtitle').css('top', $('#left-content-question').offset().top).css('left', $('#left-content-question').offset().left).css('transform', 'translate(0%, 0%)');
-$('#right-subtitle').css('top', $('#right-content-question').offset().top).css('left', $('#right-content-question').offset().left).css('transform', 'translate(0%, 0%)');
-// Position the Title
-$('#fill-title').text($('.selected-river').text()).css('top', $('.selected-river').offset().top).css('left', $('.selected-river').offset().left).css('transform', 'translate(0%, 0%)').attr('data-text', $('.selected-river').text());
-$('#stroke-title').text($('.selected-river').text()).css('top', $('.selected-river').offset().top).css('left', $('.selected-river').offset().left).css('transform', 'translate(0%, 0%)');
+  // Create the fake loading bar keyframes
+  var loadTime = 4000;
+  generateLoadFrames(loadTime);
 
-// Begin the transition to load state
-// Animate out the dropdown arrow and CTA
-$('.cta-mask > .container').css('transform', 'translateY(125%)');
-$('#dropdown-wrapper').attr('data-open', '').attr('data-animating', 'true');
+  // Position the Subtitles
+  $('#left-subtitle').css('top', $('#left-content-question').offset().top).css('left', $('#left-content-question').offset().left).css('transform', 'translate(0%, 0%)');
+  $('#right-subtitle').css('top', $('#right-content-question').offset().top).css('left', $('#right-content-question').offset().left).css('transform', 'translate(0%, 0%)');
+  // Position the Title
+  $('#fill-title').text($('.selected-river').text()).css('top', $('.selected-river').offset().top).css('left', $('.selected-river').offset().left).css('transform', 'translate(0%, 0%)').attr('data-text', $('.selected-river').text());
+  $('#stroke-title').text($('.selected-river').text()).css('top', $('.selected-river').offset().top).css('left', $('.selected-river').offset().left).css('transform', 'translate(0%, 0%)');
 
-// Fill in today's date
-$('.date-mask > .container').text(moment().format("MMM Do"));
+  // Begin the transition to load state
+  // Animate out the dropdown arrow and CTA
+  $('.cta-mask > .container').css('transform', 'translateY(125%)');
+  $('#dropdown-wrapper').attr('data-open', '').attr('data-animating', 'true');
 
-// Fill in the range tooltip text
-var rangeTooltip = 'This range should only be used as a rough estimate. Always check\nwith local outfitters or state/national parks before visiting.\n';
-$('#range-tooltip > .container > .tooltip-item').text(rangeTooltip).append('<span class="tooltip-subtext">This data was sourced from: <a href="' + riverInfo[selectedRiverIndex].flow_range_source.link + '" target="_blank">' + riverInfo[selectedRiverIndex].flow_range_source.name + '</a></span>');
+  // Fill in today's date
+  $('.date-mask > .container').text(moment().format("MMM Do"));
 
-// Start the call to the USGS after animating to the loading phase
-loadingStage();
-var realTimeFlowValue = await fetchRealTimeData(siteCode, currentSiteCookieName);
+  // Fill in the range tooltip text
+  var rangeTooltip = 'This range should only be used as a rough estimate. Always check\nwith local outfitters or state/national parks before visiting.\n';
+  $('#range-tooltip > .container > .tooltip-item').text(rangeTooltip).append('<span class="tooltip-subtext">This data was sourced from: <a href="' + riverInfo[selectedRiverIndex].flow_range_source.link + '" target="_blank">' + riverInfo[selectedRiverIndex].flow_range_source.name + '</a></span>');
 
-// Grab the real-time height data
-var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCookieName);
+  // Start the call to the USGS after animating to the loading phase
+  loadingStage();
+  var realTimeFlowValue = await fetchRealTimeData(siteCode, currentSiteCookieName);
 
-// Finish the load-bar
-$('#fill-title').removeClass('load-bar').addClass('load-bar-finish');
+  // Grab the real-time height data
+  var realTimeHeightValue = await fetchHeightData(siteCode, currentSiteHeightCookieName);
 
-// Finish the load-bar
-$('.text-load').addClass('text-load-finish').removeClass('text-load');
-gsap.to('#loader-text', {duration: .375, opacity: 0});
+  // Finish the load-bar
+  $('#fill-title').removeClass('load-bar').addClass('load-bar-finish');
 
-// Begin styling and transitioning the page
-var currentSafeRange = riverInfo[selectedRiverIndex].safe_range;
+  // Finish the load-bar
+  $('.text-load').addClass('text-load-finish').removeClass('text-load');
+  gsap.to('#loader-text', {duration: .375, opacity: 0});
 
-// Calculate the look of the height range
-var currentHeightRange = riverInfo[selectedRiverIndex].height_range;
+  // Begin styling and transitioning the page
+  var currentSafeRange = riverInfo[selectedRiverIndex].safe_range;
 
-// Store site information for page formatting (Weather Update)
-let siteLocation = riverInfo[selectedRiverIndex].geo_location;
-let siteName = riverInfo[selectedRiverIndex].river;
-let unitSet = "imperial";
+  // Calculate the look of the height range
+  var currentHeightRange = riverInfo[selectedRiverIndex].height_range;
 
-// Test if the current flow value is within the safe range
-if(realTimeFlowValue > (currentSafeRange.min - 1) && realTimeFlowValue < (currentSafeRange.max + 1)) {
-  // Test if the average value is within a percentage of the safe range
-  var rangeVariance = .25;
-  var rangeSize = currentSafeRange.max - currentSafeRange.min;
-  var superSafeRange = {
-    "min": currentSafeRange.min + (rangeSize*(rangeVariance/2)),
-    "max": currentSafeRange.max - (rangeSize*rangeVariance)
-  };
-  if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
-    // Today is safe
-    console.log("Today is safe!");
-    formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+  // Store site information for page formatting (Weather Update)
+  let siteLocation = riverInfo[selectedRiverIndex].geo_location;
+  let siteName = riverInfo[selectedRiverIndex].river;
+  let unitSet = "imperial";
+
+  // Test if the current flow value is within the safe range
+  if(realTimeFlowValue > (currentSafeRange.min - 1) && realTimeFlowValue < (currentSafeRange.max + 1)) {
+    // Test if the average value is within a percentage of the safe range
+    var rangeVariance = .25;
+    var rangeSize = currentSafeRange.max - currentSafeRange.min;
+    var superSafeRange = {
+      "min": currentSafeRange.min + (rangeSize*(rangeVariance/2)),
+      "max": currentSafeRange.max - (rangeSize*rangeVariance)
+    };
+    if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
+      // Today is safe
+      console.log("Today is safe!");
+      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+    } else {
+      // Today is maybe safe
+      console.log("Today is maybe safe?");
+      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+    }
   } else {
-    // Today is maybe safe
-    console.log("Today is maybe safe?");
-    formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+    // Today is not safe
+    console.log("Today is not safe!");
+    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
   }
-} else {
-  // Today is not safe
-  console.log("Today is not safe!");
-  formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
-}
 });
 
 // This function removes elements based on a passed selector
@@ -1344,8 +1342,46 @@ function togglePerformance() {
 
 // When the document is ready, aka startup function
 $(document).ready(function() {
+  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
+  if(getCookie('canitube_User_Cookie Policy') == 'accepted') {
+    $('#cookie-policy-banner').remove();
+  } else {
+    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000);
+    // Add event listener to cookie-policy close button
+    document.getElementById('cookie-policy-close-button').addEventListener("click", function() {
+      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
+      gsap.to('#cookie-policy-banner', {duration: .375, ease: 'power2.inOut', y: '-150%'})
+      $('#cookie-policy-banner').remove();
+    })
+  }
+  generateSelectionMenu();
+
+  // Set the central content transform to half the width and height of its loaded width and height
+  var contentWidth = $('.central-content').width();
+  var contentHeight = $('.central-content').height();
+  $('.central-content').css('transform', 'translate(' + (-contentWidth/2) + 'px, ' + (-contentHeight/2) + 'px)');
+
+  // Store the width and height values on the object
+  $('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight);
+
+  // Determine and store the max length of the dropdown wrapper
+  maxDropdownWidth();
+
   // Check local storage and expire any items that are old
   expireLocalStorage();
+
+  // Check for the previous selection
+  if(checkCookie('canitube_User_Previous Selection') == true) {
+    // If there was a previous river selection set it as the default selection
+    document.querySelector(".selected-river").innerHTML = getCookie('canitube_User_Previous Selection');
+    // Set the data index of the selection to the previously selected river
+    let riverSelectionID = getCookie('canitube_User_Previous Selection').toLowerCase().split(" ").join("-") + '-selection';
+    let riverIndex = document.querySelector('#' + riverSelectionID).getAttribute("data-index");
+    document.querySelector(".selected-river").setAttribute("data-index", riverIndex);
+    // Set the width of .selected-river to the selected river length
+    $('#dropdown-wrapper').height($('.selected-river').height()+16).width((($('.selected-river').text().length)+3) + 'ch');
+    $('.selected-river').width((($('.selected-river').text().length)+3) + 'ch').css('background-color', 'rgba(29, 29, 29, 0)');
+  }
 
   // Set the display boxes to 0 opacity
   gsap.set('.display-box', {opacity: 0, scale: .85});

@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.42";
+var appVersion = "3.44";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -20226,17 +20226,41 @@ function generateSelectionMenu() {
     var itemGroup = '#' + abbrState(riverData.state, 'abbr') + '-group';
     (0, _jquery.default)(itemGroup).append(currentItem);
   });
+} // This function determines the max dropdown width and stores it in a data attribute on the dropdown wrapper. This width is measured in 'ch' and is determined by the longest river name
+
+
+function maxDropdownWidth() {
+  // Create an array of all river names
+  let riverNameArray = [];
+
+  for (var i = 0; i < riverInfo.length; i++) {
+    riverNameArray.push(riverInfo[i].river);
+  } // Iterate through the river name array to find the longest name
+
+
+  let maxLength = 0;
+
+  for (var i = 0; i < riverNameArray.length; i++) {
+    if (riverNameArray[i].length > maxLength) {
+      maxLength = riverNameArray[i].length;
+    }
+  }
+
+  document.querySelector("#dropdown-wrapper").setAttribute("data-max-length", maxLength);
 } // This function expands and collapses the dropdown menu when it is clicked on
 
 
 (0, _jquery.default)('.selected-river').click(function () {
+  let openWidth = parseInt(document.querySelector("#dropdown-wrapper").getAttribute("data-max-length"));
+
   if ((0, _jquery.default)('#dropdown-wrapper').attr('data-open') == 'false') {
     // Open the menu
     var dropdownWidth = (0, _jquery.default)('#dropdown-wrapper').width();
     (0, _jquery.default)('#dropdown-wrapper').attr('data-open', 'true');
-    (0, _jquery.default)('#dropdown-wrapper').css('height', '').css('width', '20ch');
+    (0, _jquery.default)('#dropdown-wrapper').css('height', '').css('width', openWidth + 3 + 'ch'); // AAA
+
     (0, _jquery.default)('body').css('background-color', '#C4C4C4');
-    (0, _jquery.default)('.selected-river').css('background-color', '').css('width', '20ch');
+    (0, _jquery.default)('.selected-river').css('background-color', '').css('width', openWidth + 3 + 'ch');
   } else {
     // Close the menu
     (0, _jquery.default)('#dropdown-wrapper').attr('data-open', 'false');
@@ -20268,38 +20292,11 @@ function selectItem(itemID) {
   (0, _jquery.default)('.content-question').css('opacity', '1'); // Drop down the CTA
 
   (0, _jquery.default)('.cta-mask > .container').css('transform', 'translateY(0%)');
-} // When the document is ready
+} // Dectect when the user clicks Check Now and run the transition sequence
 
-
-(0, _jquery.default)(document).ready(function () {
-  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
-  if (getCookie('canitube_User_Cookie Policy') == 'accepted') {
-    (0, _jquery.default)('#cookie-policy-banner').remove();
-  } else {
-    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000); // Add event listener to cookie-policy close button
-
-    document.getElementById('cookie-policy-close-button').addEventListener("click", function () {
-      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
-      gsap.to('#cookie-policy-banner', {
-        duration: .375,
-        ease: 'power2.inOut',
-        y: '-150%'
-      });
-      (0, _jquery.default)('#cookie-policy-banner').remove();
-    });
-  }
-
-  generateSelectionMenu(); // Set the central content transform to half the width and height of its loaded width and height
-
-  var contentWidth = (0, _jquery.default)('.central-content').width();
-  var contentHeight = (0, _jquery.default)('.central-content').height();
-  (0, _jquery.default)('.central-content').css('transform', 'translate(' + -contentWidth / 2 + 'px, ' + -contentHeight / 2 + 'px)'); // Store the width and height values on the object
-
-  (0, _jquery.default)('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight);
-}); // Dectect when the user clicks Check Now and run the transition sequence
 
 (0, _jquery.default)('.cta-wrapper').click(async function () {
-  // First prepare the scene to transition
+  // Prepare the scene to transition
   // Grab the site data
   var selectedRiverIndex = parseInt((0, _jquery.default)('.selected-river').attr('data-index'));
   var siteCode = riverInfo[selectedRiverIndex].siteID;
@@ -20307,7 +20304,9 @@ function selectItem(itemID) {
 
   var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata"; // Name of the real-time height cookie
 
-  var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight"; // Delete the item list
+  var currentSiteHeightCookieName = "canitube_" + selectedRiver + "_currentheight"; // Save the currently selected river in the previous river selection cookie
+
+  writeCookie('canitube_User_Previous Selection', selectedRiver, 48); // Delete the item list
 
   (0, _jquery.default)('.item-list').remove(); // Create the fake loading bar keyframes
 
@@ -21324,8 +21323,47 @@ function togglePerformance() {
 
 
 (0, _jquery.default)(document).ready(function () {
-  // Check local storage and expire any items that are old
-  expireLocalStorage(); // Set the display boxes to 0 opacity
+  // Test if the Cookie Policy has been accepted, if so, remove the cookie banner
+  if (getCookie('canitube_User_Cookie Policy') == 'accepted') {
+    (0, _jquery.default)('#cookie-policy-banner').remove();
+  } else {
+    writeCookie('canitube_User_Cookie Policy', 'unaccepted', 10000000); // Add event listener to cookie-policy close button
+
+    document.getElementById('cookie-policy-close-button').addEventListener("click", function () {
+      writeCookie('canitube_User_Cookie Policy', 'accepted', 10000000);
+      gsap.to('#cookie-policy-banner', {
+        duration: .375,
+        ease: 'power2.inOut',
+        y: '-150%'
+      });
+      (0, _jquery.default)('#cookie-policy-banner').remove();
+    });
+  }
+
+  generateSelectionMenu(); // Set the central content transform to half the width and height of its loaded width and height
+
+  var contentWidth = (0, _jquery.default)('.central-content').width();
+  var contentHeight = (0, _jquery.default)('.central-content').height();
+  (0, _jquery.default)('.central-content').css('transform', 'translate(' + -contentWidth / 2 + 'px, ' + -contentHeight / 2 + 'px)'); // Store the width and height values on the object
+
+  (0, _jquery.default)('.central-content').attr('data-w', contentWidth).attr('data-h', contentHeight); // Determine and store the max length of the dropdown wrapper
+
+  maxDropdownWidth(); // Check local storage and expire any items that are old
+
+  expireLocalStorage(); // Check for the previous selection
+
+  if (checkCookie('canitube_User_Previous Selection') == true) {
+    // If there was a previous river selection set it as the default selection
+    document.querySelector(".selected-river").innerHTML = getCookie('canitube_User_Previous Selection'); // Set the data index of the selection to the previously selected river
+
+    let riverSelectionID = getCookie('canitube_User_Previous Selection').toLowerCase().split(" ").join("-") + '-selection';
+    let riverIndex = document.querySelector('#' + riverSelectionID).getAttribute("data-index");
+    document.querySelector(".selected-river").setAttribute("data-index", riverIndex); // Set the width of .selected-river to the selected river length
+
+    (0, _jquery.default)('#dropdown-wrapper').height((0, _jquery.default)('.selected-river').height() + 16).width((0, _jquery.default)('.selected-river').text().length + 3 + 'ch');
+    (0, _jquery.default)('.selected-river').width((0, _jquery.default)('.selected-river').text().length + 3 + 'ch').css('background-color', 'rgba(29, 29, 29, 0)');
+  } // Set the display boxes to 0 opacity
+
 
   gsap.set('.display-box', {
     opacity: 0,
@@ -22432,4 +22470,4 @@ function convertDOW(dowNum, typeOfString) {
   return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.936f00cc.js.map
+//# sourceMappingURL=app.b13a12b5.js.map
