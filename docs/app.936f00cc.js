@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/process/browser.js":[function(require,module,exports) {
+})({"g5IB":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -326,7 +326,7 @@ process.chdir = function (dir) {
 process.umask = function () {
   return 0;
 };
-},{}],"node_modules/jquery/dist/jquery.js":[function(require,module,exports) {
+},{}],"HlZQ":[function(require,module,exports) {
 var global = arguments[3];
 var process = require("process");
 var define;
@@ -11203,7 +11203,7 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"node_modules/process/browser.js"}],"node_modules/moment/moment.js":[function(require,module,exports) {
+},{"process":"g5IB"}],"iROh":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 //! moment.js
@@ -16875,7 +16875,7 @@ var global = arguments[3];
 
 })));
 
-},{}],"node_modules/lodash._objecttypes/index.js":[function(require,module,exports) {
+},{}],"FCJt":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16897,7 +16897,7 @@ var objectTypes = {
 
 module.exports = objectTypes;
 
-},{}],"node_modules/lodash.isobject/index.js":[function(require,module,exports) {
+},{}],"e1kN":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16938,7 +16938,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{"lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash._renative/index.js":[function(require,module,exports) {
+},{"lodash._objecttypes":"FCJt"}],"xFRP":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -16963,7 +16963,7 @@ var reNative = RegExp('^' +
 
 module.exports = reNative;
 
-},{}],"node_modules/lodash._shimkeys/index.js":[function(require,module,exports) {
+},{}],"KOa5":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17003,7 +17003,7 @@ var shimKeys = function(object) {
 
 module.exports = shimKeys;
 
-},{"lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash.keys/index.js":[function(require,module,exports) {
+},{"lodash._objecttypes":"FCJt"}],"LvIh":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17041,7 +17041,7 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._renative":"node_modules/lodash._renative/index.js","lodash._shimkeys":"node_modules/lodash._shimkeys/index.js"}],"node_modules/lodash.noop/index.js":[function(require,module,exports) {
+},{"lodash.isobject":"e1kN","lodash._renative":"xFRP","lodash._shimkeys":"KOa5"}],"Ae5J":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17069,7 +17069,7 @@ function noop() {
 
 module.exports = noop;
 
-},{}],"node_modules/lodash._basecreate/index.js":[function(require,module,exports) {
+},{}],"g5yM":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
@@ -17114,7 +17114,7 @@ if (!nativeCreate) {
 
 module.exports = baseCreate;
 
-},{"lodash.isobject":"node_modules/lodash.isobject/index.js","lodash.noop":"node_modules/lodash.noop/index.js","lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._setbinddata/index.js":[function(require,module,exports) {
+},{"lodash.isobject":"e1kN","lodash.noop":"Ae5J","lodash._renative":"xFRP"}],"aPlf":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17159,7 +17159,7 @@ var setBindData = !defineProperty ? noop : function(func, value) {
 
 module.exports = setBindData;
 
-},{"lodash.noop":"node_modules/lodash.noop/index.js","lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._basebind/index.js":[function(require,module,exports) {
+},{"lodash.noop":"Ae5J","lodash._renative":"xFRP"}],"HCZV":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17219,7 +17219,7 @@ function baseBind(bindData) {
 
 module.exports = baseBind;
 
-},{"lodash._basecreate":"node_modules/lodash._basecreate/index.js","lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js"}],"node_modules/lodash._slice/index.js":[function(require,module,exports) {
+},{"lodash._basecreate":"g5yM","lodash.isobject":"e1kN","lodash._setbinddata":"aPlf"}],"kl0L":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17259,7 +17259,7 @@ function slice(array, start, end) {
 
 module.exports = slice;
 
-},{}],"node_modules/lodash._basecreatewrapper/index.js":[function(require,module,exports) {
+},{}],"dgEA":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17339,7 +17339,7 @@ function baseCreateWrapper(bindData) {
 
 module.exports = baseCreateWrapper;
 
-},{"lodash._basecreate":"node_modules/lodash._basecreate/index.js","lodash.isobject":"node_modules/lodash.isobject/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js","lodash._slice":"node_modules/lodash._slice/index.js"}],"node_modules/lodash.isfunction/index.js":[function(require,module,exports) {
+},{"lodash._basecreate":"g5yM","lodash.isobject":"e1kN","lodash._setbinddata":"aPlf","lodash._slice":"kl0L"}],"YDGf":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17368,7 +17368,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{}],"node_modules/lodash._createwrapper/index.js":[function(require,module,exports) {
+},{}],"kFkX":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17468,7 +17468,7 @@ function createWrapper(func, bitmask, partialArgs, partialRightArgs, thisArg, ar
 
 module.exports = createWrapper;
 
-},{"lodash._basebind":"node_modules/lodash._basebind/index.js","lodash._basecreatewrapper":"node_modules/lodash._basecreatewrapper/index.js","lodash.isfunction":"node_modules/lodash.isfunction/index.js"}],"node_modules/lodash.bind/index.js":[function(require,module,exports) {
+},{"lodash._basebind":"HCZV","lodash._basecreatewrapper":"dgEA","lodash.isfunction":"YDGf"}],"TxJR":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17511,7 +17511,7 @@ function bind(func, thisArg) {
 
 module.exports = bind;
 
-},{"lodash._createwrapper":"node_modules/lodash._createwrapper/index.js","lodash._renative":"node_modules/lodash._renative/index.js","lodash._slice":"node_modules/lodash._slice/index.js"}],"node_modules/lodash.identity/index.js":[function(require,module,exports) {
+},{"lodash._createwrapper":"kFkX","lodash._renative":"xFRP","lodash._slice":"kl0L"}],"JB8l":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17541,7 +17541,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],"node_modules/lodash.support/index.js":[function(require,module,exports) {
+},{}],"PKq7":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
@@ -17584,7 +17584,7 @@ support.funcNames = typeof Function.name == 'string';
 
 module.exports = support;
 
-},{"lodash._renative":"node_modules/lodash._renative/index.js"}],"node_modules/lodash._basecreatecallback/index.js":[function(require,module,exports) {
+},{"lodash._renative":"xFRP"}],"r2yT":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17666,7 +17666,7 @@ function baseCreateCallback(func, thisArg, argCount) {
 
 module.exports = baseCreateCallback;
 
-},{"lodash.bind":"node_modules/lodash.bind/index.js","lodash.identity":"node_modules/lodash.identity/index.js","lodash._setbinddata":"node_modules/lodash._setbinddata/index.js","lodash.support":"node_modules/lodash.support/index.js"}],"node_modules/lodash.forown/index.js":[function(require,module,exports) {
+},{"lodash.bind":"TxJR","lodash.identity":"JB8l","lodash._setbinddata":"aPlf","lodash.support":"PKq7"}],"TKRq":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17718,7 +17718,7 @@ var forOwn = function(collection, callback, thisArg) {
 
 module.exports = forOwn;
 
-},{"lodash._basecreatecallback":"node_modules/lodash._basecreatecallback/index.js","lodash.keys":"node_modules/lodash.keys/index.js","lodash._objecttypes":"node_modules/lodash._objecttypes/index.js"}],"node_modules/lodash.foreach/index.js":[function(require,module,exports) {
+},{"lodash._basecreatecallback":"r2yT","lodash.keys":"LvIh","lodash._objecttypes":"FCJt"}],"KHBi":[function(require,module,exports) {
 /**
  * Lo-Dash 2.3.0 (Custom Build) <http://lodash.com/>
  * Build: `lodash modularize modern exports="npm" -o ./npm/`
@@ -17775,7 +17775,7 @@ function forEach(collection, callback, thisArg) {
 
 module.exports = forEach;
 
-},{"lodash._basecreatecallback":"node_modules/lodash._basecreatecallback/index.js","lodash.forown":"node_modules/lodash.forown/index.js"}],"node_modules/convert-units/lib/definitions/length.js":[function(require,module,exports) {
+},{"lodash._basecreatecallback":"r2yT","lodash.forown":"TKRq"}],"pd3d":[function(require,module,exports) {
 var metric,
 imperial;
 
@@ -17863,7 +17863,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/area.js":[function(require,module,exports) {
+},{}],"HOEa":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -17958,7 +17958,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/mass.js":[function(require,module,exports) {
+},{}],"PLJ8":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18038,7 +18038,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/volume.js":[function(require,module,exports) {
+},{}],"smp0":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18240,7 +18240,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/each.js":[function(require,module,exports) {
+},{}],"wQDr":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18272,7 +18272,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/temperature.js":[function(require,module,exports) {
+},{}],"ESHn":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18329,7 +18329,7 @@ module.exports = {
 };
 
 
-},{}],"node_modules/convert-units/lib/definitions/time.js":[function(require,module,exports) {
+},{}],"SGR5":[function(require,module,exports) {
 var time;
 var daysInYear = 365.25;
 
@@ -18417,7 +18417,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/digital.js":[function(require,module,exports) {
+},{}],"bxlf":[function(require,module,exports) {
 var bits
   , bytes;
 
@@ -18512,7 +18512,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/partsPer.js":[function(require,module,exports) {
+},{}],"yVy1":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18558,7 +18558,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/speed.js":[function(require,module,exports) {
+},{}],"JPpx":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18618,7 +18618,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/pace.js":[function(require,module,exports) {
+},{}],"VhYO":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18671,7 +18671,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/pressure.js":[function(require,module,exports) {
+},{}],"dzZ2":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -18752,7 +18752,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/current.js":[function(require,module,exports) {
+},{}],"yIye":[function(require,module,exports) {
 var current;
 
 current = {
@@ -18789,7 +18789,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/voltage.js":[function(require,module,exports) {
+},{}],"Ycrg":[function(require,module,exports) {
 var voltage;
 
 voltage = {
@@ -18826,7 +18826,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/power.js":[function(require,module,exports) {
+},{}],"nElb":[function(require,module,exports) {
 var power;
 
 power = {
@@ -18877,7 +18877,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/reactivePower.js":[function(require,module,exports) {
+},{}],"jcfx":[function(require,module,exports) {
 var reactivePower;
 
 reactivePower = {
@@ -18928,7 +18928,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/apparentPower.js":[function(require,module,exports) {
+},{}],"zmOF":[function(require,module,exports) {
 var apparentPower;
 
 apparentPower = {
@@ -18979,7 +18979,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/energy.js":[function(require,module,exports) {
+},{}],"rJDc":[function(require,module,exports) {
 var energy;
 
 energy = {
@@ -19044,7 +19044,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/reactiveEnergy.js":[function(require,module,exports) {
+},{}],"a6Bq":[function(require,module,exports) {
 var reactiveEnergy;
 
 reactiveEnergy = {
@@ -19095,7 +19095,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/volumeFlowRate.js":[function(require,module,exports) {
+},{}],"yqpk":[function(require,module,exports) {
 var metric
   , imperial;
 
@@ -19379,7 +19379,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/illuminance.js":[function(require,module,exports) {
+},{}],"gjwW":[function(require,module,exports) {
 var metric,
 imperial;
 
@@ -19418,7 +19418,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/frequency.js":[function(require,module,exports) {
+},{}],"qRLX":[function(require,module,exports) {
 var frequency;
 
 frequency = {
@@ -19498,7 +19498,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/definitions/angle.js":[function(require,module,exports) {
+},{}],"zo6V":[function(require,module,exports) {
 var angle;
 
 angle = {
@@ -19549,7 +19549,7 @@ module.exports = {
   }
 };
 
-},{}],"node_modules/convert-units/lib/index.js":[function(require,module,exports) {
+},{}],"K5Mp":[function(require,module,exports) {
 var convert
   , keys = require('lodash.keys')
   , each = require('lodash.foreach')
@@ -19855,7 +19855,7 @@ convert = function (value) {
 
 module.exports = convert;
 
-},{"lodash.keys":"node_modules/lodash.keys/index.js","lodash.foreach":"node_modules/lodash.foreach/index.js","./definitions/length":"node_modules/convert-units/lib/definitions/length.js","./definitions/area":"node_modules/convert-units/lib/definitions/area.js","./definitions/mass":"node_modules/convert-units/lib/definitions/mass.js","./definitions/volume":"node_modules/convert-units/lib/definitions/volume.js","./definitions/each":"node_modules/convert-units/lib/definitions/each.js","./definitions/temperature":"node_modules/convert-units/lib/definitions/temperature.js","./definitions/time":"node_modules/convert-units/lib/definitions/time.js","./definitions/digital":"node_modules/convert-units/lib/definitions/digital.js","./definitions/partsPer":"node_modules/convert-units/lib/definitions/partsPer.js","./definitions/speed":"node_modules/convert-units/lib/definitions/speed.js","./definitions/pace":"node_modules/convert-units/lib/definitions/pace.js","./definitions/pressure":"node_modules/convert-units/lib/definitions/pressure.js","./definitions/current":"node_modules/convert-units/lib/definitions/current.js","./definitions/voltage":"node_modules/convert-units/lib/definitions/voltage.js","./definitions/power":"node_modules/convert-units/lib/definitions/power.js","./definitions/reactivePower":"node_modules/convert-units/lib/definitions/reactivePower.js","./definitions/apparentPower":"node_modules/convert-units/lib/definitions/apparentPower.js","./definitions/energy":"node_modules/convert-units/lib/definitions/energy.js","./definitions/reactiveEnergy":"node_modules/convert-units/lib/definitions/reactiveEnergy.js","./definitions/volumeFlowRate":"node_modules/convert-units/lib/definitions/volumeFlowRate.js","./definitions/illuminance":"node_modules/convert-units/lib/definitions/illuminance.js","./definitions/frequency":"node_modules/convert-units/lib/definitions/frequency.js","./definitions/angle":"node_modules/convert-units/lib/definitions/angle.js"}],"assets/js/app.js":[function(require,module,exports) {
+},{"lodash.keys":"LvIh","lodash.foreach":"KHBi","./definitions/length":"pd3d","./definitions/area":"HOEa","./definitions/mass":"PLJ8","./definitions/volume":"smp0","./definitions/each":"wQDr","./definitions/temperature":"ESHn","./definitions/time":"SGR5","./definitions/digital":"bxlf","./definitions/partsPer":"yVy1","./definitions/speed":"JPpx","./definitions/pace":"VhYO","./definitions/pressure":"dzZ2","./definitions/current":"yIye","./definitions/voltage":"Ycrg","./definitions/power":"nElb","./definitions/reactivePower":"jcfx","./definitions/apparentPower":"zmOF","./definitions/energy":"rJDc","./definitions/reactiveEnergy":"a6Bq","./definitions/volumeFlowRate":"yqpk","./definitions/illuminance":"gjwW","./definitions/frequency":"qRLX","./definitions/angle":"zo6V"}],"i5Wi":[function(require,module,exports) {
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.41";
+var appVersion = "3.42";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -20904,7 +20904,15 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     duration: .375,
     ease: 'linear',
     opacity: 1
-  }, "-=1").set('#range-tooltip', {
+  }, "-=1").to('#current-conditions-box', {
+    duration: .5,
+    ease: 'power2.inOut',
+    opacity: 1
+  }, "-=2.25").to('#current-conditions-box', {
+    duration: 1,
+    ease: 'power2.inOut',
+    scale: 1
+  }, "-=2.5").set('#range-tooltip', {
     pointerEvents: 'all'
   });
 } // This function hot-swaps the favicon based on the page formatting
@@ -21190,6 +21198,21 @@ document.querySelectorAll(".settings-item > .container").forEach(item => {
 
 document.getElementById("settings-performance").addEventListener("click", function () {
   togglePerformance();
+}); // Add hover pointer event changes to range tooltip
+// Mouse over
+
+document.getElementById("range-tooltip").addEventListener("mouseover", function () {
+  // Using GSAP here to prevent having to store previous inline styles and change with vanilla JS cause that seems cumbersome af
+  gsap.set('#range-tooltip > .container > .tooltip-item', {
+    pointerEvents: 'all'
+  });
+}); // Mouse out
+
+document.getElementById("range-tooltip").addEventListener("mouseout", function () {
+  // Using GSAP here to prevent having to store previous inline styles and change with vanilla JS cause that seems cumbersome af
+  gsap.set('#range-tooltip > .container > .tooltip-item', {
+    pointerEvents: 'none'
+  });
 }); // This function toggles the settings open and closed
 
 function toggleSettings() {
@@ -21302,7 +21325,12 @@ function togglePerformance() {
 
 (0, _jquery.default)(document).ready(function () {
   // Check local storage and expire any items that are old
-  expireLocalStorage(); // Check settings cookies
+  expireLocalStorage(); // Set the display boxes to 0 opacity
+
+  gsap.set('.display-box', {
+    opacity: 0,
+    scale: .85
+  }); // Check settings cookies
 
   var settingsPerformanceCookiePresent = checkCookie('canitube_Settings_Performance');
   var settingsDisplayCookiePresent = checkCookie('canitube_Settings_Display'); // If there are no settings cookies, create cookies for the default settings
@@ -22403,209 +22431,5 @@ function convertDOW(dowNum, typeOfString) {
   };
   return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
-},{"jquery":"node_modules/jquery/dist/jquery.js","moment":"node_modules/moment/moment.js","convert-units":"node_modules/convert-units/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
-var global = arguments[3];
-var OVERLAY_ID = '__parcel__error__overlay__';
-var OldModule = module.bundle.Module;
-
-function Module(moduleName) {
-  OldModule.call(this, moduleName);
-  this.hot = {
-    data: module.bundle.hotData,
-    _acceptCallbacks: [],
-    _disposeCallbacks: [],
-    accept: function (fn) {
-      this._acceptCallbacks.push(fn || function () {});
-    },
-    dispose: function (fn) {
-      this._disposeCallbacks.push(fn);
-    }
-  };
-  module.bundle.hotData = null;
-}
-
-module.bundle.Module = Module;
-var checkedAssets, assetsToAccept;
-var parent = module.bundle.parent;
-
-if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
-  var hostname = "" || location.hostname;
-  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51133" + '/');
-
-  ws.onmessage = function (event) {
-    checkedAssets = {};
-    assetsToAccept = [];
-    var data = JSON.parse(event.data);
-
-    if (data.type === 'update') {
-      var handled = false;
-      data.assets.forEach(function (asset) {
-        if (!asset.isNew) {
-          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
-
-          if (didAccept) {
-            handled = true;
-          }
-        }
-      }); // Enable HMR for CSS by default.
-
-      handled = handled || data.assets.every(function (asset) {
-        return asset.type === 'css' && asset.generated.js;
-      });
-
-      if (handled) {
-        console.clear();
-        data.assets.forEach(function (asset) {
-          hmrApply(global.parcelRequire, asset);
-        });
-        assetsToAccept.forEach(function (v) {
-          hmrAcceptRun(v[0], v[1]);
-        });
-      } else if (location.reload) {
-        // `location` global exists in a web worker context but lacks `.reload()` function.
-        location.reload();
-      }
-    }
-
-    if (data.type === 'reload') {
-      ws.close();
-
-      ws.onclose = function () {
-        location.reload();
-      };
-    }
-
-    if (data.type === 'error-resolved') {
-      console.log('[parcel] ✨ Error resolved');
-      removeErrorOverlay();
-    }
-
-    if (data.type === 'error') {
-      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
-      removeErrorOverlay();
-      var overlay = createErrorOverlay(data);
-      document.body.appendChild(overlay);
-    }
-  };
-}
-
-function removeErrorOverlay() {
-  var overlay = document.getElementById(OVERLAY_ID);
-
-  if (overlay) {
-    overlay.remove();
-  }
-}
-
-function createErrorOverlay(data) {
-  var overlay = document.createElement('div');
-  overlay.id = OVERLAY_ID; // html encode message and stack trace
-
-  var message = document.createElement('div');
-  var stackTrace = document.createElement('pre');
-  message.innerText = data.error.message;
-  stackTrace.innerText = data.error.stack;
-  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
-  return overlay;
-}
-
-function getParents(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return [];
-  }
-
-  var parents = [];
-  var k, d, dep;
-
-  for (k in modules) {
-    for (d in modules[k][1]) {
-      dep = modules[k][1][d];
-
-      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
-        parents.push(k);
-      }
-    }
-  }
-
-  if (bundle.parent) {
-    parents = parents.concat(getParents(bundle.parent, id));
-  }
-
-  return parents;
-}
-
-function hmrApply(bundle, asset) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (modules[asset.id] || !bundle.parent) {
-    var fn = new Function('require', 'module', 'exports', asset.generated.js);
-    asset.isNew = !modules[asset.id];
-    modules[asset.id] = [fn, asset.deps];
-  } else if (bundle.parent) {
-    hmrApply(bundle.parent, asset);
-  }
-}
-
-function hmrAcceptCheck(bundle, id) {
-  var modules = bundle.modules;
-
-  if (!modules) {
-    return;
-  }
-
-  if (!modules[id] && bundle.parent) {
-    return hmrAcceptCheck(bundle.parent, id);
-  }
-
-  if (checkedAssets[id]) {
-    return;
-  }
-
-  checkedAssets[id] = true;
-  var cached = bundle.cache[id];
-  assetsToAccept.push([bundle, id]);
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    return true;
-  }
-
-  return getParents(global.parcelRequire, id).some(function (id) {
-    return hmrAcceptCheck(global.parcelRequire, id);
-  });
-}
-
-function hmrAcceptRun(bundle, id) {
-  var cached = bundle.cache[id];
-  bundle.hotData = {};
-
-  if (cached) {
-    cached.hot.data = bundle.hotData;
-  }
-
-  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
-    cached.hot._disposeCallbacks.forEach(function (cb) {
-      cb(bundle.hotData);
-    });
-  }
-
-  delete bundle.cache[id];
-  bundle(id);
-  cached = bundle.cache[id];
-
-  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    cached.hot._acceptCallbacks.forEach(function (cb) {
-      cb();
-    });
-
-    return true;
-  }
-}
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","assets/js/app.js"], null)
-//# sourceMappingURL=/app.56908c73.js.map
+},{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
+//# sourceMappingURL=app.936f00cc.js.map

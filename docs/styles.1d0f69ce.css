@@ -113,14 +113,17 @@ h5 {
 
 a{
   color: inherit;
+	cursor: pointer;
 }
 
 a:visited{
   color:inherit;
+	cursor: pointer;
 }
 
 a:hover{
   color:inherit;
+	cursor: pointer;
 }
 
 /* Dropdown */
@@ -241,7 +244,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(180deg) scale(1);
-	background-image: url('/selector-arrow.2c6915c0.svg');
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -257,7 +260,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(1);
-	background-image: url('/selector-arrow.2c6915c0.svg');
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -273,7 +276,7 @@ a:hover{
 	height: 16px;
 	content: '';
 	transform: translate(-50%, -50%) rotate(0deg) scale(0);
-	background-image: url('/selector-arrow.2c6915c0.svg');
+	background-image: url('selector-arrow.e078bd8b.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -528,7 +531,7 @@ a:hover{
 	position: absolute;
 	top: 50%;
 	left: 0px;
-	width: 110px;
+	width: 140px;
 	height: 50%;
 	transform: translate(0%, -50%);
 }
@@ -536,7 +539,7 @@ a:hover{
 #range-tooltip > .container > .tooltip-item {
 	position: absolute;
 	top: 50%;
-	left: 105%;
+	left: 85%;
 	background-color: #1D1D1D;
 	border-radius: 4px;
 	padding-top: 4px;
@@ -988,7 +991,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('/child-line.2fc40ccd.svg');
+	background-image: url('child-line.19bd7a5c.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1002,7 +1005,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	content: '';
 	width: 19px;
 	height: 19px;
-	background-image: url('/child-line-terminate.d9403a4a.svg');
+	background-image: url('child-line-terminate.08480dfd.svg');
 	background-size: contain;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -1123,7 +1126,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 #cookie-policy-close-button {
 	width: 16px;
 	height: 16px;
-	background-image: url('/close-button.29a92665.svg');
+	background-image: url('close-button.d326a291.svg');
 	background-position: center center;
 	background-size: contain;
 	background-repeat: no-repeat;
@@ -1437,4 +1440,4 @@ input[type="checkbox"]:checked + .cookie-label::before {
 }
 
 
-/*# sourceMappingURL=/styles.5072464b.css.map */
+/*# sourceMappingURL=styles.1d0f69ce.css.map */

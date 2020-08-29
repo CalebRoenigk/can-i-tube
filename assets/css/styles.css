@@ -113,14 +113,17 @@ h5 {
 
 a{
   color: inherit;
+	cursor: pointer;
 }
 
 a:visited{
   color:inherit;
+	cursor: pointer;
 }
 
 a:hover{
   color:inherit;
+	cursor: pointer;
 }
 
 /* Dropdown */
@@ -528,7 +531,7 @@ a:hover{
 	position: absolute;
 	top: 50%;
 	left: 0px;
-	width: 110px;
+	width: 140px;
 	height: 50%;
 	transform: translate(0%, -50%);
 }
@@ -536,7 +539,7 @@ a:hover{
 #range-tooltip > .container > .tooltip-item {
 	position: absolute;
 	top: 50%;
-	left: 105%;
+	left: 85%;
 	background-color: #1D1D1D;
 	border-radius: 4px;
 	padding-top: 4px;

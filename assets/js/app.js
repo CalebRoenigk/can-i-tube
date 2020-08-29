@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "3.41";
+var appVersion = "3.42";
 
 var riverInfo = [
   {
@@ -979,6 +979,8 @@ gsap.timeline()
   .to('#height-unit > .container', {duration: .375, ease: 'power2.inOut', y: '0%'}, "-=.25")
   .from('#settings-cog', {duration: 1.25, ease: 'power2.inOut', rotation: -720},  "-=.375")
   .to('#settings-cog', {duration: .375, ease: 'linear', opacity: 1},  "-=1")
+  .to('#current-conditions-box', {duration: .5, ease: 'power2.inOut', opacity: 1}, "-=2.25")
+  .to('#current-conditions-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
   .set('#range-tooltip', {pointerEvents: 'all'})
 
 }
@@ -1271,6 +1273,18 @@ document.getElementById("settings-performance").addEventListener("click", functi
   togglePerformance();
 });
 
+// Add hover pointer event changes to range tooltip
+// Mouse over
+document.getElementById("range-tooltip").addEventListener("mouseover", function() {
+  // Using GSAP here to prevent having to store previous inline styles and change with vanilla JS cause that seems cumbersome af
+  gsap.set('#range-tooltip > .container > .tooltip-item', {pointerEvents: 'all'});
+});
+// Mouse out
+document.getElementById("range-tooltip").addEventListener("mouseout", function() {
+  // Using GSAP here to prevent having to store previous inline styles and change with vanilla JS cause that seems cumbersome af
+  gsap.set('#range-tooltip > .container > .tooltip-item', {pointerEvents: 'none'});
+});
+
 // This function toggles the settings open and closed
 function toggleSettings() {
   // The animation timeline
@@ -1332,6 +1346,9 @@ function togglePerformance() {
 $(document).ready(function() {
   // Check local storage and expire any items that are old
   expireLocalStorage();
+
+  // Set the display boxes to 0 opacity
+  gsap.set('.display-box', {opacity: 0, scale: .85});
 
   // Check settings cookies
   var settingsPerformanceCookiePresent = checkCookie('canitube_Settings_Performance');
