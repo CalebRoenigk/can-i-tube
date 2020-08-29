@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.4";
+var appVersion = "3.41";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -21809,16 +21809,102 @@ async function weatherUpdate(siteLocation, siteName, unitSet, stateColor) {
           }
         }
       } else {
-        // For now log an error message in the console
-        // CODE HERE //
+        // Log an error message in the console
         console.log('Total API Calls: ' + itemWeatherAPICalls + '. Not doing anything!'); // Even if there are 3 api calls, still check updates on current temperature and sun, and push error message to display.
-        // Also add yikes message to outside of function if api calls exist but no weather data is present
+        // Check if new weather data is needed
+
+        let hourlyWeather = checkLocalStorage('canitube_' + siteName + '_Hourly Weather');
+        let hourlyTemperature = checkLocalStorage('canitube_' + siteName + '_Hourly Temperature');
+        let hourlyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Hourly Wind Speed');
+        let hourlyCloudCover = checkLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover');
+        let dailyWeather = checkLocalStorage('canitube_' + siteName + '_Daily Weather');
+        let dailyWindSpeed = checkLocalStorage('canitube_' + siteName + '_Daily Wind Speed');
+        let dailyCloudCover = checkLocalStorage('canitube_' + siteName + '_Daily Cloud Cover');
+
+        if (hourlyWeather * hourlyTemperature * hourlyWindSpeed * hourlyCloudCover * dailyWeather * dailyWindSpeed * dailyCloudCover == 0) {
+          // Error some data is missing
+          var dataError = true;
+        } else {
+          // Data is here but no new API calls can be made
+          // The current items are not present, perform operations to update current values
+          // Determine the current time as a unix timestamp and read the hourly weather values for the current values at the current hour unix timestring
+          function getFirstTime(data) {
+            const times = Object.keys(data);
+            const now = new Date().getTime();
+            const [firstTime] = times.filter(time => now < time * 1000);
+            return firstTime;
+          } // Store the current closest time key
+
+
+          let timeKey = getFirstTime(JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value)); // Use the time key to grab the value for all of the current value items from hourly items
+
+          let currentTemperatureJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Temperature').value);
+          let currentWeatherJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Weather').value);
+          let currentWindSpeedJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Wind Speed').value);
+          let currentCloudCoverJSON = JSON.parse(readLocalStorage('canitube_' + siteName + '_Hourly Cloud Cover').value);
+          let itemCurrentTemperature = currentTemperatureJSON[timeKey];
+          let itemCurrentWeather = currentWeatherJSON[timeKey];
+          let itemCurrentWindSpeed = currentWindSpeedJSON[timeKey];
+          let itemCurrentCloudCover = currentCloudCoverJSON[timeKey]; // Store these new current values
+
+          let appPrefix = 'canitube';
+          let itemCategory = 'Weather';
+          writeLocalStorage(appPrefix + '_' + siteName + '_Current Temperature', itemCurrentTemperature, ['hourstil', 1], 'Weather');
+          writeLocalStorage(appPrefix + '_' + siteName + '_Current Weather', itemCurrentWeather, ['hourstil', 1], 'Weather');
+          writeLocalStorage(appPrefix + '_' + siteName + '_Current Wind Speed', itemCurrentWindSpeed, ['hourstil', 1], 'Weather');
+          writeLocalStorage(appPrefix + '_' + siteName + '_Current Cloud Cover', itemCurrentCloudCover, ['hourstil', 1], 'Weather'); // Check for sun values
+
+          let sunriseCheck = checkLocalStorage('canitube_' + siteName + '_Sunrise');
+          let sunsetCheck = checkLocalStorage('canitube_' + siteName + '_Sunset');
+
+          if (sunriseCheck * sunsetCheck !== 1) {
+            console.log('Sunrise or Sunset are missing!'); // Fill Sunrise/Sunset with default values
+
+            let sunriseDefaultTime = new Date();
+            sunriseDefaultTime.setHours(5);
+            sunriseDefaultTime.setMinutes(0);
+            sunriseDefaultTime.setSeconds(0);
+            let sunsetDefaultTime = new Date();
+            sunsetDefaultTime.setHours(20);
+            sunsetDefaultTime.setMinutes(0);
+            sunsetDefaultTime.setSeconds(0);
+            writeLocalStorage('canitube_' + siteName + '_Sunrise', Math.floor(sunriseDefaultTime.getTime() / 1000.0), ['eod']);
+            writeLocalStorage('canitube_' + siteName + '_Sunset', Math.floor(sunsetDefaultTime.getTime() / 1000.0), ['eod']);
+          } // Add error message to display. Base hours measurement on API calls expiry date
+
+
+          let tilExpire = readLocalStorage('canitube_' + siteName + '_API Calls').expiry;
+          tilExpire = new _moment.default().to(_moment.default.unix(tilExpire));
+          let errorString = 'This Data May Be inaccurate. You have reached your Max API calls for today. Don’t worry. This Error Should Resolve ' + tilExpire;
+          document.querySelector("#current-conditions-content > .container").setAttribute("data-notice", errorString);
+        }
       }
     }
   } // Populate the Weather Display
 
 
-  weatherDisplayPopulate(siteName, unitSet, stateColor);
+  dataError = dataError || false;
+
+  if (dataError == false) {
+    weatherDisplayPopulate(siteName, unitSet, stateColor);
+  } else {
+    // Data errored out
+    console.log("Weather data error. Clearing weather data display and inputting error message!"); // Clear the weather display framework
+
+    document.querySelector("#current-conditions-content > .container").innerHTML = ""; // Add Yikes message
+
+    document.querySelector("#current-conditions-content > .container").insertAdjacentHTML('afterbegin', '<div id="error-message-wrapper"></div>');
+    document.querySelector("#error-message-wrapper").insertAdjacentHTML('afterbegin', '<div class="container"></div>'); // Add title
+
+    document.querySelector("#error-message-wrapper > .container").insertAdjacentHTML('afterbegin', '<div id="error-message-title"><div class="display-error-subtitle">Something Went Wrong</div><div class="display-error-title">Yikes</div></div>'); // Add copy
+
+    document.querySelector("#error-message-wrapper > .container").insertAdjacentHTML('beforeend', '<div class="display-error-body">Looks like Can I Tube has made too many API calls from this computer today but no weather data is present!</div>'); // Add subcopy
+
+    let tilExpire = readLocalStorage('canitube_' + siteName + '_API Calls').expiry;
+    tilExpire = new _moment.default().to(_moment.default.unix(tilExpire), true);
+    let errorString = 'Lucky you, this problem should resolve itself within ' + tilExpire;
+    document.querySelector("#error-message-wrapper > .container").insertAdjacentHTML('beforeend', '<div class="display-error-subcopy">' + errorString + '</div>');
+  }
 } // This function returns the JSON object with weather data
 
 
@@ -21964,10 +22050,10 @@ function weatherDisplayPopulate(siteName, unitSet, stateStroke) {
     "Squall": "Squall",
     "Clear Night": "Clear",
     "Clear Day": "Clear",
-    "Windy Clear Day": "Windy",
+    "Windy Clear Day": "High Winds",
     "Few Clouds": "Partly Cloudy",
     "Cloudy": "Cloudy",
-    "Windy Clouds": "Windy",
+    "Windy Clouds": "High Winds",
     "Partly Sunny Drizzle": "Sunny Drizzle",
     "Drizzle": "Drizzle",
     "Partly Sunny Snow": "Sunny Snow",
@@ -22318,4 +22404,4 @@ function convertDOW(dowNum, typeOfString) {
   return dowConverter[Object.keys(dowConverter)[dowNum - 1]][typeOfString];
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.3da90fd6.js.map
+//# sourceMappingURL=app.22242a58.js.map
