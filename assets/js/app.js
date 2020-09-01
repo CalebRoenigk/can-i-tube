@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
-import chartistGraph from "chartist";
 
 var appVersion = "4.11";
 
@@ -1031,9 +1030,9 @@ gsap.timeline()
   let flowGraphRawData = '';
   if(checkLocalStorage('canitube_' + siteName + '_Period Data') == false) {
     // Call USGS for 4 day data
-    flowGraphRawData = await fetchPeriodData(siteID, '00060', '4D');
+    flowGraphRawData = await fetchPeriodData(siteID, ['00060'], '4D');
     // Store the raw data in local storage
-    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringfy(flowGraphRawData), ['hourstil', 24], 'River');
+    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringify(flowGraphRawData), ['hourstil', 24], 'River');
   } else {
     flowGraphRawData = JSON.parse(readLocalStorage('canitube_' + siteName + '_Period Data').value);
   }
@@ -2809,10 +2808,10 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
   // First lets make the historical data set
   for(var i=0; i < data.value.timeSeries[0].values[0].value.length; i++) {
     // Time Entry
-    let currentTime = moment(json.value.timeSeries[0].values[0].value[i].dateTime.substr(0,json.value.timeSeries[0].values[0].value[i].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
+    let currentTime = moment(data.value.timeSeries[0].values[0].value[i].dateTime.substr(0,data.value.timeSeries[0].values[0].value[i].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
     dataLabels.push(currentTime/900);
     // Data Entry
-    let currentData = parseInt(json.value.timeSeries[0].values[0].value[i].value)
+    let currentData = parseInt(data.value.timeSeries[0].values[0].value[i].value)
     dataValues.push(currentData);
     estimationValues.push('null');
     // Max Safe Flow line
@@ -2821,7 +2820,7 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
 
   // Now we add data for the total number of days + 1 it will take the river to normalize
   let mostRecentFlow = dataValues[dataValues.length-1];
-  let mostRecentTime = moment(json.value.timeSeries[0].values[0].value[json.value.timeSeries[0].values[0].value.length-1].dateTime.substr(0,json.value.timeSeries[0].values[0].value[json.value.timeSeries[0].values[0].value.length-1].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
+  let mostRecentTime = moment(data.value.timeSeries[0].values[0].value[data.value.timeSeries[0].values[0].value.length-1].dateTime.substr(0,data.value.timeSeries[0].values[0].value[data.value.timeSeries[0].values[0].value.length-1].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
   let returnDays = Math.ceil(((mostRecentFlow - baseFlow)/1000) * relaxPeriod)+1;
   let relaxValue = ((mostRecentFlow - baseFlow)/1000) * relaxPeriod;
   for(var i=0; i < returnDays*96; i++) {
@@ -2871,6 +2870,10 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
   let maxSafeFlowValuesPost = maxSafeFlowValues;
   maxSafeFlowValues.splice(maxSafeFlowValues.length-13, 13, 'null');
 
+  // Remove the loader wheel
+  document.querySelector('#graph-area').classList.remove('graph-load-state', 'graph-load-state-no', 'graph-load-state-maybe', 'graph-load-state-yes');
+
+  // Add the graph
   var chart = new Chartist.Line('#graph-area', {
     labels: dataLabels,
     series: [
