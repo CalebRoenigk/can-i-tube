@@ -24309,7 +24309,9 @@ var _chartist = _interopRequireDefault(require("chartist"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "4.011";
+var appVersion = "4.11"; // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
+// Base flow is the average flow for a given river
+
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -24326,6 +24328,8 @@ var riverInfo = [{
     "min": 2,
     "max": 7
   },
+  "relax_period": 0.9411764706,
+  "base_flow": 694,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24350,6 +24354,8 @@ var riverInfo = [{
     "min": 2,
     "max": 8
   },
+  "relax_period": 1.7391304348,
+  "base_flow": 500,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24374,6 +24380,8 @@ var riverInfo = [{
     "min": 1,
     "max": 6
   },
+  "relax_period": 2.2222222222,
+  "base_flow": 560,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24398,6 +24406,8 @@ var riverInfo = [{
     "min": 2.5,
     "max": 7
   },
+  "relax_period": 0.1666666667,
+  "base_flow": 3840,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24422,6 +24432,8 @@ var riverInfo = [{
     "min": 1,
     "max": 10
   },
+  "relax_period": 0.5714285714,
+  "base_flow": 800,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24446,6 +24458,8 @@ var riverInfo = [{
     "min": 1.5,
     "max": 4
   },
+  "relax_period": 1.7142857143,
+  "base_flow": 1780,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065",
@@ -24471,6 +24485,8 @@ var riverInfo = [{
     "min": .5,
     "max": 4
   },
+  "relax_period": 3.4161490683,
+  "base_flow": 300,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065",
@@ -24496,6 +24512,8 @@ var riverInfo = [{
     "min": 1,
     "max": 3
   },
+  "relax_period": 4.8,
+  "base_flow": 882,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24520,6 +24538,8 @@ var riverInfo = [{
     "min": 2,
     "max": 3.75
   },
+  "relax_period": 1.2903225806,
+  "base_flow": 300,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24544,6 +24564,8 @@ var riverInfo = [{
     "min": 1,
     "max": 4.5
   },
+  "relax_period": 3.3333333333,
+  "base_flow": 525,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24568,6 +24590,8 @@ var riverInfo = [{
     "min": 2,
     "max": 6
   },
+  "relax_period": 3.3333333333,
+  "base_flow": 775,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24592,6 +24616,8 @@ var riverInfo = [{
     "min": 2,
     "max": 5.5
   },
+  "relax_period": 9.2105263158,
+  "base_flow": 440,
   "site_parameters": {
     "discharge": "00060",
     "gage_height": "00065"
@@ -24600,17 +24626,7 @@ var riverInfo = [{
     "lat": "38.6462305",
     "long": "-78.5347329"
   }
-}]; // Places info formatted as such
-// 'river_name': [
-//   {
-//     "business_name": name,
-//     "business_maps_link": link,
-//     "business_rating": 0-5,
-//     "business_contact": phone
-//   },
-//   etc...
-// ]
-// This function returns a state abbrivation
+}]; // This function returns a state abbrivation
 
 function abbrState(input, to) {
   var states = [['Arizona', 'AZ'], ['Alabama', 'AL'], ['Alaska', 'AK'], ['Arkansas', 'AR'], ['California', 'CA'], ['Colorado', 'CO'], ['Connecticut', 'CT'], ['Delaware', 'DE'], ['Florida', 'FL'], ['Georgia', 'GA'], ['Hawaii', 'HI'], ['Idaho', 'ID'], ['Illinois', 'IL'], ['Indiana', 'IN'], ['Iowa', 'IA'], ['Kansas', 'KS'], ['Kentucky', 'KY'], ['Louisiana', 'LA'], ['Maine', 'ME'], ['Maryland', 'MD'], ['Massachusetts', 'MA'], ['Michigan', 'MI'], ['Minnesota', 'MN'], ['Mississippi', 'MS'], ['Missouri', 'MO'], ['Montana', 'MT'], ['Nebraska', 'NE'], ['Nevada', 'NV'], ['New Hampshire', 'NH'], ['New Jersey', 'NJ'], ['New Mexico', 'NM'], ['New York', 'NY'], ['North Carolina', 'NC'], ['North Dakota', 'ND'], ['Ohio', 'OH'], ['Oklahoma', 'OK'], ['Oregon', 'OR'], ['Pennsylvania', 'PA'], ['Rhode Island', 'RI'], ['South Carolina', 'SC'], ['South Dakota', 'SD'], ['Tennessee', 'TN'], ['Texas', 'TX'], ['Utah', 'UT'], ['Vermont', 'VT'], ['Virginia', 'VA'], ['Washington', 'WA'], ['West Virginia', 'WV'], ['Wisconsin', 'WI'], ['Wyoming', 'WY']];
@@ -24750,8 +24766,10 @@ function selectItem(itemID) {
 
   for (var i = 0; i < siteParameterNames.length; i++) {
     siteParameters.push(currentParametersObject[siteParameterNames[i]]);
-  } // Name of the real-time cookie for the current site
+  }
 
+  let relaxPeriod = riverInfo[selectedRiverIndex].relax_period;
+  let baseFlow = riverInfo[selectedRiverIndex].base_flow; // Name of the real-time cookie for the current site
 
   var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata"; // Name of the real-time height cookie
 
@@ -24863,16 +24881,16 @@ function selectItem(itemID) {
     if (realTimeFlowValue > superSafeRange.min - 1 && realTimeFlowValue < superSafeRange.max + 1) {
       // Today is safe
       console.log("Today is safe!");
-      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
     } else {
       // Today is maybe safe
       console.log("Today is maybe safe?");
-      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
     }
   } else {
     // Today is not safe
     console.log("Today is not safe!");
-    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
   }
 }); // This function removes elements based on a passed selector
 
@@ -25144,7 +25162,7 @@ function loadingStage() {
 } // This function formats the page based on the determined safety
 
 
-function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet) {
+async function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet, siteID, relaxPeriod, baseFlow) {
   // This object contains the information to determine the formatting of each global style
   var formatChoices = {
     'yes': {
@@ -25397,10 +25415,21 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     scale: 1
   }, "-=2.5").set('#range-tooltip', {
     pointerEvents: 'all'
-  }); // Call USGS for 4 day data
-  // CODE HERE
-  // Call a graph update to display the returned 4-day data
-  // generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
+  }); // Test for 4D flow data, if present pass into raw data, else, run call to USGS
+
+  let flowGraphRawData = '';
+
+  if (checkLocalStorage('canitube_' + siteName + '_Period Data') == false) {
+    // Call USGS for 4 day data
+    flowGraphRawData = await fetchPeriodData(siteID, '00060', '4D'); // Store the raw data in local storage
+
+    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringfy(flowGraphRawData), ['hourstil', 24], 'River');
+  } else {
+    flowGraphRawData = JSON.parse(readLocalStorage('canitube_' + siteName + '_Period Data').value);
+  } // Call a graph update to display the returned 4-day data
+
+
+  generateGraph(flowGraphRawData, safeRange.max, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color);
 } // This function hot-swaps the favicon based on the page formatting
 
 
@@ -27228,6 +27257,52 @@ function localBusinessPopulate(location, element, riverName, state) {
   }
 
   checkPlacesData(riverName, element);
+} // This function fetches the current data
+
+
+function fetchPeriodData(site, parameters, period) {
+  console.log("Fetching parameters: " + parameters + " from USGS for site: " + site + " for a period of: " + period);
+  return new Promise((resolve, reject) => {
+    _jquery.default.ajax({
+      url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=" + parameters.join(",") + "&siteStatus=active&period=P" + period,
+      dataType: 'JSON',
+      data: '',
+      success: function (json) {
+        console.log("Data Retreived from site!"); // Return the data object
+
+        resolve(json);
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log("Error: AJAX request failed...");
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });
+  });
+} // This function reads the USGS JSON data and returns an object with the required values
+
+
+function parseRealTimeData(data, parameterCodes) {
+  let timeSeries = data.value.timeSeries; // Sort the codes alphabetically so that the lowest code comes first
+
+  parameterCodes = parameterCodes.sort(); // Iterate over each parameter code
+
+  let returnData = {};
+
+  for (var i = 0; i < parameterCodes.length; i++) {
+    // The time series array contains objects with each parameter code, each code is returned in numerical order, lowest codes always come first
+    // Test that the current parameter matches the current code, if it doesn't, log this to the console
+    if (timeSeries[i].variable.variableCode[0].value !== parameterCodes[i]) {
+      console.log("Selection(timeSeries[i].variable.variableCode[0].value): " + timeSeries[i].variable.variableCode[0].value + " does not match the current parameter: " + parameterCodes[i]);
+    } // Grab the current value
+
+
+    let currentValue = timeSeries[i].values[0].value[0].value;
+    let currentKey = parameterCodes[i];
+    returnData[currentKey.toString()] = currentValue;
+  }
+
+  return returnData;
 } // This function generates the flow graph
 
 
@@ -27362,4 +27437,4 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
   }, 1);
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp","chartist":"A7mC"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.5cede5f7.js.map
+//# sourceMappingURL=app.7b6e44e7.js.map

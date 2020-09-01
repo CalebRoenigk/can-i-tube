@@ -5,6 +5,8 @@ import chartistGraph from "chartist";
 
 var appVersion = "4.11";
 
+// Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
+// Base flow is the average flow for a given river
 var riverInfo = [
   {
     "river": "Cape Fear River",
@@ -22,8 +24,8 @@ var riverInfo = [
       "min": 2,
       "max": 7
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 0.9411764706,
+    "base_flow": 694,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -49,8 +51,8 @@ var riverInfo = [
       "min": 2,
       "max": 8
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 1.7391304348,
+    "base_flow": 500,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -76,8 +78,8 @@ var riverInfo = [
       "min": 1,
       "max": 6
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 2.2222222222,
+    "base_flow": 560,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -103,8 +105,8 @@ var riverInfo = [
       "min": 2.5,
       "max": 7
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 0.1666666667,
+    "base_flow": 3840,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -130,8 +132,8 @@ var riverInfo = [
       "min": 1,
       "max": 10
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 0.5714285714,
+    "base_flow": 800,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -157,8 +159,8 @@ var riverInfo = [
       "min": 1.5,
       "max": 4
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 1.7142857143,
+    "base_flow": 1780,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065",
@@ -185,8 +187,8 @@ var riverInfo = [
       "min": .5,
       "max": 4
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 3.4161490683,
+    "base_flow": 300,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065",
@@ -213,8 +215,8 @@ var riverInfo = [
       "min": 1,
       "max": 3
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 4.8,
+    "base_flow": 882,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -240,8 +242,8 @@ var riverInfo = [
       "min": 2,
       "max": 3.75
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 1.2903225806,
+    "base_flow": 300,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -267,8 +269,8 @@ var riverInfo = [
       "min": 1,
       "max": 4.5
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 3.3333333333,
+    "base_flow": 525,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -294,8 +296,8 @@ var riverInfo = [
       "min": 2,
       "max": 6
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 3.3333333333,
+    "base_flow": 775,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -321,8 +323,8 @@ var riverInfo = [
       "min": 2,
       "max": 5.5
     },
-    "relax_period": ,
-    "base_flow": ,
+    "relax_period": 9.2105263158,
+    "base_flow": 440,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -892,7 +894,7 @@ gsap.timeline()
 }
 
 // This function formats the page based on the determined safety
-function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet, siteID, relaxPeriod, baseFlow) {
+async function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet, siteID, relaxPeriod, baseFlow) {
 // This object contains the information to determine the formatting of each global style
 var formatChoices = {
   'yes': {
