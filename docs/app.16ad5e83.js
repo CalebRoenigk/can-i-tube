@@ -24309,7 +24309,7 @@ var _chartist = _interopRequireDefault(require("chartist"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "3.51";
+var appVersion = "4.01";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -27360,4 +27360,4 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
   }, 1);
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp","chartist":"A7mC"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.8f92d78a.js.map
+//# sourceMappingURL=app.16ad5e83.js.map

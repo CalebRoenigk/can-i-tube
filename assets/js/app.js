@@ -3,7 +3,7 @@ import moment from 'moment';
 import convert from 'convert-units';
 import chartistGraph from "chartist";
 
-var appVersion = "3.51";
+var appVersion = "4.01";
 
 var riverInfo = [
   {
