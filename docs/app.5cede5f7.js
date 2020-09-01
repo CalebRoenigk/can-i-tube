@@ -24309,7 +24309,7 @@ var _chartist = _interopRequireDefault(require("chartist"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "4.01";
+var appVersion = "4.011";
 var riverInfo = [{
   "river": "Cape Fear River",
   "siteID": "02102500",
@@ -25397,7 +25397,9 @@ function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange
     scale: 1
   }, "-=2.5").set('#range-tooltip', {
     pointerEvents: 'all'
-  }); // Call a graph update
+  }); // Call USGS for 4 day data
+  // CODE HERE
+  // Call a graph update to display the returned 4-day data
   // generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
 } // This function hot-swaps the favicon based on the page formatting
 
@@ -27360,4 +27362,4 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
   }, 1);
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp","chartist":"A7mC"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.16ad5e83.js.map
+//# sourceMappingURL=app.5cede5f7.js.map

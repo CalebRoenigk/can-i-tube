@@ -1700,5 +1700,25 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	background: rgba(38, 28, 21, .2);
 }
 
+.beta-tag {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	letter-spacing: 1.25px;
+	font-size: 10px;
+	font-family: 'Kayak Sans Bold', arial, sans-serif;
+	color: inherit;
+	padding-left: 8px;
+	padding-right: 4px;
+	padding-top: 5px;
+	padding-bottom: 4px;
+	text-align: center;
+	border-width: 1px;
+	border-color: inherit;
+	border-style: solid;
+	box-sizing: border-box;
+	transform: translate(2px, 0px);
+}
 
-/*# sourceMappingURL=styles.7a01da82.css.map */
+
+/*# sourceMappingURL=styles.75f1edae.css.map */

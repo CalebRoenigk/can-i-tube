@@ -3,7 +3,7 @@ import moment from 'moment';
 import convert from 'convert-units';
 import chartistGraph from "chartist";
 
-var appVersion = "4.01";
+var appVersion = "4.011";
 
 var riverInfo = [
   {
@@ -1010,7 +1010,10 @@ gsap.timeline()
   .to('#the-download-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
   .set('#range-tooltip', {pointerEvents: 'all'});
 
-  // Call a graph update
+  // Call USGS for 4 day data
+  // CODE HERE
+
+  // Call a graph update to display the returned 4-day data
   // generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
 }
 
