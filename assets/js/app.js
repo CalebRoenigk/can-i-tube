@@ -3,7 +3,7 @@ import moment from 'moment';
 import convert from 'convert-units';
 import chartistGraph from "chartist";
 
-var appVersion = "4.011";
+var appVersion = "4.11";
 
 var riverInfo = [
   {
@@ -22,6 +22,8 @@ var riverInfo = [
       "min": 2,
       "max": 7
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -47,6 +49,8 @@ var riverInfo = [
       "min": 2,
       "max": 8
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -72,6 +76,8 @@ var riverInfo = [
       "min": 1,
       "max": 6
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -97,6 +103,8 @@ var riverInfo = [
       "min": 2.5,
       "max": 7
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -122,6 +130,8 @@ var riverInfo = [
       "min": 1,
       "max": 10
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -147,6 +157,8 @@ var riverInfo = [
       "min": 1.5,
       "max": 4
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065",
@@ -173,6 +185,8 @@ var riverInfo = [
       "min": .5,
       "max": 4
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065",
@@ -199,6 +213,8 @@ var riverInfo = [
       "min": 1,
       "max": 3
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -224,6 +240,8 @@ var riverInfo = [
       "min": 2,
       "max": 3.75
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -249,6 +267,8 @@ var riverInfo = [
       "min": 1,
       "max": 4.5
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -274,6 +294,8 @@ var riverInfo = [
       "min": 2,
       "max": 6
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -299,6 +321,8 @@ var riverInfo = [
       "min": 2,
       "max": 5.5
     },
+    "relax_period": ,
+    "base_flow": ,
     "site_parameters": {
       "discharge": "00060",
       "gage_height": "00065"
@@ -309,17 +333,6 @@ var riverInfo = [
     }
   }
 ];
-
-// Places info formatted as such
-// 'river_name': [
-//   {
-//     "business_name": name,
-//     "business_maps_link": link,
-//     "business_rating": 0-5,
-//     "business_contact": phone
-//   },
-//   etc...
-// ]
 
 // This function returns a state abbrivation
 function abbrState(input, to){
@@ -506,6 +519,8 @@ $('.cta-wrapper').click(async function() {
   for(var i=0; i < siteParameterNames.length; i++) {
     siteParameters.push(currentParametersObject[siteParameterNames[i]])
   }
+  let relaxPeriod = riverInfo[selectedRiverIndex].relax_period;
+  let baseFlow = riverInfo[selectedRiverIndex].base_flow;
 
   // Name of the real-time cookie for the current site
   var currentSiteCookieName = "canitube_" + selectedRiver + "_currentdata";
@@ -625,16 +640,16 @@ $('.cta-wrapper').click(async function() {
     if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
       // Today is safe
       console.log("Today is safe!");
-      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+      formatPage("yes", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
     } else {
       // Today is maybe safe
       console.log("Today is maybe safe?");
-      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+      formatPage("maybe", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
     }
   } else {
     // Today is not safe
     console.log("Today is not safe!");
-    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet);
+    formatPage("no", realTimeFlowValue, realTimeHeightValue, currentSafeRange, currentHeightRange, siteLocation, siteName, unitSet, riverInfo[selectedRiverIndex].siteID, relaxPeriod, baseFlow);
   }
 });
 
@@ -877,7 +892,7 @@ gsap.timeline()
 }
 
 // This function formats the page based on the determined safety
-function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet) {
+function formatPage(state, currentFlowValue, heightValue, safeRange, heightRange, siteGeoLocation, siteName, unitSet, siteID, relaxPeriod, baseFlow) {
 // This object contains the information to determine the formatting of each global style
 var formatChoices = {
   'yes': {
@@ -1010,11 +1025,19 @@ gsap.timeline()
   .to('#the-download-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
   .set('#range-tooltip', {pointerEvents: 'all'});
 
-  // Call USGS for 4 day data
-  // CODE HERE
+  // Test for 4D flow data, if present pass into raw data, else, run call to USGS
+  let flowGraphRawData = '';
+  if(checkLocalStorage('canitube_' + siteName + '_Period Data') == false) {
+    // Call USGS for 4 day data
+    flowGraphRawData = await fetchPeriodData(siteID, '00060', '4D');
+    // Store the raw data in local storage
+    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringfy(flowGraphRawData), ['hourstil', 24], 'River');
+  } else {
+    flowGraphRawData = JSON.parse(readLocalStorage('canitube_' + siteName + '_Period Data').value);
+  }
 
   // Call a graph update to display the returned 4-day data
-  // generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
+  generateGraph(flowGraphRawData, safeRange.max, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
 }
 
 // This function hot-swaps the favicon based on the page formatting
@@ -2726,6 +2749,52 @@ function localBusinessPopulate(location, element, riverName, state) {
   }
 
   checkPlacesData(riverName, element);
+}
+
+// This function fetches the current data
+function fetchPeriodData(site, parameters, period) {
+  console.log("Fetching parameters: " + parameters + " from USGS for site: " + site + " for a period of: " + period);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=" + site + "&parameterCd=" + parameters.join(",") + "&siteStatus=active&period=P" + period,
+      dataType: 'JSON',
+      data: '',
+      success: function(json){
+        console.log("Data Retreived from site!");
+
+        // Return the data object
+        resolve(json);
+       },
+      error : function(XMLHttpRequest, textStatus, errorThrown) {
+         console.log("Error: AJAX request failed...");
+         console.log(textStatus);
+         console.log(errorThrown);
+      }
+    });
+  })
+}
+
+// This function reads the USGS JSON data and returns an object with the required values
+function parseRealTimeData(data, parameterCodes) {
+  let timeSeries = data.value.timeSeries;
+  // Sort the codes alphabetically so that the lowest code comes first
+  parameterCodes = parameterCodes.sort();
+  // Iterate over each parameter code
+  let returnData = {};
+  for(var i=0; i < parameterCodes.length; i++) {
+    // The time series array contains objects with each parameter code, each code is returned in numerical order, lowest codes always come first
+    // Test that the current parameter matches the current code, if it doesn't, log this to the console
+    if(timeSeries[i].variable.variableCode[0].value !== parameterCodes[i]) {
+      console.log("Selection(timeSeries[i].variable.variableCode[0].value): " + timeSeries[i].variable.variableCode[0].value + " does not match the current parameter: " + parameterCodes[i]);
+    }
+
+    // Grab the current value
+    let currentValue = timeSeries[i].values[0].value[0].value;
+    let currentKey = parameterCodes[i];
+
+    returnData[currentKey.toString()] = currentValue;
+  }
+  return returnData;
 }
 
 // This function generates the flow graph
