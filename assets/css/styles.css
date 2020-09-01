@@ -1438,3 +1438,234 @@ input[type="checkbox"]:checked + .cookie-label::before {
 #error-message-wrapper > .container > #error-message-title > .display-error-title {
 	font-size: 81px;
 }
+
+/* More Info */
+
+#the-download-content::before {
+  position: absolute;
+  display: block;
+	color: #eac435;
+  content: 'The Download';
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+  top: 0px;
+  left: 24px;
+  letter-spacing: .5px;
+	transform: translate(0%, -45%);
+}
+
+#the-download-content::after {
+  position: absolute;
+  display: block;
+  content: '';
+	top: 0px;
+	left: 0px;
+  width: 100%;
+  height: 100%;
+  border: 1px #eac435 solid;
+  clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 146px 10px, 146px -5px, 105% -5px, 105% 105%, -5px 105%);
+}
+
+#download-graph {
+	top: 0px;
+	height: 72%;
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+#local-outfitters {
+	bottom: 0px;
+	height: 28%;
+	padding: 12px;
+	padding-bottom: 8px;
+	box-sizing: border-box;
+}
+
+#local-outfitters::before {
+  position: absolute;
+  display: block;
+	color: #eac435;
+  content: 'Local Outfitters';
+	font-family: 'Kayak Sans Regular', arial, sans-serif;
+  top: 0px;
+  left: 24px;
+  letter-spacing: .5px;
+	transform: translate(0%, -45%);
+}
+
+#local-outfitters::after {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	display: block;
+	content: '';
+	border: 1px #eac435 solid;
+	clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 167px 10px, 167px -5px, 105% -5px, 105% 105%, -5px 105%);
+}
+
+#local-outfitters > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	z-index: 500;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#local-outfitters > .container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#local-outfitters > .container {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.outfitter-item {
+	position: relative;
+	max-width: 130px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	padding-right: 24px;
+	text-decoration: none;
+}
+
+.outfitter-title {
+	color: inherit;
+	font-size: 14px;
+	letter-spacing: .5px;
+	line-height: 1.25;
+	text-align: left;
+}
+
+.outfitter-rating {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.outfitter-rating-stars {
+	height: 20px;
+	width: 80px;
+	transform: translate(-4px, 0px);
+}
+
+.outfitter-rating-count {
+	color: inherit;
+	font-size: 14px;
+	letter-spacing: 1px;
+	white-space: nowrap;
+	text-align: right;
+	margin-top: 5px;
+	margin-left: 12px;
+}
+
+#graph-timeline, #graph-flow-line {
+	font-size: 14px;
+	letter-spacing: .75px;
+}
+
+#graph-timeline > .container, #graph-flow-line > .container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	white-space: nowrap;
+}
+
+#graph-now {
+	margin-right: 8px;
+}
+
+#graph-later {
+	margin-left: 8px;
+}
+
+.graph-timeline-line {
+	position: relative;
+	width: 100%;
+}
+
+.graph-disclaimer {
+	margin-top: 8px;
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: left;
+}
+
+#graph-area {
+	width: 100%;
+	height: 70%;
+	margin-bottom: 24px;
+}
+
+.ct-series-a .ct-line {
+  stroke: #eac435;
+  stroke-width: 2px;
+	fill: none;
+}
+
+.ct-series-b .ct-line {
+  stroke: #eac435;
+  stroke-width: 1px;
+	stroke-dasharray: 18 12;
+	fill: none;
+}
+
+.ct-series-c .ct-line {
+  stroke: #eac435;
+  stroke-width: 2px;
+	stroke-dasharray: 6 6;
+	fill: none;
+}
+
+.ct-labels {
+	font-size: 8px;
+}
+
+.item-no, .item-maybe, .item-yes {
+	padding: 12px;
+	padding-bottom: 8px;
+	box-sizing: border-box;
+	-webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	cursor: pointer;
+	transition: .2s ease;
+}
+
+.item-no {
+	background: rgba(234, 196, 53, 0);
+}
+
+.item-no:hover {
+	background: rgba(234, 196, 53, .2);
+}
+
+.item-maybe {
+	background: rgba(228, 230, 195, 0);
+}
+
+.item-maybe:hover {
+	background: rgba(228, 230, 195, .2);
+}
+
+.item-yes {
+	background: rgba(38, 28, 21, 0);
+}
+
+.item-yes:hover {
+	background: rgba(38, 28, 21, .2);
+}
