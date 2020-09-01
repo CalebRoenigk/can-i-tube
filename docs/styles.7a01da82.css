@@ -1151,6 +1151,11 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	transform: translate(-50%, -50%)
 }
 
+#the-download-box {
+	right: 0%;
+	transform: translate(-50%, -50%)
+}
+
 .display-error-subtitle, .display-error-title, .display-error-body, .display-error-subcopy {
 	text-align: center;
 }
@@ -1444,7 +1449,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 #the-download-content::before {
   position: absolute;
   display: block;
-	color: #eac435;
+	color: inherit;
   content: 'The Download';
 	font-family: 'Kayak Sans Regular', arial, sans-serif;
   top: 0px;
@@ -1461,7 +1466,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	left: 0px;
   width: 100%;
   height: 100%;
-  border: 1px #eac435 solid;
+  border: 1px inherit solid;
   clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 146px 10px, 146px -5px, 105% -5px, 105% 105%, -5px 105%);
 }
 
@@ -1483,7 +1488,7 @@ input[type="checkbox"]:checked + .cookie-label::before {
 #local-outfitters::before {
   position: absolute;
   display: block;
-	color: #eac435;
+	color: inherit;
   content: 'Local Outfitters';
 	font-family: 'Kayak Sans Regular', arial, sans-serif;
   top: 0px;
@@ -1500,7 +1505,9 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	height: 100%;
 	display: block;
 	content: '';
-	border: 1px #eac435 solid;
+	border-width:1px;
+	border-color: inherit;
+	border-style: solid;
 	clip-path: polygon(-5px -5px, 20px -5px, 20px 10px, 167px 10px, 167px -5px, 105% -5px, 105% 105%, -5px 105%);
 }
 
@@ -1580,6 +1587,11 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	white-space: nowrap;
+	align-content: center;
+}
+
+#graph-timeline > .container {
+	height: auto;
 }
 
 #graph-now {
@@ -1606,6 +1618,24 @@ input[type="checkbox"]:checked + .cookie-label::before {
 	width: 100%;
 	height: 70%;
 	margin-bottom: 24px;
+}
+
+.graph-load-state {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 75px 75px;
+}
+
+.graph-load-state-no {
+	background-image: url('spinner-no.5fb6396d.gif');
+}
+
+.graph-load-state-maybe {
+	background-image: url('spinner-maybe.8346d6c8.gif');
+}
+
+.graph-load-state-yes {
+	background-image: url('spinner-yes.fd5ae385.gif');
 }
 
 .ct-series-a .ct-line {
@@ -1671,4 +1701,4 @@ input[type="checkbox"]:checked + .cookie-label::before {
 }
 
 
-/*# sourceMappingURL=styles.86aa2c2b.css.map */
+/*# sourceMappingURL=styles.7a01da82.css.map */

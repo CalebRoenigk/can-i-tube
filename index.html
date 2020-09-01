@@ -25,7 +25,6 @@
     <meta name="theme-color" content="#e6e6e6" id="themeColor">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/font/font.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
 </head>
 <body class="bkgd-neutral">
   <div class="banner" id="cookie-policy-banner"><div class="container"><div class="banner-content">Can I Tube uses cookies to improve your expierence by enabling faster load times. Using this site means you are ok with the use of these cookies. You can learn more <a href="">here</a>.<div id="cookie-policy-close-button"></div></div></div></div>
@@ -196,14 +195,14 @@
           <div class="container">
             <div class="display-subsection" id="download-graph">
               <div class="container">
-                <div id="graph-area"></div>
+                <div id="graph-area" class="graph-load-state"></div>
                 <div id="graph-timeline">
                   <div class="container">
                     <div class="graph-timeline-item" id="graph-now">Est. Normal Flow</div>
                     <div class="graph-timeline-line">
                       <div class="line-rule"></div>
                     </div>
-                    <div class="graph-timeline-item" id="graph-later"></div>
+                    <div class="graph-timeline-item" id="graph-later">Aug 11</div>
                   </div>
                 </div>
                 <div class="graph-disclaimer"><span class="superscript">×</span>This Estimate is based on Average Stream Flow Estimates and
@@ -297,5 +296,6 @@
   </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.0/gsap.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUt7_Q7Mf5zTjIQu9imgewMX7BAbeQ0NU&libraries=places"></script>
 <script src="assets/js/app.js"></script>
 </html>

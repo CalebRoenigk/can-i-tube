@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
+import chartistGraph from "chartist";
 
 var appVersion = "3.51";
 
@@ -945,8 +946,15 @@ $('#icon-i').css('opacity', '0');
 $('#background-wave > mask').attr('width', $(window).width()).attr('height', $(window).height());
 $('#background-wave > mask > g > rect').attr('width', $(window).width()).attr('height', $(window).height());
 
+// Add loading spinner state to graph area
+let loaderClass = 'graph-load-state-' + state;
+document.querySelector('.graph-load-state').classList.add(loaderClass)
+
 // Call a weather display update
 weatherUpdate(siteGeoLocation, siteName, unitSet, formatChoices[state].stroke_color);
+
+// Call a local business update
+localBusinessPopulate(siteGeoLocation, document.getElementById('local-outfitters'), siteName, state);
 
 // Begin the transition to the final state
 gsap.timeline()
@@ -970,6 +978,7 @@ gsap.timeline()
   .set('#weather-forecast', {borderColor: formatChoices[state].stroke_color, color: formatChoices[state].text_color})
   .set('.line-rule', {background: formatChoices[state].stroke_color})
   .set('.information-display', {borderColor: formatChoices[state].stroke_color, color: formatChoices[state].text_color})
+  .set('#graph-timeline > .container', {height: 'auto'})
   .to('body', {duration: 1, background: formatChoices[state].background_color})
   .to('.border-content', {duration: .75, ease: 'power2.inOut', height: $(window).height()-150, opacity: 1}, '-=.25')
   .to('#background-wave > path', {duration: .75, ease: 'power2.inOut', fill: formatChoices[state].text_color}, '-=.75')
@@ -997,8 +1006,12 @@ gsap.timeline()
   .to('#settings-cog', {duration: .375, ease: 'linear', opacity: 1},  "-=1")
   .to('#current-conditions-box', {duration: .5, ease: 'power2.inOut', opacity: 1}, "-=2.25")
   .to('#current-conditions-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
-  .set('#range-tooltip', {pointerEvents: 'all'})
+  .to('#the-download-box', {duration: .5, ease: 'power2.inOut', opacity: 1}, "-=2")
+  .to('#the-download-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
+  .set('#range-tooltip', {pointerEvents: 'all'});
 
+  // Call a graph update
+  // generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
 }
 
 // This function hot-swaps the favicon based on the page formatting
@@ -2436,4 +2449,411 @@ function convertDOW(dowNum, typeOfString) {
     }
   }
   return dowConverter[Object.keys(dowConverter)[dowNum-1]][typeOfString];
+}
+
+// This function returns businesses that deal with tubing based on input location and an element that will be populated with returned places
+function localBusinessPopulate(location, element, riverName, state) {
+  // This function checks for places data for the current river to decide if reading or fetching places is needed
+  function checkPlacesData(river, parentElement) {
+    if(checkLocalStorage('canitube_' + river + '_Local Outfitters') == false) {
+      // There is no local outfitters data for the current river, get it from the Google Places API
+      initialize(state);
+    } else {
+      addListings(readLocalStorage('canitube_' + river + '_Local Outfitters').value, parentElement, state);
+    }
+  }
+
+  // This function handles the fetching of locations
+  async function initialize(state) {
+    var currentRiverLocation = new google.maps.LatLng(parseFloat(location.lat),parseFloat(location.long));
+
+    var request = {
+      location: currentRiverLocation,
+      radius: '16093.4',
+      query: 'river tubing'
+    };
+
+    let service = new google.maps.places.PlacesService(element);
+    service.textSearch(request, callback);
+
+    // Check local storage for returned item until it is found
+    var placesReturn = await returnItem();
+
+    // Store the data properly
+    writeLocalStorage('canitube_' + riverName + '_Local Outfitters', placesReturn, ['hourstil', 744], 'Local Outfitters');
+
+    // Add the listings to the outfitters subsection
+    addListings(placesReturn, element, state);
+
+  }
+
+  // This function is what returns the places found based on the search string
+  function callback(results, status) {
+    console.log('Places API returned results')
+    // Return array that will hold each returned place
+    let places = [];
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      // If there are less than 5 places returned set the loop varible to the amount of places returned
+      let maxPlaces = 5;
+      if(results.length < 5) {
+        maxPlaces = results.length;
+      }
+
+      for (var i = 0; i < maxPlaces; i++) {
+        var place = results[i];
+        places.push(place);
+      }
+    }
+    writeLocalStorage('canitube_TEMP_Places Return', places, ['hourstil', 1], 'TEMP');
+  }
+
+  // This function checks every 25 miliseconds for the places data and when found returns it
+  function returnItem() {
+    return new Promise(resolve => {
+      var checkInterval = setInterval(function() {
+        // If the data is present in local storage resolve and return the data
+        if(checkLocalStorage('canitube_TEMP_Places Return') == true) {
+          // Store the data
+          let returnData = readLocalStorage('canitube_TEMP_Places Return').value;
+
+          // Delete the temp data
+          removeItemLocalStorage('canitube_TEMP_Places Return');
+
+          resolve(returnData);
+        }
+      }, 25);
+    });
+  }
+
+  // This function adds each listing to the local outfitters section
+  function addListings(placesAry, parentElement, answerState) {
+    // Iterate over each listing
+    // Preset information
+    let baseURL = 'https://www.google.com/maps/search/?api=1&query=';
+    let strokeColor = '';
+    if(answerState == 'no') {
+      strokeColor = '#EAC435';
+    }
+    if(answerState == 'maybe') {
+      strokeColor = '#E4E6C3';
+    }
+    if(answerState == 'yes') {
+      strokeColor = '#261C15';
+    }
+
+    // Add the container to the parent element
+    parentElement.insertAdjacentHTML('beforeend', '<div class="container"></div>');
+
+    for(var i=0; i < placesAry.length; i++) {
+      // Grab the relevant data
+      let placeName = placesAry[i].name;
+      let placeRating = placesAry[i].rating;
+      let placeRatingCount = placesAry[i].user_ratings_total;
+
+      // Create some adjusted ratings values for the rating stars to appear correct
+      let ratingScale = 0;
+      switch(true) {
+        case (placeRating >= 5):
+          // 5 Star
+          ratingScale = 1;
+          break;
+        case (placeRating < 5 && placeRating >= 4.5):
+          // 4.5 Star
+          ratingScale = .9119158499;
+          break;
+        case (placeRating < 4.5 && placeRating >= 4):
+          // 4 Star
+          ratingScale = .7906850137;
+          break;
+        case (placeRating < 4 && placeRating >= 3.5):
+          // 3.5 Star
+          ratingScale = .7031809752;
+          break;
+        case (placeRating < 3.5 && placeRating >= 3):
+          // 3 Star
+          ratingScale = .5814235761;
+          break;
+        case (placeRating < 3 && placeRating >= 2.5):
+          // 2.5 Star
+          ratingScale = .4937838808;
+          break;
+        case (placeRating < 2.5 && placeRating >= 2):
+          // 2 Star
+          ratingScale = .3721264393;
+          break;
+        case (placeRating < 2 && placeRating >= 1.5):
+          // 1.5 Star
+          ratingScale = .284054784;
+          break;
+        case (placeRating < 1.5 && placeRating >= 1):
+          // 1 Star
+          ratingScale = .1628721416;
+          break;
+        case (placeRating < 1 && placeRating >= 0.5):
+          // 0.5 Star
+          ratingScale = .07482726061;
+          break;
+        default:
+          // 0 Star
+          ratingScale = 0;
+          break;
+    }
+
+      // Form the place URL
+      let placeURL = baseURL + encodeURIComponent(placeName);
+
+      // If the place name is over an amount, truncate it
+      if(placeName.length > 30) {
+        placeName = placeName.substring(0, 28) + '...';
+      }
+
+      // Create the listing elements
+      let item = '<a href="' + placeURL + '" target="_blank" class="outfitter-item item-' + answerState + '" id="outfitter-' + i + '"></div>';
+      // Title
+      let itemTitle = '<div class="outfitter-title">' + placeName + '</div>';
+      // Rating Container
+      let ratingParent = '<div class="outfitter-rating"></div>';
+      // Stars Container
+      let starContainer = '<div class="outfitter-rating-stars"></div>'
+      // Rating SVG
+      let ratingSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      // Set its attributes accordingly
+      ratingSVG.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      ratingSVG.setAttribute('x', '0');
+      ratingSVG.setAttribute('y', '0');
+      ratingSVG.setAttribute('enable-background', 'new 0 0 64 16');
+      ratingSVG.setAttribute('version', '1.1');
+      ratingSVG.setAttribute('viewBox', '0 0 64 16');
+      ratingSVG.setAttribute('xml:space', 'preserve');
+      ratingSVG.setAttribute('data-rating', placeRating);
+      // ratingSVG.setAttribute('id', 'svg-rating-' + i);
+
+      // Create the star outlines group
+      let starOutlinesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      starOutlinesGroup.setAttributeNS(null, 'id', 'star-outlines-' + i);
+      // Create the star outlines
+      let starOutlines = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      starOutlines.setAttributeNS(null, 'd', 'M8.5 10.1l-3 2.1 1.1-3.5-3-2.3h3.8l1.2-3.5 1.1 3.5 3.8.1-3 2.2 1.1 3.6zM20.2 10.1l-3 2.1 1.1-3.5-3-2.3h3.8l1.2-3.5 1.2 3.5 3.7.1-3 2.2 1.1 3.6zM32 10.1l-3.1 2.1L30 8.7l-2.9-2.3h3.7L32 2.9l1.2 3.5 3.7.1-3 2.2 1.1 3.6zM43.7 10.1l-3.1 2.1 1.2-3.5-3-2.3h3.7l1.3-3.5 1.1 3.5 3.8.1-3.1 2.2 1.1 3.6zM55.4 10.1l-3 2.1 1.1-3.5-3-2.3h3.8l1.2-3.5 1.1 3.5 3.8.1-3 2.2 1.1 3.6z');
+      starOutlines.setAttributeNS(null, 'fill', 'none');
+      starOutlines.setAttributeNS(null, 'stroke', strokeColor);
+      starOutlines.setAttributeNS(null, 'stroke-miterlimit', '10');
+      starOutlines.setAttributeNS(null, 'class', 'svg-stroke-style');
+      // Add the outlines to the outlines group
+      starOutlinesGroup.appendChild(starOutlines);
+      // Add the outlines group to the rating SVG
+      ratingSVG.appendChild(starOutlinesGroup);
+
+      // Create the defs
+      let ratingDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      // Create the mask filter
+      let ratingFilterMask = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      ratingFilterMask.setAttributeNS(null, 'id', 'adobe-opacitymaskfilter-' + i);
+      ratingFilterMask.setAttributeNS(null, 'width', '56.8');
+      ratingFilterMask.setAttributeNS(null, 'height', '13');
+      ratingFilterMask.setAttributeNS(null, 'x', '3.6');
+      ratingFilterMask.setAttributeNS(null, 'y', '1.5');
+      ratingFilterMask.setAttributeNS(null, 'filterUnits', 'userSpaceOnUse');
+      // Create the colorMatrix
+      let filterFeColorMatrix = document.createElementNS('http://www.w3.org/2000/svg', 'feColorMatrix');
+      filterFeColorMatrix.setAttributeNS(null, 'values', '1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0');
+      // Add the colorMatrix to the mask filter
+      ratingFilterMask.appendChild(filterFeColorMatrix);
+      // Add the filter to the defs
+      ratingDefs.appendChild(ratingFilterMask);
+      // Add the defs to the rating SVG
+      ratingSVG.appendChild(ratingDefs);
+
+      // Create the rating mask
+      let ratingMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+      ratingMask.setAttributeNS(null, 'id', 'rating-progress-mask-' + i);
+      ratingMask.setAttributeNS(null, 'width', '55.3');
+      ratingMask.setAttributeNS(null, 'height', '8');
+      ratingMask.setAttributeNS(null, 'x', '4.4');
+      ratingMask.setAttributeNS(null, 'y', '3.7');
+      ratingMask.setAttributeNS(null, 'maskUnits', 'userSpaceOnUse');
+      // Create the mask group
+      let maskGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      maskGroup.setAttributeNS(null, 'filter', 'url(#adobe-opacitymaskfilter-' + i);
+      // Create the mask rect
+      let maskRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      maskRect.setAttributeNS(null, 'id', 'rating-progress-mask-rect-' + i);
+      maskRect.setAttributeNS(null, 'width', '56.8');
+      maskRect.setAttributeNS(null, 'height', '13');
+      maskRect.setAttributeNS(null, 'x', '3.6');
+      maskRect.setAttributeNS(null, 'y', '1.5');
+      maskRect.setAttributeNS(null, 'fill', '#FFF');
+      maskRect.setAttributeNS(null, 'style', 'transform-origin: left center; transform: scaleX(' + ratingScale + ');');
+      // Add the mask rect to the mask group
+      maskGroup.appendChild(maskRect);
+      // Add the mask group to the rating mask
+      ratingMask.appendChild(maskGroup);
+      // Add the rating mask to the rating SVG
+      ratingSVG.appendChild(ratingMask);
+
+      // Create the rating progress fill group
+      let fillGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      fillGroup.setAttributeNS(null, 'id', 'rating-progress-fill-' + i);
+      fillGroup.setAttributeNS(null, 'mask', 'url(#rating-progress-mask-' + i + ')');
+      // Creating the rating fill path
+      let fillPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      fillPath.setAttributeNS(null, 'd', 'M8.5 9.8l-2.6 1.8 1-3-2.5-1.9h3.1l1.1-3 1 3h3.1l-2.5 1.9.9 3.1zM20.2 9.8l-2.6 1.8 1-3-2.5-1.9h3.2l1-3 1 3h3.2l-2.6 1.9.9 3.1zM32 9.8l-2.6 1.8.9-3-2.5-1.9H31l1-3 1 3h3.2l-2.6 1.9.9 3.1zM43.7 9.8l-2.6 1.8 1-3-2.6-1.9h3.2l1-3 1 3h3.2l-2.5 1.9.9 3.1zM55.4 9.8l-2.6 1.8 1-3-2.5-1.9h3.1l1.1-3 1 3h3.1l-2.5 1.9.9 3.1z');
+      fillPath.setAttributeNS(null, 'fill', strokeColor);
+      fillPath.setAttributeNS(null, 'class', 'svg-fill-style');
+      // Add the fill path to the fill group
+      fillGroup.appendChild(fillPath);
+      // Add the fill group to the rating SVG
+      ratingSVG.appendChild(fillGroup);
+
+      // Rating Count
+      let ratingCount = '<div class="outfitter-rating-count">(' + placeRatingCount + ')</div>';
+
+      // Add the item listing to the parent element's container
+      document.querySelector('#local-outfitters > .container').insertAdjacentHTML('beforeend', item);
+      // Add top-level elements to the current item
+      document.querySelector('#outfitter-' + i).insertAdjacentHTML('beforeend', itemTitle);
+      document.querySelector('#outfitter-' + i).insertAdjacentHTML('beforeend', ratingParent);
+      // Add ratings elements to the ratings container
+      document.querySelector('#outfitter-' + i + ' > .outfitter-rating').insertAdjacentHTML('beforeend', starContainer);
+      document.querySelector('#outfitter-' + i + ' > .outfitter-rating').insertAdjacentHTML('beforeend', ratingCount);
+
+      // Add the SVG to the star rating container
+      document.querySelector('#outfitter-' + i + ' > .outfitter-rating > .outfitter-rating-stars').appendChild(ratingSVG);
+
+    }
+  }
+
+  checkPlacesData(riverName, element);
+}
+
+// This function generates the flow graph
+function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion, stokeColor) {
+  let dataLabels = []; // X-Axis
+  let dataValues = []; // Histoical Data
+  let maxSafeFlowValues = []; // Max Safe Flow Line
+  let estimationValues = []; // Estimated data
+
+  // First lets make the historical data set
+  for(var i=0; i < data.value.timeSeries[0].values[0].value.length; i++) {
+    // Time Entry
+    let currentTime = moment(json.value.timeSeries[0].values[0].value[i].dateTime.substr(0,json.value.timeSeries[0].values[0].value[i].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
+    dataLabels.push(currentTime/900);
+    // Data Entry
+    let currentData = parseInt(json.value.timeSeries[0].values[0].value[i].value)
+    dataValues.push(currentData);
+    estimationValues.push('null');
+    // Max Safe Flow line
+    maxSafeFlowValues.push(maxSafeFlow);
+  }
+
+  // Now we add data for the total number of days + 1 it will take the river to normalize
+  let mostRecentFlow = dataValues[dataValues.length-1];
+  let mostRecentTime = moment(json.value.timeSeries[0].values[0].value[json.value.timeSeries[0].values[0].value.length-1].dateTime.substr(0,json.value.timeSeries[0].values[0].value[json.value.timeSeries[0].values[0].value.length-1].dateTime.length-10), "YYYY-MM-DDTHH:mm:ss").unix();
+  let returnDays = Math.ceil(((mostRecentFlow - baseFlow)/1000) * relaxPeriod)+1;
+  let relaxValue = ((mostRecentFlow - baseFlow)/1000) * relaxPeriod;
+  for(var i=0; i < returnDays*96; i++) {
+    // Time Entry
+    let newTime = moment.unix(mostRecentTime).add((15*i), 'minutes').unix();
+    dataLabels.push(newTime/900);
+    // Data Entry
+    dataValues.push('null');
+    // Estimation
+    let est = (mostRecentFlow-baseFlow)*Math.pow(Math.floor(relaxValue)/relaxValue, i*(1/relaxValue))+baseFlow;
+    estimationValues.push(est);
+    // When the previous estimation value is above 1.1xBaseFlow, and the current estimation value is at or below that, change the estimate safe flow date to the current estimation time
+    let normalFlow = baseFlow*1.1;
+    let previousEst = (mostRecentFlow-baseFlow)*Math.pow(Math.floor(relaxValue)/relaxValue, (i-1)*(1/relaxValue))+baseFlow;
+    if(previousEst > normalFlow && est <= normalFlow) {
+      document.querySelector('#graph-later').textContent = moment.unix(newTime).format('MMM D');
+    }
+    // Max Safe Flow line
+    maxSafeFlowValues.push(maxSafeFlow);
+  }
+
+  // Here we extract every nth element based on the data resoultion setting
+  // Store the current data arrays as temp arrays and clear the proper array contents
+  let tempDataLabels = dataLabels;
+  let tempDataValues = dataValues;
+  let tempMaxSafeFlowValues = maxSafeFlowValues;
+  let tempEstimationValues = estimationValues;
+  dataLabels = [];
+  dataValues = [];
+  maxSafeFlowValues = [];
+  estimationValues = [];
+  for(var i=0; i < tempDataLabels.length;) {
+    dataLabels.push(tempDataLabels[i]);
+    dataValues.push(tempDataValues[i]);
+    maxSafeFlowValues.push(tempMaxSafeFlowValues[i]);
+    estimationValues.push(tempEstimationValues[i]);
+    // Make sure that the last non-null history value is the last null estimation value
+    if(estimationValues[(i/dataResoultion)-1] == 'null' && tempEstimationValues[i] !== 'null') {
+      estimationValues.splice((i/dataResoultion)-1, 1, dataValues[(i/dataResoultion)-1]);
+    }
+
+    i = i + dataResoultion;
+  }
+
+  // Remove some of the max flow line data points to make room for the label
+  let maxSafeFlowValuesPre = maxSafeFlowValues;
+  let maxSafeFlowValuesPost = maxSafeFlowValues;
+  maxSafeFlowValues.splice(maxSafeFlowValues.length-13, 13, 'null');
+
+  var chart = new Chartist.Line('#graph-area', {
+    labels: dataLabels,
+    series: [
+      dataValues,
+      maxSafeFlowValues,
+      estimationValues
+    ]
+  }, {
+    showPoint: false,
+    showLine: true,
+    showArea: false,
+    fullWidth: true,
+    showLabel: false,
+    axisX: {
+      showGrid: false,
+      showLabel: false,
+      offset: 2
+    },
+    axisY: {
+      showGrid: false,
+      showLabel: false,
+      offset: 0
+    },
+    chartPadding: 0,
+  });
+
+  // Add a text label to the max flow line
+  setTimeout(function() {
+    // Get the coordinates for the max flow line group
+    let coordinateObject = document.querySelector('.ct-series-b').getBoundingClientRect();
+    // Max Flow Line Group
+    let maxFlowLineGroup = document.querySelector('.ct-series-b');
+    // Create a Text Label
+    let maxFlowText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    maxFlowText.setAttributeNS(null, 'x', coordinateObject.width + 8);
+    maxFlowText.setAttributeNS(null, 'fill', stokeColor);
+    maxFlowText.textContent = "Highest Safe Flow";
+    maxFlowText.setAttributeNS(null, 'style', 'font-size: 12px; letter-spacing: .5px;');
+    maxFlowLineGroup.append(maxFlowText);
+    // Reposition the text now that it is loaded in the SVG
+    maxFlowText.setAttributeNS(null, 'y', document.querySelector('.ct-series-b').getBoundingClientRect().height - document.querySelector('.ct-series-b > text').getBoundingClientRect().height/2);
+
+    // Add the current pointer
+    let svgParentObject = document.querySelector('.ct-chart-line').getBoundingClientRect();
+    let estimateObject = document.querySelector('.ct-series-c').getBoundingClientRect();
+    console.log(svgParentObject)
+    console.log(estimateObject)
+    let topOffset = estimateObject.top - svgParentObject.top;
+    let leftOffset = estimateObject.left - svgParentObject.left;
+
+    // <polygon fill="#eac435" points="8 2.7 2.2 12.9 13.9 12.9"/>
+    let currentTimePointer = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    currentTimePointer.setAttributeNS(null, 'points', [leftOffset, topOffset+10, leftOffset+11.6913/2, topOffset+20.125, leftOffset-11.6913/2, topOffset+20.125].join(" "));
+    currentTimePointer.setAttributeNS(null, 'fill', stokeColor);
+    currentTimePointer.setAttributeNS(null, 'style', 'transform-origin: ' + leftOffset + 'px ' + (topOffset+10) + 'px; transform: translate(2px, 0px) rotate(0deg);');
+    let svgParent = document.querySelector('.ct-chart-line');
+    svgParent.appendChild(currentTimePointer);
+
+  }, 1)
 }
