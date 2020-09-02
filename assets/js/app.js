@@ -635,7 +635,7 @@ $('.cta-wrapper').click(async function() {
     var rangeVariance = .25;
     var rangeSize = currentSafeRange.max - currentSafeRange.min;
     var superSafeRange = {
-      "min": currentSafeRange.min + (rangeSize*(rangeVariance/2)),
+      "min": currentSafeRange.min - (rangeSize*(rangeVariance/2)),
       "max": currentSafeRange.max - (rangeSize*rangeVariance)
     };
     if(realTimeFlowValue > (superSafeRange.min - 1) && realTimeFlowValue < (superSafeRange.max + 1)) {
@@ -977,6 +977,7 @@ gsap.timeline()
   .delay(.25)
   .call(createAnswer, [state, currentFlowValue])
   .set('.border-content', {zIndex: 100})
+  .set('.border-text', {color: formatChoices[state].text_color})
   .set('#answer > .container', {y: '150%', color: formatChoices[state].text_color})
   .set('#current-flow > .container', {y: '150%', color: formatChoices[state].text_color})
   .set('.measurement-number', {color: formatChoices[state].text_color})
@@ -986,6 +987,8 @@ gsap.timeline()
   .set('.date-mask > .container', {color: formatChoices[state].text_color})
   .set('.date-mask', {background: formatChoices[state].background_color})
   .set('.settings-text', {color: formatChoices[state].text_color})
+  .set('.unit-item', {color: formatChoices[state].text_color})
+  .set('.unit-seperator', {color: formatChoices[state].text_color})
   .set('svg .svg-stroke-style', {stroke: formatChoices[state].stroke_color})
   .set('svg .svg-fill-style', {fill: formatChoices[state].stroke_color})
   .set('.point-indicator > svg > path', {fill: formatChoices[state].stroke_color})
@@ -1032,7 +1035,7 @@ gsap.timeline()
     // Call USGS for 4 day data
     flowGraphRawData = await fetchPeriodData(siteID, ['00060'], '4D');
     // Store the raw data in local storage
-    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringify(flowGraphRawData), ['hourstil', 24], 'River');
+    writeLocalStorage('canitube_' + siteName + '_Period Data', JSON.stringify(flowGraphRawData), ['hourstil', 2], 'River');
   } else {
     flowGraphRawData = JSON.parse(readLocalStorage('canitube_' + siteName + '_Period Data').value);
   }
@@ -1329,6 +1332,11 @@ document.getElementById("settings-performance").addEventListener("click", functi
   togglePerformance();
 });
 
+// Add click event that changes the unit measure setting
+document.getElementById("unit-swap").addEventListener("click", function(){
+  toggleMeasurement();
+});
+
 // Add hover pointer event changes to range tooltip
 // Mouse over
 document.getElementById("range-tooltip").addEventListener("mouseover", function() {
@@ -1348,14 +1356,16 @@ function toggleSettings() {
     .set('#range-tooltip', {pointerEvents: 'none'})
     .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '120deg'})
     .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25')
-    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25');
+    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25')
+    .to('#unit-swap > .container', {duration: .375, ease: 'power2.inOut', x: '0%', opacity: 1}, '-=.25');
 
   // The animation timeline
   var settingsAnimationClose = gsap.timeline({paused: true})
     .set('#range-tooltip', {pointerEvents: 'all'})
     .to('#settings-cog', {duration: .375, ease: 'power2.inOut', rotation: '0deg'})
     .to('#settings-performance > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25')
-    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25');
+    .to('#settings-display > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25')
+    .to('#unit-swap > .container', {duration: .375, ease: 'power2.inOut', x: '-25%', opacity: 0}, '-=.25');
 
   // If the settings are open, reverse the timeline, else play the timeline
   if($('.settings').attr('data-expanded') == 'true') {
@@ -1383,19 +1393,39 @@ function togglePerformance() {
     $('#performance-svg').attr('data-performance', 'rough');
     $('#performance-svg > polyline').attr('points', '6.9,22.8 6.9,19.6 10.1,19.6 10.1,16.4 13.3,16.4 13.3,13.2 16.5,13.2 16.5,10 19.7,10 19.7,6.8 22.9,6.8');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':250}})
+    writeCookie('canitube_Settings_Performance', 'rough', 10000000);
   } else if(currentState == 'rough') {
     // None
     $('#performance-svg').attr('data-performance', 'none');
     $('#performance-svg > polyline').attr('points', '6,14 7.6,14 9.2,14 10.8,14 12.4,14 14,14 15.6,14 17.2,14 18.8,14 20.4,14 22,14');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':1000}});
     gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: 0})
+    writeCookie('canitube_Settings_Performance', 'none', 10000000);
   } else {
     // Smooth
     $('#performance-svg').attr('data-performance', 'smooth');
     $('#performance-svg > polyline').attr('points', '6,22 7.6,20.4 9.2,18.8 10.8,17.2 12.4,15.6 14,14 15.6,12.4 17.2,10.8 18.8,9.2 20.4,7.6 22,6');
     gsap.to('#performance-svg', {duration: .1, ease: SteppedEase.config(1), attr:{'data-resolution':100}})
     gsap.to('#background-wave', {duration: .5, ease: 'power2.inOut', opacity: .5})
+    writeCookie('canitube_Settings_Performance', 'smooth', 10000000);
   }
+}
+
+// This function toggles the measurement setting
+function toggleMeasurement() {
+  let currentUnit = document.querySelector('#unit-wrapper').getAttribute('data-measure');
+  if(currentUnit == 'imperial') {
+    // Metric
+    measureUpdate('metric');
+    document.querySelector('#unit-wrapper').setAttribute('data-measure', 'metric');
+    writeCookie('canitube_Settings_Unit Measure', 'metric', 10000000);
+  } else {
+    // Imperial
+    measureUpdate('imperial');
+    document.querySelector('#unit-wrapper').setAttribute('data-measure', 'imperial');
+    writeCookie('canitube_Settings_Unit Measure', 'imperial', 10000000);
+  }
+
 }
 
 // When the document is ready, aka startup function
@@ -2932,5 +2962,110 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
     let svgParent = document.querySelector('.ct-chart-line');
     svgParent.appendChild(currentTimePointer);
 
+    // Color the lines correctly
+    $('.ct-line').each(function() {
+      $(this).css('stroke', stokeColor);
+    });
+
   }, 1)
+}
+
+// This function updates units of measure between imperial and metric
+function measureUpdate(unitSet) {
+  let unitsTo = {
+    "length": "",
+    "speed": "",
+    "temperature": "",
+    "volume_flow_rate": ""
+  }
+  if(unitSet == 'imperial') {
+    // Imperial
+    // Speed: mile/hour
+    // Length: feet
+    // Volume Flow Rate: cubic feet/second
+    // Temperature: Fahrenheit
+    unitsTo.length = 'ft';
+    unitsTo.speed = 'm/h';
+    unitsTo.temperature = 'F';
+    unitsTo.volume_flow_rate = 'ft3/s';
+  } else {
+    // Metric
+    // Speed: metre/second
+    // Length: meter
+    // Volume Flow Rate: cubic meter/second
+    // Temperature: Celsius
+    unitsTo.length = 'm';
+    unitsTo.speed = 'm/s';
+    unitsTo.temperature = 'C';
+    unitsTo.volume_flow_rate = 'm3/s';
+  }
+  let unitBase = 'FT';
+  if(unitSet == 'metric') {
+    unitBase = 'M';
+  }
+
+  // Select values of all the items that need to have their units update
+  // Height range
+  let heightUnit = document.querySelector('.height-wrapper').getAttribute('data-unit');
+  let highHeightMeasure = parseInt(document.querySelector('#high-height').textContent);
+  let lowHeightMeasure = parseInt(document.querySelector('#low-height').textContent);
+  // Convert
+  highHeightMeasure = Math.round(convert(highHeightMeasure).from(heightUnit).to(unitsTo.length)*10)/10;
+  lowHeightMeasure = Math.round(convert(lowHeightMeasure).from(heightUnit).to(unitsTo.length)*10)/10;
+  // Set
+  document.querySelector('.height-wrapper').setAttribute('data-unit', unitsTo.length);
+  document.querySelector('#high-height').innerHTML = highHeightMeasure;
+  document.querySelector('#low-height').innerHTML = lowHeightMeasure;
+  // Measurement
+  document.querySelector('#height-unit').innerHTML = '';
+  document.querySelector('#height-unit').insertAdjacentText('afterbegin', unitBase);
+
+  // Flow range
+  let rangeFlowUnit = document.querySelector('.range-wrapper').getAttribute('data-unit');
+  let highRangeFlowMeasure = parseInt(document.querySelector('#high-range').textContent);
+  let lowRangeFlowMeasure = parseInt(document.querySelector('#low-range').textContent);
+  // Convert
+  highRangeFlowMeasure = Math.round(convert(highRangeFlowMeasure).from(rangeFlowUnit).to(unitsTo.volume_flow_rate));
+  lowRangeFlowMeasure = Math.round(convert(lowRangeFlowMeasure).from(rangeFlowUnit).to(unitsTo.volume_flow_rate));
+  // Set
+  document.querySelector('.range-wrapper').setAttribute('data-unit', unitsTo.volume_flow_rate);
+  document.querySelector('#high-range').innerHTML = highRangeFlowMeasure;
+  document.querySelector('#low-range').innerHTML = lowRangeFlowMeasure;
+  // Measurement
+  document.querySelector('#range-unit').innerHTML = '';
+  document.querySelector('#range-unit').insertAdjacentText('afterbegin', unitBase);
+  document.querySelector('#range-unit').insertAdjacentHTML('beforeend', '<span class="superscript">3</span>');
+  document.querySelector('#range-unit').insertAdjacentText('beforeend', '/S');
+
+  // Current temp
+  let currentTempUnit = document.querySelector('.weather-subtitle').getAttribute('data-unit');
+  let currentWaterTempMeasure = document.querySelector('#water-temp').textContent.split('o')[0].split(' ')[1];
+  let currentAirTempMeasure = parseInt(document.querySelector('#air-temp').textContent.split('o')[0].split(' ')[1]);
+  // Convert
+  if(currentWaterTempMeasure !== '-') {
+    // Water temp is not a null value
+    currentWaterTempMeasure = Math.round(convert(parseInt(currentWaterTempMeasure)).from(currentTempUnit).to(unitsTo.temperature));
+  }
+  currentAirTempMeasure = Math.round(convert(currentAirTempMeasure).from(currentTempUnit).to(unitsTo.temperature));
+  // Set
+  document.querySelector('.weather-subtitle').setAttribute('data-unit', unitsTo.temperature);
+  // Water
+  document.querySelector('#water-temp').innerHTML = '';
+  document.querySelector('#water-temp').insertAdjacentText('afterbegin', 'Water: ' + currentWaterTempMeasure);
+  document.querySelector('#water-temp').insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector('#water-temp').insertAdjacentText('beforeend', unitsTo.temperature);
+  // Air
+  document.querySelector('#air-temp').innerHTML = '';
+  document.querySelector('#air-temp').insertAdjacentText('afterbegin', 'Air: ' + currentAirTempMeasure);
+  document.querySelector('#air-temp').insertAdjacentHTML('beforeend', '<span class="degree">o</span>');
+  document.querySelector('#air-temp').insertAdjacentText('beforeend', unitsTo.temperature);
+
+  // Current flow
+  let currentFlowUnit = document.querySelector('#current-flow').getAttribute('data-unit');
+  let currentFlowMeasure = parseInt(document.querySelector('#current-flow > .container').textContent);
+  // Convert
+  currentFlowMeasure = Math.round(convert(currentFlowMeasure).from(currentFlowUnit).to(unitsTo.volume_flow_rate));
+  // Set
+  document.querySelector('#current-flow').setAttribute('data-unit', unitsTo.volume_flow_rate);
+  document.querySelector('#current-flow > .container').textContent = currentFlowMeasure;
 }

@@ -23,7 +23,7 @@
     <meta name="msapplication-TileImage" content="mstile-144x144.f2f3aa2c.png"> <!--no update-->
     <meta name="msapplication-config" content="browserconfig.b7b7a74f.xml"> <!--no update-->
     <meta name="theme-color" content="#e6e6e6" id="themeColor">
-    <link rel="stylesheet" href="styles.75f1edae.css">
+    <link rel="stylesheet" href="styles.c0534fde.css">
     <link rel="stylesheet" href="font.23cf1589.css">
 </head>
 <body class="bkgd-neutral">
@@ -78,7 +78,7 @@
             <div class="container">
             </div>
           </div>
-          <div id="current-flow">
+          <div id="current-flow" data-unit="ft3/s">
             <div class="container">
             </div>
           </div>
@@ -100,7 +100,7 @@
               </svg>
             </div>
           </div>
-          <div class="range-wrapper">
+          <div class="range-wrapper" data-unit="ft3/s">
             <div class="container">
               <div class="measurement-number" id="low-range"></div>
               <div class="measurement-number" id="high-range"></div>
@@ -125,7 +125,7 @@
               Water Height
             </div>
           </div>
-          <div class="height-wrapper">
+          <div class="height-wrapper" data-unit="ft">
             <div class="container">
               <div class="measurement-number" id="low-height"></div>
               <div class="measurement-number" id="high-height"></div>
@@ -148,7 +148,7 @@
           <div class="container">
             <div class="display-subsection" id="current-weather">
               <div class="container">
-                <div class="weather-subtitle">
+                <div class="weather-subtitle" data-unit="F">
                   <div id="water-temp"></div>
                   <div id="air-temp"></div>
                 </div>
@@ -271,6 +271,14 @@
               </svg>
             </div>
           </div>
+          <div class="settings-item" id="unit-swap">
+            <div class="container" style="transform: translate(-25%, 0%); opacity: 0;">
+              <div class="settings-text">
+                Unit of Measure:
+              </div>
+              <div id="unit-wrapper" data-measure="imperial"><div class="unit-item" id="measure-imperial">Imperial</div><div class="unit-seperator">/</div><div class="unit-item" id="measure-metric">Metric</div></div>
+            </div>
+          </div>
         </div>
       </div>
       <svg id="background-wave" data-speed="1" data-height="-25" xmlns="http://www.w3.org/2000/svg">
@@ -299,5 +307,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.0/gsap.min.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUt7_Q7Mf5zTjIQu9imgewMX7BAbeQ0NU&libraries=places"></script>
 <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
-<script src="app.9c708ca5.js"></script>
+<script src="app.aa3c3223.js"></script>
 </html>

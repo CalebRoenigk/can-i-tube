@@ -747,6 +747,8 @@ a:hover{
 .settings-item {
 	margin-right: 24px;
 	overflow-x: hidden;
+	overflow-y: hidden;
+	height: 24px;
 }
 
 .settings-item > .container {
@@ -768,6 +770,35 @@ a:hover{
 	font-family: 'Kayak Sans Regular', arial, sans-serif;
 	letter-spacing: 0px;
 	transform: translate(0%, 25%);
+}
+
+#unit-wrapper {
+	margin-left: 6px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-content: center;
+	transform: translate(0%, 25%);
+	color: inherit;
+}
+
+.unit-item, .unit-seperator {
+	font-size: 12px;
+	transition: .2s ease;
+}
+
+.unit-seperator {
+	margin-left: 2px;
+	margin-right: 3px;
+}
+
+#unit-wrapper[data-measure="imperial"] > #measure-imperial, #unit-wrapper[data-measure="metric"] > #measure-metric {
+	opacity: 1;
+}
+
+#unit-wrapper[data-measure="metric"] > #measure-imperial, #unit-wrapper[data-measure="imperial"] > #measure-metric {
+	opacity: .5;
 }
 
 /* Background Wave */
@@ -1639,20 +1670,20 @@ input[type="checkbox"]:checked + .cookie-label::before {
 }
 
 .ct-series-a .ct-line {
-  stroke: #eac435;
+  stroke: inherit;
   stroke-width: 2px;
 	fill: none;
 }
 
 .ct-series-b .ct-line {
-  stroke: #eac435;
+  stroke: inherit;
   stroke-width: 1px;
 	stroke-dasharray: 18 12;
 	fill: none;
 }
 
 .ct-series-c .ct-line {
-  stroke: #eac435;
+  stroke: inherit;
   stroke-width: 2px;
 	stroke-dasharray: 6 6;
 	fill: none;
@@ -1721,4 +1752,4 @@ input[type="checkbox"]:checked + .cookie-label::before {
 }
 
 
-/*# sourceMappingURL=styles.75f1edae.css.map */
+/*# sourceMappingURL=styles.c0534fde.css.map */
