@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "4.3";
+var appVersion = "4.31";
 
 // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
 // Base flow is the average flow for a given river
@@ -2952,8 +2952,6 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
     // Add the current pointer
     let svgParentObject = document.querySelector('.ct-chart-line').getBoundingClientRect();
     let estimateObject = document.querySelector('.ct-series-c').getBoundingClientRect();
-    console.log(svgParentObject)
-    console.log(estimateObject)
     let topOffset = estimateObject.top - svgParentObject.top;
     let leftOffset = estimateObject.left - svgParentObject.left;
 

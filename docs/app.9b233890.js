@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "4.3"; // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
+var appVersion = "4.31"; // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
 // Base flow is the average flow for a given river
 
 var riverInfo = [{
@@ -23025,8 +23025,6 @@ function generateGraph(data, maxSafeFlow, relaxPeriod, baseFlow, dataResoultion,
 
     let svgParentObject = document.querySelector('.ct-chart-line').getBoundingClientRect();
     let estimateObject = document.querySelector('.ct-series-c').getBoundingClientRect();
-    console.log(svgParentObject);
-    console.log(estimateObject);
     let topOffset = estimateObject.top - svgParentObject.top;
     let leftOffset = estimateObject.left - svgParentObject.left; // <polygon fill="#eac435" points="8 2.7 2.2 12.9 13.9 12.9"/>
 
@@ -23144,4 +23142,4 @@ function measureUpdate(unitSet) {
   document.querySelector('#current-flow > .container').textContent = currentFlowMeasure;
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.b8ddd52f.js.map
+//# sourceMappingURL=app.9b233890.js.map
