@@ -19866,7 +19866,7 @@ var _convertUnits = _interopRequireDefault(require("convert-units"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var appVersion = "4.11"; // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
+var appVersion = "4.3"; // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
 // Base flow is the average flow for a given river
 
 var riverInfo = [{
@@ -23144,4 +23144,4 @@ function measureUpdate(unitSet) {
   document.querySelector('#current-flow > .container').textContent = currentFlowMeasure;
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.2e99d95c.js.map
+//# sourceMappingURL=app.b8ddd52f.js.map

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import convert from 'convert-units';
 
-var appVersion = "4.11";
+var appVersion = "4.3";
 
 // Relax period is how long it takes a river to lose 1000 cuft of flow after a storm peak
 // Base flow is the average flow for a given river
