@@ -1029,6 +1029,9 @@ gsap.timeline()
   .to('#the-download-box', {duration: 1, ease: 'power2.inOut', scale: 1}, "-=2.5")
   .set('#range-tooltip', {pointerEvents: 'all'});
 
+  // Update the units of measure
+  measureUpdate(getCookie('canitube_Settings_Unit Measure'));
+
   // Test for 4D flow data, if present pass into raw data, else, run call to USGS
   let flowGraphRawData = '';
   if(checkLocalStorage('canitube_' + siteName + '_Period Data') == false) {
@@ -1041,7 +1044,7 @@ gsap.timeline()
   }
 
   // Call a graph update to display the returned 4-day data
-  generateGraph(flowGraphRawData, safeRange.max, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color)
+  generateGraph(flowGraphRawData, safeRange.max, relaxPeriod, baseFlow, 16, formatChoices[state].stroke_color);
 }
 
 // This function hot-swaps the favicon based on the page formatting

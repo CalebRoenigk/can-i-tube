@@ -20978,7 +20978,9 @@ async function formatPage(state, currentFlowValue, heightValue, safeRange, heigh
     scale: 1
   }, "-=2.5").set('#range-tooltip', {
     pointerEvents: 'all'
-  }); // Test for 4D flow data, if present pass into raw data, else, run call to USGS
+  }); // Update the units of measure
+
+  measureUpdate(getCookie('canitube_Settings_Unit Measure')); // Test for 4D flow data, if present pass into raw data, else, run call to USGS
 
   let flowGraphRawData = '';
 
@@ -23142,4 +23144,4 @@ function measureUpdate(unitSet) {
   document.querySelector('#current-flow > .container').textContent = currentFlowMeasure;
 }
 },{"jquery":"HlZQ","moment":"iROh","convert-units":"K5Mp"}]},{},["i5Wi"], null)
-//# sourceMappingURL=app.aa3c3223.js.map
+//# sourceMappingURL=app.2e99d95c.js.map
